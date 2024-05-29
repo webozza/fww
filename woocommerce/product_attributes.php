@@ -1,0 +1,1045 @@
+<?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
+global $product;
+global $wpdb;
+
+?>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		recalcForm();
+		jQuery('.ginput_total').bind('DOMSubtreeModified', function() {
+			if(jQuery(this).html() !== '' && jQuery(this).html() !== '$0.00'){
+				jQuery("button[name='add-to-cart']").show();
+			}else{
+				jQuery("button[name='add-to-cart']").hide();
+			}
+		});
+		jQuery(".hwFieldSelect").change(function() {
+			recalcForm();
+		});
+		function recalcForm() {
+			var w1 = jQuery("#width").val();
+			// var w2 = jQuery("#Width8ths").val();
+			var h1 = jQuery("#height").val();
+			// var h2 = jQuery("#Height8ths").val();
+
+			var h2Disp = "";
+			var w2Disp = "";
+			var height = +h1;
+			var width = +w1;
+			// var height = +h1 + +h2;
+			// var width = +w1 + +w2;
+			var sqIn = (height*width);
+			var heightDisp = "";
+			var widthDisp = "";
+
+			// var sqIn = (w1*h1);
+
+			/*if (h2 == null || h2 == "Select" || h2 == "0") {
+				// heightDisp = height + '"'; 
+				heightDisp = h1 + '"'; 
+			} else {
+				heightDisp = h1 + ' ('+h2+')';
+				// heightDisp = height + " " + h2Disp;
+			}
+			if (w2 == null || w2 == "Select" || w2 == "0") {
+				widthDisp = w1 + '"';
+				// widthDisp = width + '"';
+			} else {
+				widthDisp = w1 + ' ('+w2+')';
+				// widthDisp = width + " " + w2Disp;
+			}*/
+
+			heightDisp = h1;
+			widthDisp = w1;
+
+			// jQuery("#_wtoDimensions").val(w1 + " x " + h1);
+			jQuery("#wtoDimensions").html(widthDisp + " X " + heightDisp);
+			jQuery("#_wtoDimensions").val(widthDisp + " X " + heightDisp);
+
+			jQuery("#totalSqIn").val(sqIn);
+			jQuery("#_totalSqIn").val(sqIn);
+			
+			var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
+
+			jQuery.ajax({
+				url: ajaxurl,
+				type: 'POST',
+				data: { action:'get_price_from_table', height: h1, width: w1, PID: <?php echo $product->get_id(); ?>},
+				success: function(data){
+
+					var bp = Number(data);
+					
+					jQuery("#_bp").val(bp);
+					
+
+					var fTotal = parseFloat(bp);
+
+					
+					if (fTotal != null) {
+						jQuery('.ginput_total').html("$" + fTotal.toFixed(2));
+						jQuery('#total').val(fTotal.toFixed(2));
+						jQuery('#_total').val(fTotal.toFixed(2));
+					} else {
+						jQuery('#total').val(0);
+						jQuery('#_total').val(0);
+						jQuery('.ginput_total').html("$0.00");
+					}
+				},
+				error: function(request,error){
+					alert('That didnt work (get Price): ' + error);
+				}
+			});
+
+
+		}
+	});
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="product_attribute">
+	<div class="height_width">
+		<div class="height">
+			<label>Width</label>
+			<select data-val="true" id="width" name="HidthInches" class="hwFieldSelect">
+				<option selected="selected" value="24">24</option>
+				<option value="24 (1/8)">24 1/8</option>
+				<option value="24 (1/4)">24 1/4</option>
+				<option value="24 (3/8)">24 3/8</option>
+				<option value="24 (1/2)">24 1/2</option>
+				<option value="24 (5/8)">24 5/8</option>
+				<option value="24 (3/4)">24 3/4</option>
+				<option value="24 (7/8)">24 7/8</option>
+				<option value="25">25</option>
+				<option value="25 (1/8)">25 1/8</option>
+				<option value="25 (1/4)">25 1/4</option>
+				<option value="25 (3/8)">25 3/8</option>
+				<option value="25 (1/2)">25 1/2</option>
+				<option value="25 (5/8)">25 5/8</option>
+				<option value="25 (3/4)">25 3/4</option>
+				<option value="25 (7/8)">25 7/8</option>
+				<option value="26">26</option>
+				<option value="26 (1/8)">26 1/8</option>
+				<option value="26 (1/4)">26 1/4</option>
+				<option value="26 (3/8)">26 3/8</option>
+				<option value="26 (1/2)">26 1/2</option>
+				<option value="26 (5/8)">26 5/8</option>
+				<option value="26 (3/4)">26 3/4</option>
+				<option value="26 (7/8)">26 7/8</option>
+				<option value="27">27</option>
+				<option value="27 (1/8)">27 1/8</option>
+				<option value="27 (1/4)">27 1/4</option>
+				<option value="27 (3/8)">27 3/8</option>
+				<option value="27 (1/2)">27 1/2</option>
+				<option value="27 (5/8)">27 5/8</option>
+				<option value="27 (3/4)">27 3/4</option>
+				<option value="27 (7/8)">27 7/8</option>
+				<option value="28">28</option>
+				<option value="28 (1/8)">28 1/8</option>
+				<option value="28 (1/4)">28 1/4</option>
+				<option value="28 (3/8)">28 3/8</option>
+				<option value="28 (1/2)">28 1/2</option>
+				<option value="28 (5/8)">28 5/8</option>
+				<option value="28 (3/4)">28 3/4</option>
+				<option value="28 (7/8)">28 7/8</option>
+				<option value="29">29</option>
+				<option value="29 (1/8)">29 1/8</option>
+				<option value="29 (1/4)">29 1/4</option>
+				<option value="29 (3/8)">29 3/8</option>
+				<option value="29 (1/2)">29 1/2</option>
+				<option value="29 (5/8)">29 5/8</option>
+				<option value="29 (3/4)">29 3/4</option>
+				<option value="29 (7/8)">29 7/8</option>
+				<option value="30">30</option>
+				<option value="30 (1/8)">30 1/8</option>
+				<option value="30 (1/4)">30 1/4</option>
+				<option value="30 (3/8)">30 3/8</option>
+				<option value="30 (1/2)">30 1/2</option>
+				<option value="30 (5/8)">30 5/8</option>
+				<option value="30 (3/4)">30 3/4</option>
+				<option value="30 (7/8)">30 7/8</option>
+				<option value="31">31</option>
+				<option value="31 (1/8)">31 1/8</option>
+				<option value="31 (1/4)">31 1/4</option>
+				<option value="31 (3/8)">31 3/8</option>
+				<option value="31 (1/2)">31 1/2</option>
+				<option value="31 (5/8)">31 5/8</option>
+				<option value="31 (3/4)">31 3/4</option>
+				<option value="31 (7/8)">31 7/8</option>
+				<option value="32">32</option>
+				<option value="32 (1/8)">32 1/8</option>
+				<option value="32 (1/4)">32 1/4</option>
+				<option value="32 (3/8)">32 3/8</option>
+				<option value="32 (1/2)">32 1/2</option>
+				<option value="32 (5/8)">32 5/8</option>
+				<option value="32 (3/4)">32 3/4</option>
+				<option value="32 (7/8)">32 7/8</option>
+				<option value="33">33</option>
+				<option value="33 (1/8)">33 1/8</option>
+				<option value="33 (1/4)">33 1/4</option>
+				<option value="33 (3/8)">33 3/8</option>
+				<option value="33 (1/2)">33 1/2</option>
+				<option value="33 (5/8)">33 5/8</option>
+				<option value="33 (3/4)">33 3/4</option>
+				<option value="33 (7/8)">33 7/8</option>
+				<option value="34">34</option>
+				<option value="34 (1/8)">34 1/8</option>
+				<option value="34 (1/4)">34 1/4</option>
+				<option value="34 (3/8)">34 3/8</option>
+				<option value="34 (1/2)">34 1/2</option>
+				<option value="34 (5/8)">34 5/8</option>
+				<option value="34 (3/4)">34 3/4</option>
+				<option value="34 (7/8)">34 7/8</option>
+				<option value="35">35</option>
+				<option value="35 (1/8)">35 1/8</option>
+				<option value="35 (1/4)">35 1/4</option>
+				<option value="35 (3/8)">35 3/8</option>
+				<option value="35 (1/2)">35 1/2</option>
+				<option value="35 (5/8)">35 5/8</option>
+				<option value="35 (3/4)">35 3/4</option>
+				<option value="35 (7/8)">35 7/8</option>
+				<option value="36">36</option>
+				<option value="36 (1/8)">36 1/8</option>
+				<option value="36 (1/4)">36 1/4</option>
+				<option value="36 (3/8)">36 3/8</option>
+				<option value="36 (1/2)">36 1/2</option>
+				<option value="36 (5/8)">36 5/8</option>
+				<option value="36 (3/4)">36 3/4</option>
+				<option value="36 (7/8)">36 7/8</option>
+				<option value="37">37</option>
+				<option value="37 (1/8)">37 1/8</option>
+				<option value="37 (1/4)">37 1/4</option>
+				<option value="37 (3/8)">37 3/8</option>
+				<option value="37 (1/2)">37 1/2</option>
+				<option value="37 (5/8)">37 5/8</option>
+				<option value="37 (3/4)">37 3/4</option>
+				<option value="37 (7/8)">37 7/8</option>
+				<option value="38">38</option>
+				<option value="38 (1/8)">38 1/8</option>
+				<option value="38 (1/4)">38 1/4</option>
+				<option value="38 (3/8)">38 3/8</option>
+				<option value="38 (1/2)">38 1/2</option>
+				<option value="38 (5/8)">38 5/8</option>
+				<option value="38 (3/4)">38 3/4</option>
+				<option value="38 (7/8)">38 7/8</option>
+				<option value="39">39</option>
+				<option value="39 (1/8)">39 1/8</option>
+				<option value="39 (1/4)">39 1/4</option>
+				<option value="39 (3/8)">39 3/8</option>
+				<option value="39 (1/2)">39 1/2</option>
+				<option value="39 (5/8)">39 5/8</option>
+				<option value="39 (3/4)">39 3/4</option>
+				<option value="39 (7/8)">39 7/8</option>
+				<option value="40">40</option>
+				<option value="40 (1/8)">40 1/8</option>
+				<option value="40 (1/4)">40 1/4</option>
+				<option value="40 (3/8)">40 3/8</option>
+				<option value="40 (1/2)">40 1/2</option>
+				<option value="40 (5/8)">40 5/8</option>
+				<option value="40 (3/4)">40 3/4</option>
+				<option value="40 (7/8)">40 7/8</option>
+				<option value="41">41</option>
+				<option value="41 (1/8)">41 1/8</option>
+				<option value="41 (1/4)">41 1/4</option>
+				<option value="41 (3/8)">41 3/8</option>
+				<option value="41 (1/2)">41 1/2</option>
+				<option value="41 (5/8)">41 5/8</option>
+				<option value="41 (3/4)">41 3/4</option>
+				<option value="41 (7/8)">41 7/8</option>
+				<option value="42">42</option>
+				<option value="42 (1/8)">42 1/8</option>
+				<option value="42 (1/4)">42 1/4</option>
+				<option value="42 (3/8)">42 3/8</option>
+				<option value="42 (1/2)">42 1/2</option>
+				<option value="42 (5/8)">42 5/8</option>
+				<option value="42 (3/4)">42 3/4</option>
+				<option value="42 (7/8)">42 7/8</option>
+				<option value="43">43</option>
+				<option value="43 (1/8)">43 1/8</option>
+				<option value="43 (1/4)">43 1/4</option>
+				<option value="43 (3/8)">43 3/8</option>
+				<option value="43 (1/2)">43 1/2</option>
+				<option value="43 (5/8)">43 5/8</option>
+				<option value="43 (3/4)">43 3/4</option>
+				<option value="43 (7/8)">43 7/8</option>
+				<option value="44">44</option>
+				<option value="44 (1/8)">44 1/8</option>
+				<option value="44 (1/4)">44 1/4</option>
+				<option value="44 (3/8)">44 3/8</option>
+				<option value="44 (1/2)">44 1/2</option>
+				<option value="44 (5/8)">44 5/8</option>
+				<option value="44 (3/4)">44 3/4</option>
+				<option value="44 (7/8)">44 7/8</option>
+				<option value="45">45</option>
+				<option value="45 (1/8)">45 1/8</option>
+				<option value="45 (1/4)">45 1/4</option>
+				<option value="45 (3/8)">45 3/8</option>
+				<option value="45 (1/2)">45 1/2</option>
+				<option value="45 (5/8)">45 5/8</option>
+				<option value="45 (3/4)">45 3/4</option>
+				<option value="45 (7/8)">45 7/8</option>
+				<option value="46">46</option>
+				<option value="46 (1/8)">46 1/8</option>
+				<option value="46 (1/4)">46 1/4</option>
+				<option value="46 (3/8)">46 3/8</option>
+				<option value="46 (1/2)">46 1/2</option>
+				<option value="46 (5/8)">46 5/8</option>
+				<option value="46 (3/4)">46 3/4</option>
+				<option value="46 (7/8)">46 7/8</option>
+				<option value="47">47</option>
+				<option value="47 (1/8)">47 1/8</option>
+				<option value="47 (1/4)">47 1/4</option>
+				<option value="47 (3/8)">47 3/8</option>
+				<option value="47 (1/2)">47 1/2</option>
+				<option value="47 (5/8)">47 5/8</option>
+				<option value="47 (3/4)">47 3/4</option>
+				<option value="47 (7/8)">47 7/8</option>
+				<option value="48">48</option>
+				<option value="48 (1/8)">48 1/8</option>
+				<option value="48 (1/4)">48 1/4</option>
+				<option value="48 (3/8)">48 3/8</option>
+				<option value="48 (1/2)">48 1/2</option>
+				<option value="48 (5/8)">48 5/8</option>
+				<option value="48 (3/4)">48 3/4</option>
+				<option value="48 (7/8)">48 7/8</option>
+				<option value="49">49</option>
+				<option value="49 (1/8)">49 1/8</option>
+				<option value="49 (1/4)">49 1/4</option>
+				<option value="49 (3/8)">49 3/8</option>
+				<option value="49 (1/2)">49 1/2</option>
+				<option value="49 (5/8)">49 5/8</option>
+				<option value="49 (3/4)">49 3/4</option>
+				<option value="49 (7/8)">49 7/8</option>
+				<option value="50">50</option>
+				<option value="50 (1/8)">50 1/8</option>
+				<option value="50 (1/4)">50 1/4</option>
+				<option value="50 (3/8)">50 3/8</option>
+				<option value="50 (1/2)">50 1/2</option>
+				<option value="50 (5/8)">50 5/8</option>
+				<option value="50 (3/4)">50 3/4</option>
+				<option value="50 (7/8)">50 7/8</option>
+				<option value="51">51</option>
+				<option value="51 (1/8)">51 1/8</option>
+				<option value="51 (1/4)">51 1/4</option>
+				<option value="51 (3/8)">51 3/8</option>
+				<option value="51 (1/2)">51 1/2</option>
+				<option value="51 (5/8)">51 5/8</option>
+				<option value="51 (3/4)">51 3/4</option>
+				<option value="51 (7/8)">51 7/8</option>
+				<option value="52">52</option>
+				<option value="52 (1/8)">52 1/8</option>
+				<option value="52 (1/4)">52 1/4</option>
+				<option value="52 (3/8)">52 3/8</option>
+				<option value="52 (1/2)">52 1/2</option>
+				<option value="52 (5/8)">52 5/8</option>
+				<option value="52 (3/4)">52 3/4</option>
+				<option value="52 (7/8)">52 7/8</option>
+				<option value="53">53</option>
+				<option value="53 (1/8)">53 1/8</option>
+				<option value="53 (1/4)">53 1/4</option>
+				<option value="53 (3/8)">53 3/8</option>
+				<option value="53 (1/2)">53 1/2</option>
+				<option value="53 (5/8)">53 5/8</option>
+				<option value="53 (3/4)">53 3/4</option>
+				<option value="53 (7/8)">53 7/8</option>
+				<option value="54">54</option>
+				<option value="54 (1/8)">54 1/8</option>
+				<option value="54 (1/4)">54 1/4</option>
+				<option value="54 (3/8)">54 3/8</option>
+				<option value="54 (1/2)">54 1/2</option>
+				<option value="54 (5/8)">54 5/8</option>
+				<option value="54 (3/4)">54 3/4</option>
+				<option value="54 (7/8)">54 7/8</option>
+				<option value="55">55</option>
+				<option value="55 (1/8)">55 1/8</option>
+				<option value="55 (1/4)">55 1/4</option>
+				<option value="55 (3/8)">55 3/8</option>
+				<option value="55 (1/2)">55 1/2</option>
+				<option value="55 (5/8)">55 5/8</option>
+				<option value="55 (3/4)">55 3/4</option>
+				<option value="55 (7/8)">55 7/8</option>
+				<option value="56">56</option>
+				<option value="56 (1/8)">56 1/8</option>
+				<option value="56 (1/4)">56 1/4</option>
+				<option value="56 (3/8)">56 3/8</option>
+				<option value="56 (1/2)">56 1/2</option>
+				<option value="56 (5/8)">56 5/8</option>
+				<option value="56 (3/4)">56 3/4</option>
+				<option value="56 (7/8)">56 7/8</option>
+				<option value="57">57</option>
+				<option value="57 (1/8)">57 1/8</option>
+				<option value="57 (1/4)">57 1/4</option>
+				<option value="57 (3/8)">57 3/8</option>
+				<option value="57 (1/2)">57 1/2</option>
+				<option value="57 (5/8)">57 5/8</option>
+				<option value="57 (3/4)">57 3/4</option>
+				<option value="57 (7/8)">57 7/8</option>
+				<option value="58">58</option>
+				<option value="58 (1/8)">58 1/8</option>
+				<option value="58 (1/4)">58 1/4</option>
+				<option value="58 (3/8)">58 3/8</option>
+				<option value="58 (1/2)">58 1/2</option>
+				<option value="58 (5/8)">58 5/8</option>
+				<option value="58 (3/4)">58 3/4</option>
+				<option value="58 (7/8)">58 7/8</option>
+				<option value="59">59</option>
+				<option value="59 (1/8)">59 1/8</option>
+				<option value="59 (1/4)">59 1/4</option>
+				<option value="59 (3/8)">59 3/8</option>
+				<option value="59 (1/2)">59 1/2</option>
+				<option value="59 (5/8)">59 5/8</option>
+				<option value="59 (3/4)">59 3/4</option>
+				<option value="59 (7/8)">59 7/8</option>
+				<option value="60">60</option>
+				<option value="60 (1/8)">60 1/8</option>
+				<option value="60 (1/4)">60 1/4</option>
+				<option value="60 (3/8)">60 3/8</option>
+				<option value="60 (1/2)">60 1/2</option>
+				<option value="60 (5/8)">60 5/8</option>
+				<option value="60 (3/4)">60 3/4</option>
+				<option value="60 (7/8)">60 7/8</option>
+				<option value="61">61</option>
+				<option value="61 (1/8)">61 1/8</option>
+				<option value="61 (1/4)">61 1/4</option>
+				<option value="61 (3/8)">61 3/8</option>
+				<option value="61 (1/2)">61 1/2</option>
+				<option value="61 (5/8)">61 5/8</option>
+				<option value="61 (3/4)">61 3/4</option>
+				<option value="61 (7/8)">61 7/8</option>
+				<option value="62">62</option>
+				<option value="62 (1/8)">62 1/8</option>
+				<option value="62 (1/4)">62 1/4</option>
+				<option value="62 (3/8)">62 3/8</option>
+				<option value="62 (1/2)">62 1/2</option>
+				<option value="62 (5/8)">62 5/8</option>
+				<option value="62 (3/4)">62 3/4</option>
+				<option value="62 (7/8)">62 7/8</option>
+				<option value="63">63</option>
+				<option value="63 (1/8)">63 1/8</option>
+				<option value="63 (1/4)">63 1/4</option>
+				<option value="63 (3/8)">63 3/8</option>
+				<option value="63 (1/2)">63 1/2</option>
+				<option value="63 (5/8)">63 5/8</option>
+				<option value="63 (3/4)">63 3/4</option>
+				<option value="63 (7/8)">63 7/8</option>
+				<option value="64">64</option>
+				<option value="64 (1/8)">64 1/8</option>
+				<option value="64 (1/4)">64 1/4</option>
+				<option value="64 (3/8)">64 3/8</option>
+				<option value="64 (1/2)">64 1/2</option>
+				<option value="64 (5/8)">64 5/8</option>
+				<option value="64 (3/4)">64 3/4</option>
+				<option value="64 (7/8)">64 7/8</option>
+				<option value="65">65</option>
+				<option value="65 (1/8)">65 1/8</option>
+				<option value="65 (1/4)">65 1/4</option>
+				<option value="65 (3/8)">65 3/8</option>
+				<option value="65 (1/2)">65 1/2</option>
+				<option value="65 (5/8)">65 5/8</option>
+				<option value="65 (3/4)">65 3/4</option>
+				<option value="65 (7/8)">65 7/8</option>
+				<option value="66">66</option>
+				<option value="66 (1/8)">66 1/8</option>
+				<option value="66 (1/4)">66 1/4</option>
+				<option value="66 (3/8)">66 3/8</option>
+				<option value="66 (1/2)">66 1/2</option>
+				<option value="66 (5/8)">66 5/8</option>
+				<option value="66 (3/4)">66 3/4</option>
+				<option value="66 (7/8)">66 7/8</option>
+				<option value="67">67</option>
+				<option value="67 (1/8)">67 1/8</option>
+				<option value="67 (1/4)">67 1/4</option>
+				<option value="67 (3/8)">67 3/8</option>
+				<option value="67 (1/2)">67 1/2</option>
+				<option value="67 (5/8)">67 5/8</option>
+				<option value="67 (3/4)">67 3/4</option>
+				<option value="67 (7/8)">67 7/8</option>
+				<option value="68">68</option>
+				<option value="68 (1/8)">68 1/8</option>
+				<option value="68 (1/4)">68 1/4</option>
+				<option value="68 (3/8)">68 3/8</option>
+				<option value="68 (1/2)">68 1/2</option>
+				<option value="68 (5/8)">68 5/8</option>
+				<option value="68 (3/4)">68 3/4</option>
+				<option value="68 (7/8)">68 7/8</option>
+				<option value="69">69</option>
+				<option value="69 (1/8)">69 1/8</option>
+				<option value="69 (1/4)">69 1/4</option>
+				<option value="69 (3/8)">69 3/8</option>
+				<option value="69 (1/2)">69 1/2</option>
+				<option value="69 (5/8)">69 5/8</option>
+				<option value="69 (3/4)">69 3/4</option>
+				<option value="69 (7/8)">69 7/8</option>
+				<option value="70">70</option>
+				<option value="70 (1/8)">70 1/8</option>
+				<option value="70 (1/4)">70 1/4</option>
+				<option value="70 (3/8)">70 3/8</option>
+				<option value="70 (1/2)">70 1/2</option>
+				<option value="70 (5/8)">70 5/8</option>
+				<option value="70 (3/4)">70 3/4</option>
+				<option value="70 (7/8)">70 7/8</option>
+				<option value="71">71</option>
+				<option value="71 (1/8)">71 1/8</option>
+				<option value="71 (1/4)">71 1/4</option>
+				<option value="71 (3/8)">71 3/8</option>
+				<option value="71 (1/2)">71 1/2</option>
+				<option value="71 (5/8)">71 5/8</option>
+				<option value="71 (3/4)">71 3/4</option>
+				<option value="71 (7/8)">71 7/8</option>
+				<option value="72">72</option>
+				<option value="72 (1/8)">72 1/8</option>
+				<option value="72 (1/4)">72 1/4</option>
+				<option value="72 (3/8)">72 3/8</option>
+				<option value="72 (1/2)">72 1/2</option>
+				<option value="72 (5/8)">72 5/8</option>
+				<option value="72 (3/4)">72 3/4</option>
+				<option value="72 (7/8)">72 7/8</option>
+				<option value="73">73</option>
+				<option value="73 (1/8)">73 1/8</option>
+				<option value="73 (1/4)">73 1/4</option>
+				<option value="73 (3/8)">73 3/8</option>
+				<option value="73 (1/2)">73 1/2</option>
+				<option value="73 (5/8)">73 5/8</option>
+				<option value="73 (3/4)">73 3/4</option>
+				<option value="73 (7/8)">73 7/8</option>
+				<option value="74">74</option>
+				<option value="74 (1/8)">74 1/8</option>
+				<option value="74 (1/4)">74 1/4</option>
+				<option value="74 (3/8)">74 3/8</option>
+				<option value="74 (1/2)">74 1/2</option>
+				<option value="74 (5/8)">74 5/8</option>
+				<option value="74 (3/4)">74 3/4</option>
+				<option value="74 (7/8)">74 7/8</option>
+				<option value="75">75</option>
+				<option value="75 (1/8)">75 1/8</option>
+				<option value="75 (1/4)">75 1/4</option>
+				<option value="75 (3/8)">75 3/8</option>
+				<option value="75 (1/2)">75 1/2</option>
+				<option value="75 (5/8)">75 5/8</option>
+				<option value="75 (3/4)">75 3/4</option>
+				<option value="75 (7/8)">75 7/8</option>
+				<option value="76">76</option>
+				<option value="76 (1/8)">76 1/8</option>
+				<option value="76 (1/4)">76 1/4</option>
+				<option value="76 (3/8)">76 3/8</option>
+				<option value="76 (1/2)">76 1/2</option>
+				<option value="76 (5/8)">76 5/8</option>
+				<option value="76 (3/4)">76 3/4</option>
+				<option value="76 (7/8)">76 7/8</option>
+				<option value="77">77</option>
+				<option value="77 (1/8)">77 1/8</option>
+				<option value="77 (1/4)">77 1/4</option>
+				<option value="77 (3/8)">77 3/8</option>
+				<option value="77 (1/2)">77 1/2</option>
+				<option value="77 (5/8)">77 5/8</option>
+				<option value="77 (3/4)">77 3/4</option>
+				<option value="77 (7/8)">77 7/8</option>
+				<option value="78">78</option>
+				<option value="78 (1/8)">78 1/8</option>
+				<option value="78 (1/4)">78 1/4</option>
+				<option value="78 (3/8)">78 3/8</option>
+				<option value="78 (1/2)">78 1/2</option>
+				<option value="78 (5/8)">78 5/8</option>
+				<option value="78 (3/4)">78 3/4</option>
+				<option value="78 (7/8)">78 7/8</option>
+			</select>
+		</div>
+		<div class="width">
+			<label>Height</label>
+			<select data-val="true" data-val-number="The field height must be a number." data-val-required="The height field is required." id="height" name="height" class="hwFieldSelect">
+				<option value="30" selected="selected">30</option>
+				<option value="30 (1/8)">30 1/8</option>
+				<option value="30 (1/4)">30 1/4</option>
+				<option value="30 (3/8)">30 3/8</option>
+				<option value="30 (1/2)">30 1/2</option>
+				<option value="30 (5/8)">30 5/8</option>
+				<option value="30 (3/4)">30 3/4</option>
+				<option value="30 (7/8)">30 7/8</option>
+				<option value="31">31</option>
+				<option value="31 (1/8)">31 1/8</option>
+				<option value="31 (1/4)">31 1/4</option>
+				<option value="31 (3/8)">31 3/8</option>
+				<option value="31 (1/2)">31 1/2</option>
+				<option value="31 (5/8)">31 5/8</option>
+				<option value="31 (3/4)">31 3/4</option>
+				<option value="31 (7/8)">31 7/8</option>
+				<option value="32">32</option>
+				<option value="32 (1/8)">32 1/8</option>
+				<option value="32 (1/4)">32 1/4</option>
+				<option value="32 (3/8)">32 3/8</option>
+				<option value="32 (1/2)">32 1/2</option>
+				<option value="32 (5/8)">32 5/8</option>
+				<option value="32 (3/4)">32 3/4</option>
+				<option value="32 (7/8)">32 7/8</option>
+				<option value="33">33</option>
+				<option value="33 (1/8)">33 1/8</option>
+				<option value="33 (1/4)">33 1/4</option>
+				<option value="33 (3/8)">33 3/8</option>
+				<option value="33 (1/2)">33 1/2</option>
+				<option value="33 (5/8)">33 5/8</option>
+				<option value="33 (3/4)">33 3/4</option>
+				<option value="33 (7/8)">33 7/8</option>
+				<option value="34">34</option>
+				<option value="34 (1/8)">34 1/8</option>
+				<option value="34 (1/4)">34 1/4</option>
+				<option value="34 (3/8)">34 3/8</option>
+				<option value="34 (1/2)">34 1/2</option>
+				<option value="34 (5/8)">34 5/8</option>
+				<option value="34 (3/4)">34 3/4</option>
+				<option value="34 (7/8)">34 7/8</option>
+				<option value="35">35</option>
+				<option value="35 (1/8)">35 1/8</option>
+				<option value="35 (1/4)">35 1/4</option>
+				<option value="35 (3/8)">35 3/8</option>
+				<option value="35 (1/2)">35 1/2</option>
+				<option value="35 (5/8)">35 5/8</option>
+				<option value="35 (3/4)">35 3/4</option>
+				<option value="35 (7/8)">35 7/8</option>
+				<option value="36">36</option>
+				<option value="36 (1/8)">36 1/8</option>
+				<option value="36 (1/4)">36 1/4</option>
+				<option value="36 (3/8)">36 3/8</option>
+				<option value="36 (1/2)">36 1/2</option>
+				<option value="36 (5/8)">36 5/8</option>
+				<option value="36 (3/4)">36 3/4</option>
+				<option value="36 (7/8)">36 7/8</option>
+				<option value="37">37</option>
+				<option value="37 (1/8)">37 1/8</option>
+				<option value="37 (1/4)">37 1/4</option>
+				<option value="37 (3/8)">37 3/8</option>
+				<option value="37 (1/2)">37 1/2</option>
+				<option value="37 (5/8)">37 5/8</option>
+				<option value="37 (3/4)">37 3/4</option>
+				<option value="37 (7/8)">37 7/8</option>
+				<option value="38">38</option>
+				<option value="38 (1/8)">38 1/8</option>
+				<option value="38 (1/4)">38 1/4</option>
+				<option value="38 (3/8)">38 3/8</option>
+				<option value="38 (1/2)">38 1/2</option>
+				<option value="38 (5/8)">38 5/8</option>
+				<option value="38 (3/4)">38 3/4</option>
+				<option value="38 (7/8)">38 7/8</option>
+				<option value="39">39</option>
+				<option value="39 (1/8)">39 1/8</option>
+				<option value="39 (1/4)">39 1/4</option>
+				<option value="39 (3/8)">39 3/8</option>
+				<option value="39 (1/2)">39 1/2</option>
+				<option value="39 (5/8)">39 5/8</option>
+				<option value="39 (3/4)">39 3/4</option>
+				<option value="39 (7/8)">39 7/8</option>
+				<option value="40">40</option>
+				<option value="40 (1/8)">40 1/8</option>
+				<option value="40 (1/4)">40 1/4</option>
+				<option value="40 (3/8)">40 3/8</option>
+				<option value="40 (1/2)">40 1/2</option>
+				<option value="40 (5/8)">40 5/8</option>
+				<option value="40 (3/4)">40 3/4</option>
+				<option value="40 (7/8)">40 7/8</option>
+				<option value="41">41</option>
+				<option value="41 (1/8)">41 1/8</option>
+				<option value="41 (1/4)">41 1/4</option>
+				<option value="41 (3/8)">41 3/8</option>
+				<option value="41 (1/2)">41 1/2</option>
+				<option value="41 (5/8)">41 5/8</option>
+				<option value="41 (3/4)">41 3/4</option>
+				<option value="41 (7/8)">41 7/8</option>
+				<option value="42">42</option>
+				<option value="42 (1/8)">42 1/8</option>
+				<option value="42 (1/4)">42 1/4</option>
+				<option value="42 (3/8)">42 3/8</option>
+				<option value="42 (1/2)">42 1/2</option>
+				<option value="42 (5/8)">42 5/8</option>
+				<option value="42 (3/4)">42 3/4</option>
+				<option value="42 (7/8)">42 7/8</option>
+				<option value="43">43</option>
+				<option value="43 (1/8)">43 1/8</option>
+				<option value="43 (1/4)">43 1/4</option>
+				<option value="43 (3/8)">43 3/8</option>
+				<option value="43 (1/2)">43 1/2</option>
+				<option value="43 (5/8)">43 5/8</option>
+				<option value="43 (3/4)">43 3/4</option>
+				<option value="43 (7/8)">43 7/8</option>
+				<option value="44">44</option>
+				<option value="44 (1/8)">44 1/8</option>
+				<option value="44 (1/4)">44 1/4</option>
+				<option value="44 (3/8)">44 3/8</option>
+				<option value="44 (1/2)">44 1/2</option>
+				<option value="44 (5/8)">44 5/8</option>
+				<option value="44 (3/4)">44 3/4</option>
+				<option value="44 (7/8)">44 7/8</option>
+				<option value="45">45</option>
+				<option value="45 (1/8)">45 1/8</option>
+				<option value="45 (1/4)">45 1/4</option>
+				<option value="45 (3/8)">45 3/8</option>
+				<option value="45 (1/2)">45 1/2</option>
+				<option value="45 (5/8)">45 5/8</option>
+				<option value="45 (3/4)">45 3/4</option>
+				<option value="45 (7/8)">45 7/8</option>
+				<option value="46">46</option>
+				<option value="46 (1/8)">46 1/8</option>
+				<option value="46 (1/4)">46 1/4</option>
+				<option value="46 (3/8)">46 3/8</option>
+				<option value="46 (1/2)">46 1/2</option>
+				<option value="46 (5/8)">46 5/8</option>
+				<option value="46 (3/4)">46 3/4</option>
+				<option value="46 (7/8)">46 7/8</option>
+				<option value="47">47</option>
+				<option value="47 (1/8)">47 1/8</option>
+				<option value="47 (1/4)">47 1/4</option>
+				<option value="47 (3/8)">47 3/8</option>
+				<option value="47 (1/2)">47 1/2</option>
+				<option value="47 (5/8)">47 5/8</option>
+				<option value="47 (3/4)">47 3/4</option>
+				<option value="47 (7/8)">47 7/8</option>
+				<option value="48">48</option>
+				<option value="48 (1/8)">48 1/8</option>
+				<option value="48 (1/4)">48 1/4</option>
+				<option value="48 (3/8)">48 3/8</option>
+				<option value="48 (1/2)">48 1/2</option>
+				<option value="48 (5/8)">48 5/8</option>
+				<option value="48 (3/4)">48 3/4</option>
+				<option value="48 (7/8)">48 7/8</option>
+				<option value="49">49</option>
+				<option value="49 (1/8)">49 1/8</option>
+				<option value="49 (1/4)">49 1/4</option>
+				<option value="49 (3/8)">49 3/8</option>
+				<option value="49 (1/2)">49 1/2</option>
+				<option value="49 (5/8)">49 5/8</option>
+				<option value="49 (3/4)">49 3/4</option>
+				<option value="49 (7/8)">49 7/8</option>
+				<option value="50">50</option>
+				<option value="50 (1/8)">50 1/8</option>
+				<option value="50 (1/4)">50 1/4</option>
+				<option value="50 (3/8)">50 3/8</option>
+				<option value="50 (1/2)">50 1/2</option>
+				<option value="50 (5/8)">50 5/8</option>
+				<option value="50 (3/4)">50 3/4</option>
+				<option value="50 (7/8)">50 7/8</option>
+				<option value="51">51</option>
+				<option value="51 (1/8)">51 1/8</option>
+				<option value="51 (1/4)">51 1/4</option>
+				<option value="51 (3/8)">51 3/8</option>
+				<option value="51 (1/2)">51 1/2</option>
+				<option value="51 (5/8)">51 5/8</option>
+				<option value="51 (3/4)">51 3/4</option>
+				<option value="51 (7/8)">51 7/8</option>
+				<option value="52">52</option>
+				<option value="52 (1/8)">52 1/8</option>
+				<option value="52 (1/4)">52 1/4</option>
+				<option value="52 (3/8)">52 3/8</option>
+				<option value="52 (1/2)">52 1/2</option>
+				<option value="52 (5/8)">52 5/8</option>
+				<option value="52 (3/4)">52 3/4</option>
+				<option value="52 (7/8)">52 7/8</option>
+				<option value="53">53</option>
+				<option value="53 (1/8)">53 1/8</option>
+				<option value="53 (1/4)">53 1/4</option>
+				<option value="53 (3/8)">53 3/8</option>
+				<option value="53 (1/2)">53 1/2</option>
+				<option value="53 (5/8)">53 5/8</option>
+				<option value="53 (3/4)">53 3/4</option>
+				<option value="53 (7/8)">53 7/8</option>
+				<option value="54">54</option>
+				<option value="54 (1/8)">54 1/8</option>
+				<option value="54 (1/4)">54 1/4</option>
+				<option value="54 (3/8)">54 3/8</option>
+				<option value="54 (1/2)">54 1/2</option>
+				<option value="54 (5/8)">54 5/8</option>
+				<option value="54 (3/4)">54 3/4</option>
+				<option value="54 (7/8)">54 7/8</option>
+				<option value="55">55</option>
+				<option value="55 (1/8)">55 1/8</option>
+				<option value="55 (1/4)">55 1/4</option>
+				<option value="55 (3/8)">55 3/8</option>
+				<option value="55 (1/2)">55 1/2</option>
+				<option value="55 (5/8)">55 5/8</option>
+				<option value="55 (3/4)">55 3/4</option>
+				<option value="55 (7/8)">55 7/8</option>
+				<option value="56">56</option>
+				<option value="56 (1/8)">56 1/8</option>
+				<option value="56 (1/4)">56 1/4</option>
+				<option value="56 (3/8)">56 3/8</option>
+				<option value="56 (1/2)">56 1/2</option>
+				<option value="56 (5/8)">56 5/8</option>
+				<option value="56 (3/4)">56 3/4</option>
+				<option value="56 (7/8)">56 7/8</option>
+				<option value="57">57</option>
+				<option value="57 (1/8)">57 1/8</option>
+				<option value="57 (1/4)">57 1/4</option>
+				<option value="57 (3/8)">57 3/8</option>
+				<option value="57 (1/2)">57 1/2</option>
+				<option value="57 (5/8)">57 5/8</option>
+				<option value="57 (3/4)">57 3/4</option>
+				<option value="57 (7/8)">57 7/8</option>
+				<option value="58">58</option>
+				<option value="58 (1/8)">58 1/8</option>
+				<option value="58 (1/4)">58 1/4</option>
+				<option value="58 (3/8)">58 3/8</option>
+				<option value="58 (1/2)">58 1/2</option>
+				<option value="58 (5/8)">58 5/8</option>
+				<option value="58 (3/4)">58 3/4</option>
+				<option value="58 (7/8)">58 7/8</option>
+				<option value="59">59</option>
+				<option value="59 (1/8)">59 1/8</option>
+				<option value="59 (1/4)">59 1/4</option>
+				<option value="59 (3/8)">59 3/8</option>
+				<option value="59 (1/2)">59 1/2</option>
+				<option value="59 (5/8)">59 5/8</option>
+				<option value="59 (3/4)">59 3/4</option>
+				<option value="59 (7/8)">59 7/8</option>
+				<option value="60">60</option>
+				<option value="60 (1/8)">60 1/8</option>
+				<option value="60 (1/4)">60 1/4</option>
+				<option value="60 (3/8)">60 3/8</option>
+				<option value="60 (1/2)">60 1/2</option>
+				<option value="60 (5/8)">60 5/8</option>
+				<option value="60 (3/4)">60 3/4</option>
+				<option value="60 (7/8)">60 7/8</option>
+				<option value="61">61</option>
+				<option value="61 (1/8)">61 1/8</option>
+				<option value="61 (1/4)">61 1/4</option>
+				<option value="61 (3/8)">61 3/8</option>
+				<option value="61 (1/2)">61 1/2</option>
+				<option value="61 (5/8)">61 5/8</option>
+				<option value="61 (3/4)">61 3/4</option>
+				<option value="61 (7/8)">61 7/8</option>
+				<option value="62">62</option>
+				<option value="62 (1/8)">62 1/8</option>
+				<option value="62 (1/4)">62 1/4</option>
+				<option value="62 (3/8)">62 3/8</option>
+				<option value="62 (1/2)">62 1/2</option>
+				<option value="62 (5/8)">62 5/8</option>
+				<option value="62 (3/4)">62 3/4</option>
+				<option value="62 (7/8)">62 7/8</option>
+				<option value="63">63</option>
+				<option value="63 (1/8)">63 1/8</option>
+				<option value="63 (1/4)">63 1/4</option>
+				<option value="63 (3/8)">63 3/8</option>
+				<option value="63 (1/2)">63 1/2</option>
+				<option value="63 (5/8)">63 5/8</option>
+				<option value="63 (3/4)">63 3/4</option>
+				<option value="63 (7/8)">63 7/8</option>
+				<option value="64">64</option>
+				<option value="64 (1/8)">64 1/8</option>
+				<option value="64 (1/4)">64 1/4</option>
+				<option value="64 (3/8)">64 3/8</option>
+				<option value="64 (1/2)">64 1/2</option>
+				<option value="64 (5/8)">64 5/8</option>
+				<option value="64 (3/4)">64 3/4</option>
+				<option value="64 (7/8)">64 7/8</option>
+				<option value="65">65</option>
+				<option value="65 (1/8)">65 1/8</option>
+				<option value="65 (1/4)">65 1/4</option>
+				<option value="65 (3/8)">65 3/8</option>
+				<option value="65 (1/2)">65 1/2</option>
+				<option value="65 (5/8)">65 5/8</option>
+				<option value="65 (3/4)">65 3/4</option>
+				<option value="65 (7/8)">65 7/8</option>
+				<option value="66">66</option>
+				<option value="66 (1/8)">66 1/8</option>
+				<option value="66 (1/4)">66 1/4</option>
+				<option value="66 (3/8)">66 3/8</option>
+				<option value="66 (1/2)">66 1/2</option>
+				<option value="66 (5/8)">66 5/8</option>
+				<option value="66 (3/4)">66 3/4</option>
+				<option value="66 (7/8)">66 7/8</option>
+				<option value="67">67</option>
+				<option value="67 (1/8)">67 1/8</option>
+				<option value="67 (1/4)">67 1/4</option>
+				<option value="67 (3/8)">67 3/8</option>
+				<option value="67 (1/2)">67 1/2</option>
+				<option value="67 (5/8)">67 5/8</option>
+				<option value="67 (3/4)">67 3/4</option>
+				<option value="67 (7/8)">67 7/8</option>
+				<option value="68">68</option>
+				<option value="68 (1/8)">68 1/8</option>
+				<option value="68 (1/4)">68 1/4</option>
+				<option value="68 (3/8)">68 3/8</option>
+				<option value="68 (1/2)">68 1/2</option>
+				<option value="68 (5/8)">68 5/8</option>
+				<option value="68 (3/4)">68 3/4</option>
+				<option value="68 (7/8)">68 7/8</option>
+				<option value="69">69</option>
+				<option value="69 (1/8)">69 1/8</option>
+				<option value="69 (1/4)">69 1/4</option>
+				<option value="69 (3/8)">69 3/8</option>
+				<option value="69 (1/2)">69 1/2</option>
+				<option value="69 (5/8)">69 5/8</option>
+				<option value="69 (3/4)">69 3/4</option>
+				<option value="69 (7/8)">69 7/8</option>
+				<option value="70">70</option>
+				<option value="70 (1/8)">70 1/8</option>
+				<option value="70 (1/4)">70 1/4</option>
+				<option value="70 (3/8)">70 3/8</option>
+				<option value="70 (1/2)">70 1/2</option>
+				<option value="70 (5/8)">70 5/8</option>
+				<option value="70 (3/4)">70 3/4</option>
+				<option value="70 (7/8)">70 7/8</option>
+				<option value="71">71</option>
+				<option value="71 (1/8)">71 1/8</option>
+				<option value="71 (1/4)">71 1/4</option>
+				<option value="71 (3/8)">71 3/8</option>
+				<option value="71 (1/2)">71 1/2</option>
+				<option value="71 (5/8)">71 5/8</option>
+				<option value="71 (3/4)">71 3/4</option>
+				<option value="71 (7/8)">71 7/8</option>
+				<option value="72">72</option>
+				<option value="72 (1/8)">72 1/8</option>
+				<option value="72 (1/4)">72 1/4</option>
+				<option value="72 (3/8)">72 3/8</option>
+				<option value="72 (1/2)">72 1/2</option>
+				<option value="72 (5/8)">72 5/8</option>
+				<option value="72 (3/4)">72 3/4</option>
+				<option value="72 (7/8)">72 7/8</option>
+				<option value="73">73</option>
+				<option value="73 (1/8)">73 1/8</option>
+				<option value="73 (1/4)">73 1/4</option>
+				<option value="73 (3/8)">73 3/8</option>
+				<option value="73 (1/2)">73 1/2</option>
+				<option value="73 (5/8)">73 5/8</option>
+				<option value="73 (3/4)">73 3/4</option>
+				<option value="73 (7/8)">73 7/8</option>
+				<option value="74">74</option>
+				<option value="74 (1/8)">74 1/8</option>
+				<option value="74 (1/4)">74 1/4</option>
+				<option value="74 (3/8)">74 3/8</option>
+				<option value="74 (1/2)">74 1/2</option>
+				<option value="74 (5/8)">74 5/8</option>
+				<option value="74 (3/4)">74 3/4</option>
+				<option value="74 (7/8)">74 7/8</option>
+				<option value="75">75</option>
+				<option value="75 (1/8)">75 1/8</option>
+				<option value="75 (1/4)">75 1/4</option>
+				<option value="75 (3/8)">75 3/8</option>
+				<option value="75 (1/2)">75 1/2</option>
+				<option value="75 (5/8)">75 5/8</option>
+				<option value="75 (3/4)">75 3/4</option>
+				<option value="75 (7/8)">75 7/8</option>
+				<option value="76">76</option>
+				<option value="76 (1/8)">76 1/8</option>
+				<option value="76 (1/4)">76 1/4</option>
+				<option value="76 (3/8)">76 3/8</option>
+				<option value="76 (1/2)">76 1/2</option>
+				<option value="76 (5/8)">76 5/8</option>
+				<option value="76 (3/4)">76 3/4</option>
+				<option value="76 (7/8)">76 7/8</option>
+				<option value="77">77</option>
+				<option value="77 (1/8)">77 1/8</option>
+				<option value="77 (1/4)">77 1/4</option>
+				<option value="77 (3/8)">77 3/8</option>
+				<option value="77 (1/2)">77 1/2</option>
+				<option value="77 (5/8)">77 5/8</option>
+				<option value="77 (3/4)">77 3/4</option>
+				<option value="77 (7/8)">77 7/8</option>
+				<option value="78">78</option>
+				<option value="78 (1/8)">78 1/8</option>
+				<option value="78 (1/4)">78 1/4</option>
+				<option value="78 (3/8)">78 3/8</option>
+				<option value="78 (1/2)">78 1/2</option>
+				<option value="78 (5/8)">78 5/8</option>
+				<option value="78 (3/4)">78 3/4</option>
+				<option value="78 (7/8)">78 7/8</option>
+			</select>
+		</div>
+	</div>
+	<div class="moutn_and_others">
+		<div class="mount">
+			<div class="inside_outside">
+					<div>
+						<label for="inside_mount">Inside Mount</label>
+						<input name="inside_mount" type="checkbox">
+					</div>
+					<div>
+						<label for="outside_mount">Outside Mount</label>
+						<input name="outside_mount" type="checkbox">
+					</div>
+			</div>
+			<div class="window">
+				<div>
+					<label for="window_name">Window Name</label>
+					<input name="window_name" type="text" placeholder="Living Room Left">
+				</div>
+				<div>
+					<label for="need_returns">Does your blind need returns</label>
+					<select id="return_size" name="return_size">
+						<option value="0.5">1/2"</option>
+						<option value="0.625">5/8"</option>
+						<option value="0.75">3/4"</option>
+						<option value="0.875">7/8"</option>
+						<option value="1">1"</option>
+						<option value="1.125">1 1/8"</option>
+						<option value="1.25">1 1/4"</option>
+						<option value="1.375">1 3/8"</option>
+						<option value="1.5">1 1/2"</option>
+						<option value="1.625">1 5/8"</option>
+						<option value="1.75">1 3/4"</option>
+						<option value="1.875">1 7/8"</option>
+						<option value="2">2"</option>
+						<option value="2.125">2 1/8"</option>
+						<option value="2.25">2 1/4"</option>
+						<option value="2.375">2 3/8"</option>
+						<option value="2.5">2 1/2"</option>
+						<option value="2.625">2 5/8"</option>
+						<option value="2.75">2 3/4"</option>
+						<option value="2.875">2 7/8"</option>
+						<option value="3">3"</option>
+						<option value="3.125">3 1/8"</option>
+						<option value="3.25">3 1/4"</option>
+						<option value="3.375">3 3/8"</option>
+						<option value="3.5">3 1/2"</option>
+					</select>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+<?php
+add_action( 'woocommerce_before_add_to_cart_button', 'custom_hidden_product_field', 11 );
+function custom_hidden_product_field() {
+
+	global $wpdb;
+
+	$productLine = "1"; 
+
+	if (is_user_logged_in()){ $userID = get_current_user_id(); }else{ $userID = 0; }
+	?>
+	
+	<div id="discounted">
+		<!-- <label class="msrpLabel"><strong>TOTAL:</strong></label> -->
+		<input type="hidden" name="total" id="total" />
+		<div class="totalPrice ginput_total">$0.00</div>
+		<div class="clr"></div>
+	</div>
+
+	<input type="hidden" name="wtoDimensions" id="_wtoDimensions">
+	<input type="hidden" name="userID" id="_userID" value="<?PHP echo $userID; ?>">
+	<input type="hidden" name="totalSqIn" id="_totalSqIn">
+	<input type="hidden" name="bp" id="_bp">
+	<input type="hidden" name="total" id="_total" />
+
+	<?php
+}
+?>
