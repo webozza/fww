@@ -222,6 +222,7 @@ img.zoomImg {
     width: 50%;
     height: 500px;
     border-radius: 22px;
+    z-index: 9;
 }
 
 .video_popup iframe {
