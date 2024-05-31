@@ -2,6 +2,8 @@
     $logo = get_stylesheet_directory_uri() . '/assets/logo_blk_hires.png';
 ?>
 
+<div class="divider"></div>
+
 <div class="video_section">
     <div class="video_container">
         <h2>INSIDE OR OUTSIDE MOUNT</h2>

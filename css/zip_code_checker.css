@@ -129,14 +129,13 @@ img.zoomImg {
 /* css for bottom video section   */
 
 .video_section {
-
     display: flex;
     justify-content: space-around;
     align-items: flex-start;
-    margin: 20px;
-    border-top: 1px solid #ededed;
+    margin: 20px auto;
     padding-top: 50px;
     padding-bottom: 50px;
+    max-width: 1350px;
 }
 
 .video_container {
@@ -271,6 +270,11 @@ img.zoomImg {
     height: 100%;
     border-radius: 10px;
     overflow: hidden;
+}
+
+
+.woo-variation-gallery-slider.slick-initialized.slick-slider i {
+    z-index: 9999;
 }
 
 
