@@ -294,10 +294,10 @@ img.zoomImg {
 }
 
 .postid-46 div#mybag-wc-product-gallery-66596ca30aeab {
-    display: none;
+    display: none !important;
 }
 
 
-a.compare.button {
-    display: none;
+.postid-46 a.compare.button {
+    display: none !important;
 }
