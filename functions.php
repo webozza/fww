@@ -20,6 +20,7 @@ function enqueue_zip_code_checker_assets() {
         wp_enqueue_style('zip-code-checker-css', get_stylesheet_directory_uri() . '/css/zip_code_checker.css');
         wp_enqueue_script('zip-code-checker-js', get_stylesheet_directory_uri() . '/js/zip_code_checker.js', array(), null, true);
         wp_enqueue_script('product-attributes-js', get_stylesheet_directory_uri() . '/js/product_attributes.js', array(), null, true);
+        wp_enqueue_script('global-js', get_stylesheet_directory_uri() . '/js/global.js', array(), null, true);
     }
 }
 add_action('wp_enqueue_scripts', 'enqueue_zip_code_checker_assets');
