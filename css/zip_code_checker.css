@@ -278,6 +278,44 @@ img.zoomImg {
 }
 
 
+.divider {
+    width: 100%;
+    height: 1px;
+    background: #f1f1f1;
+}
+
+
+
+
+
+
+@media only screen and (max-width: 767px) {
+    .video_section {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin: 20px auto;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        max-width: 1350px;
+        flex-direction: column;
+        gap: 30px;
+    }
+    .close_button {
+        position: absolute;
+        top: -40px;
+        right: 20px;
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        transition: .3s;
+    }
+}
+
+
+
 
 /* hide section */
 
