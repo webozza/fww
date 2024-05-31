@@ -145,7 +145,7 @@ img.zoomImg {
 
 .video_container h2 {
     color: black !important;
-    font-size: 16px !important;
+    font-size: 14px !important;
     margin-bottom: 10px !important;
     line-height: normal !important;
     letter-spacing: normal !important;
@@ -157,8 +157,8 @@ img.zoomImg {
 
 .video_box {
     position: relative;
-    width: 270px;
-    height: 150px;
+    width: 210px;
+    height: 110px;
     border: 2px solid #ccc;
     border-radius: 30px;
     overflow: hidden;
@@ -180,7 +180,7 @@ img.zoomImg {
     position: absolute;
     z-index: 2;
     color: #000;
-    scale: 3;
+    scale: 2.5;
     display: flex;
 }
 
