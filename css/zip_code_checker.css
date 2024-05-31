@@ -136,6 +136,7 @@ img.zoomImg {
     margin: 20px;
     border-top: 1px solid #ededed;
     padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 .video_container {
@@ -268,4 +269,35 @@ img.zoomImg {
     height: 100%;
     border-radius: 10px;
     overflow: hidden;
+}
+
+
+
+/* hide section */
+
+
+
+.postid-465 .woocommerce-tabs.wc-tabs-wrapper {
+    display: none;
+}
+.postid-465 .woocommerce-breadcrumb{
+		display:none;
+}
+
+
+.postid-465 a.add_to_wishlist.single_add_to_wishlist {
+    display: none;
+}
+
+.postid-46 .mybag-action-buttons {
+    display: none !important;
+}
+
+.postid-46 div#mybag-wc-product-gallery-66596ca30aeab {
+    display: none;
+}
+
+
+a.compare.button {
+    display: none;
 }

@@ -977,6 +977,7 @@ global $wpdb;
 				<div>
 					<label for="need_returns">Does your blind need returns</label>
 					<select id="return_size" name="return_size">
+						<option value="select size">select size</option>
 						<option value="0.5">1/2"</option>
 						<option value="0.625">5/8"</option>
 						<option value="0.75">3/4"</option>
