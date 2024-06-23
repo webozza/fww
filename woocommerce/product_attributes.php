@@ -3,118 +3,17 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
-
 global $product;
 global $wpdb;
-
 ?>
-<script type="text/javascript">
-	jQuery(document).ready(function() {
-		recalcForm();
-		jQuery('.ginput_total').bind('DOMSubtreeModified', function() {
-			if(jQuery(this).html() !== '' && jQuery(this).html() !== '$0.00'){
-				jQuery("button[name='add-to-cart']").show();
-			}else{
-				jQuery("button[name='add-to-cart']").hide();
-			}
-		});
-		jQuery(".hwFieldSelect").change(function() {
-			recalcForm();
-		});
-		function recalcForm() {
-			var w1 = jQuery("#width").val();
-			// var w2 = jQuery("#Width8ths").val();
-			var h1 = jQuery("#height").val();
-			// var h2 = jQuery("#Height8ths").val();
-
-			var h2Disp = "";
-			var w2Disp = "";
-			var height = +h1;
-			var width = +w1;
-			// var height = +h1 + +h2;
-			// var width = +w1 + +w2;
-			var sqIn = (height*width);
-			var heightDisp = "";
-			var widthDisp = "";
-
-			// var sqIn = (w1*h1);
-
-			/*if (h2 == null || h2 == "Select" || h2 == "0") {
-				// heightDisp = height + '"'; 
-				heightDisp = h1 + '"'; 
-			} else {
-				heightDisp = h1 + ' ('+h2+')';
-				// heightDisp = height + " " + h2Disp;
-			}
-			if (w2 == null || w2 == "Select" || w2 == "0") {
-				widthDisp = w1 + '"';
-				// widthDisp = width + '"';
-			} else {
-				widthDisp = w1 + ' ('+w2+')';
-				// widthDisp = width + " " + w2Disp;
-			}*/
-
-			heightDisp = h1;
-			widthDisp = w1;
-
-			// jQuery("#_wtoDimensions").val(w1 + " x " + h1);
-			jQuery("#wtoDimensions").html(widthDisp + " X " + heightDisp);
-			jQuery("#_wtoDimensions").val(widthDisp + " X " + heightDisp);
-
-			jQuery("#totalSqIn").val(sqIn);
-			jQuery("#_totalSqIn").val(sqIn);
-			
-			var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
-
-			jQuery.ajax({
-				url: ajaxurl,
-				type: 'POST',
-				data: { action:'get_price_from_table', height: h1, width: w1, PID: <?php echo $product->get_id(); ?>},
-				success: function(data){
-
-					var bp = Number(data);
-					
-					jQuery("#_bp").val(bp);
-					
-
-					var fTotal = parseFloat(bp);
-
-					
-					if (fTotal != null) {
-						jQuery('.ginput_total').html("$" + fTotal.toFixed(2));
-						jQuery('#total').val(fTotal.toFixed(2));
-						jQuery('#_total').val(fTotal.toFixed(2));
-					} else {
-						jQuery('#total').val(0);
-						jQuery('#_total').val(0);
-						jQuery('.ginput_total').html("$0.00");
-					}
-				},
-				error: function(request,error){
-					alert('That didnt work (get Price): ' + error);
-				}
-			});
 
 
-		}
-	});
-
-</script>
-
-
-
-
-
-
-
-
-
-
+<input type="hidden" id="productId" value="<?php echo get_the_ID(); ?>">
 
 
 <div class="product_attribute">
 	<div class="height_width">
-		<div class="height">
+		<div class="width">
 			<label>Width</label>
 			<select data-val="true" id="width" name="HidthInches" class="hwFieldSelect">
 				<option selected="selected" value="24">24</option>
@@ -559,7 +458,7 @@ global $wpdb;
 				<option value="78 (7/8)">78 7/8</option>
 			</select>
 		</div>
-		<div class="width">
+		<div class="height">
 			<label>Height</label>
 			<select data-val="true" data-val-number="The field height must be a number." data-val-required="The height field is required." id="height" name="height" class="hwFieldSelect">
 				<option value="30" selected="selected">30</option>
@@ -962,7 +861,7 @@ global $wpdb;
 			<div class="inside_outside">
 					<div>
 						<label for="inside_mount">Inside Mount</label>
-						<input name="inside_mount" type="checkbox">
+						<input name="inside_mount" type="checkbox" require>
 					</div>
 					<div>
 						<label for="outside_mount">Outside Mount</label>
@@ -1012,35 +911,19 @@ global $wpdb;
 	</div>
 </div>
 
-
-
-
-
-
 <?php
-add_action( 'woocommerce_before_add_to_cart_button', 'custom_hidden_product_field', 11 );
+add_action('woocommerce_before_add_to_cart_button', 'custom_hidden_product_field', 11);
+
 function custom_hidden_product_field() {
-
-	global $wpdb;
-
-	$productLine = "1"; 
-
-	if (is_user_logged_in()){ $userID = get_current_user_id(); }else{ $userID = 0; }
-	?>
-	
-	<div id="discounted">
-		<!-- <label class="msrpLabel"><strong>TOTAL:</strong></label> -->
-		<input type="hidden" name="total" id="total" />
-		<div class="totalPrice ginput_total">$0.00</div>
-		<div class="clr"></div>
-	</div>
-
-	<input type="hidden" name="wtoDimensions" id="_wtoDimensions">
-	<input type="hidden" name="userID" id="_userID" value="<?PHP echo $userID; ?>">
-	<input type="hidden" name="totalSqIn" id="_totalSqIn">
-	<input type="hidden" name="bp" id="_bp">
-	<input type="hidden" name="total" id="_total" />
-
-	<?php
+    global $product;
+    $product_price = $product->get_price();
+    ?>
+    
+    <!-- <div id="discounted">
+        <input type="hidden" name="total" id="total" value="<?php echo esc_attr($product_price); ?>" />
+        <div class="totalPrice ginput_total"><?php echo wc_price($product_price); ?></div>
+        <div class="clr"></div>
+    </div> -->
+    <?php
 }
-?>
+

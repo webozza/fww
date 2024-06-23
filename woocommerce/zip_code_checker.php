@@ -15,17 +15,17 @@ function display_zip_code_checker() {
         <input type="text" id="zip_code" name="zip_code" placeholder="90210">
         <button id="check_zip_code">CHECK</button>
         <div id="zip_code_result"></div>
-
     </div>
     <script>
         // Pass the PHP variables to JavaScript
         let available_zip_codes = "<?php echo esc_js($available_zip_codes); ?>".split(',');
-         let sucess_text =  `<span class="zip-available"><img src="<?= $tick_icon?>"> YES, get started <a href="#">here</a></span>`;
+         let sucess_text =  `<span class="zip-available"><img src="<?= $tick_icon?>"> YES, get started  <input type="checkbox" value="false">`;
          let unavailable_text = `<span class="zip-not-available"><img src="<?= $cros_icon?>"> Unfortunately not at this time</span>`
+         
          console.log(sucess_text);
          console.log(unavailable_text)
-
         console.log(available_zip_codes)
+
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('check_zip_code').addEventListener('click', function() {
                 var zipCode = document.getElementById('zip_code').value;

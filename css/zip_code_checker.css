@@ -35,10 +35,22 @@
 
 .zip-code-check .zip-available {
     color: green;
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    align-items: center;
+    padding-top: 10px;
+    gap: 5px;
+
 }
 
 .zip-code-check .zip-not-available {
     color: red;
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    align-items: center;
+    padding-top: 10px;
 }
 
 
@@ -344,4 +356,112 @@ img.zoomImg {
 
 .postid-465 a.compare.button {
     display: none !important;
+}
+
+
+.woocommerce-variation-price{
+    display: block !important;
+}
+
+
+
+.variations tbody tr:last-child{
+    display: none;
+}
+
+.single-product div.product .summary form.cart .single_add_to_cart_button {
+    float: left !important;
+}
+
+
+
+
+/* Cart Page  */
+
+
+dl.variation {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+}
+
+dl.variation dt, dl.variation dd {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+dl.variation dt {
+    width: 50%; /* Adjust the width as needed */
+    font-weight: bold;
+    display:flex;
+    
+}
+
+dl.variation dd {
+    width: 50%; /* Adjust this to match the dt width */
+}
+
+dl.variation dt::after {
+    content: ":";
+    padding-right: 5px; /* Adjust spacing as needed */
+}
+
+dl.variation dt, dl.variation dd {
+    padding: 0px 0; /* Adjust spacing as needed */
+}
+
+dl.variation dd p {
+    margin: 0; /* Ensure no extra margin from <p> */
+    display: flex;
+}
+
+
+
+
+dl.variation dd {
+    display: flex;
+    align-content: center;
+}
+
+
+
+
+.cart-collaterals{
+    display: flex;
+}
+
+.cart-collaterals div{
+    margin: 0 !important;
+}
+.cart-collaterals div:first-child{
+    width: 60% !important;
+}
+
+.cart-collaterals div:last-child{
+    width: 40% !important;
+}
+
+
+
+
+.woocommerce-cart .cart-collaterals .wc-proceed-to-checkout {
+    display: block !important;
+}
+
+
+.woocommerce-cart .cart-collaterals .wc-proceed-to-checkout {
+    width: auto !important;
+}
+
+
+.woocommerce-cart .shop_table.cart tbody td.actions > .button {
+    width: auto !important;
+}
+
+
+.cart-collaterals {
+    padding-top: 50px;
+    border-top: 1px solid #80808026;
 }
