@@ -608,6 +608,59 @@ function remove_duplicate_product_from_cart($cart_item_key, $product_id, $quanti
 }
 
 // ====================================//
+//  >>  Show coupon on order received page
+// ====================================//
+add_action('woocommerce_thankyou', 'display_discount_coupon_on_thankyou', 10, 1);
+
+function display_discount_coupon_on_thankyou($order_id) {
+    // Get the order
+    $order = wc_get_order($order_id);
+    $discount_amount = 0;
+    $product_1056_in_order = false;
+
+    // Check each item in the order to see if product 1056 was purchased
+    foreach ($order->get_items() as $item) {
+        if ($item->get_product_id() == 1056) {
+            $product_1056_in_order = true;
+            // Calculate the discount amount based on the custom attribute 'custom_quantity'
+            $custom_quantity = $item->get_meta('custom_quantity');
+            if ($custom_quantity) {
+                $discount_amount += intval($custom_quantity) * 10; // Multiply custom quantity by $10
+            }
+            break; // Exit loop once product 1056 is found
+        }
+    }
+
+    // Only proceed if product 1056 was in the order and a discount amount was calculated
+    if ($product_1056_in_order && $discount_amount > 0) {
+        // Set a unique coupon code for this order
+        $coupon_code = 'FITrite_' . $order_id;
+
+        // Check if the coupon already exists, or create it
+        if (!wc_get_coupon_id_by_code($coupon_code)) {
+            $coupon = new WC_Coupon();
+            $coupon->set_code($coupon_code);
+            $coupon->set_discount_type('fixed_cart'); // Apply discount to the entire cart
+            $coupon->set_amount($discount_amount);
+            $coupon->set_usage_limit(1); // One-time use
+            $coupon->set_individual_use(true); // Cannot be combined with other coupons
+            $coupon->set_exclude_product_ids(array(1056)); // Exclude product 1056 from discount applicability
+            $coupon->set_date_expires(strtotime('+30 days')); // Set expiry date
+            $coupon->save();
+        }
+
+        // Display the coupon code and discount amount on the Thank You page
+        echo '<div class="woocommerce-message">';
+        echo '<p>Thank you for your order! Here is a discount code for your next purchase:</p>';
+        echo '<p><strong>Coupon Code:</strong> ' . esc_html($coupon_code) . '</p>';
+        echo '<p><strong>Discount Amount:</strong> ' . wc_price($discount_amount) . '</p>';
+        echo '<p>This discount can be used on any products except the item you just ordered (ID: 1056).</p>';
+        echo '</div>';
+    }
+}
+
+
+// ====================================//
 //  >>  Apply coupon code
 // ====================================//
 
