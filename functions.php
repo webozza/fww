@@ -1,0 +1,660 @@
+<?php
+/**
+ * MyBag Child
+ *
+ * @package mybag-child 
+ */
+
+/**
+ * Include all your custom code here
+ */
+
+ if ( ! defined( '_S_VERSION' ) ) {
+    // Replace this with your actual theme version
+    define( '_S_VERSION', '1.0.2' );
+}
+
+//====================================//
+//  >>   Enqueue the CSS and JS files
+//====================================//
+
+function enqueue_zip_code_checker_assets() {
+    // Global CSS file with static version
+    wp_enqueue_style('custom-css', get_stylesheet_directory_uri() . '/css/custom.css', array(), _S_VERSION);
+    
+    // Global JS file with static version
+    wp_enqueue_script('global-js', get_stylesheet_directory_uri() . '/js/global.js', array(), _S_VERSION, true);
+    
+    // Conditional styles and scripts for product and cart pages
+    if (is_product() || is_cart()) {
+        wp_enqueue_style('zip-code-checker-css', get_stylesheet_directory_uri() . '/css/zip_code_checker.css', array(), _S_VERSION);
+        wp_enqueue_script('zip-code-checker-js', get_stylesheet_directory_uri() . '/js/zip_code_checker.js', array(), _S_VERSION, true);
+
+        wp_enqueue_script('product-attributes-js', get_stylesheet_directory_uri() . '/js/product_attributes.js', array('jquery'), _S_VERSION, true);
+        wp_localize_script('product-attributes-js', 'customPriceUpdateParams', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('custom_price_update_nonce')
+        ));
+    } elseif (is_page('fitrite')) {
+        wp_enqueue_style('zip-code-checker-css', get_stylesheet_directory_uri() . '/css/zip_code_checker.css', array(), _S_VERSION);
+    }
+
+    // Global cart script with static version
+    wp_enqueue_script('cart-script', get_stylesheet_directory_uri() . '/js/cart.js', array('jquery'), _S_VERSION, true);
+
+    wp_localize_script('cart-script', 'ajax_object', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('update_cart_variant_nonce'),
+        'product_id' => get_the_ID() // Ensure this is the correct product ID
+    ));
+}
+add_action('wp_enqueue_scripts', 'enqueue_zip_code_checker_assets');
+
+//====================================//
+//  >>  Include the ZIP code checker template
+//====================================//
+
+function include_zip_code_checker() {
+    if (is_product()) {
+        include get_stylesheet_directory() . '/woocommerce/zip_code_checker.php';
+        display_zip_code_checker();
+    }
+}
+add_action('woocommerce_before_single_product_summary', 'include_zip_code_checker', 20);
+
+//====================================//
+//  >>  ZipCode Shortcode for non product page
+//====================================//
+
+// Register shortcode for zip code checker
+function zip_code_checker_shortcode() {
+    ob_start(); // Start output buffering
+    
+    // Include the PHP file
+    include plugin_dir_path( __FILE__ ) . 'woocommerce/zip_code_checker_non-product-page.php';
+    display_zip_code_checker();
+    return ob_get_clean(); // Return the buffered output
+}
+add_shortcode('zip_code_checker', 'zip_code_checker_shortcode');
+
+//====================================//
+//  >>  Include the Prodcut attributes template
+//====================================//
+
+function include_product_attributes() {
+    if (is_product()) {
+        include get_stylesheet_directory() . '/woocommerce/product_attributes.php';
+    }
+}
+add_action('woocommerce_before_add_to_cart_form', 'include_product_attributes', 20);
+
+//====================================//
+//  >>  Include the bottom video section template
+//====================================//
+
+function include_under_product_video_section() {
+    if (is_product()) {
+        include get_stylesheet_directory() . '/woocommerce/under_product_video_section.php';
+    }
+}
+add_action('woocommerce_after_single_product_summary', 'include_under_product_video_section', 2);
+
+// ====================================//
+//  >>  Update Product Price On Height And Width
+// ====================================//
+
+add_action('wp_ajax_add_custom_product_to_cart', 'add_custom_product_to_cart');
+add_action('wp_ajax_nopriv_add_custom_product_to_cart', 'add_custom_product_to_cart');
+
+function add_custom_product_to_cart() {
+    $product_id = intval($_POST['product_id']);
+    $quantity = intval($_POST['quantity']);
+    $custom_quantity = intval($_POST['custom_quantity']); // Ensure you get the value
+    $custom_price = floatval($_POST['custom_price']);
+    $measuring_fee =  floatval($_POST['measuring_fee']);
+    $width = sanitize_text_field($_POST['width']);
+    $height = sanitize_text_field($_POST['height']);
+    $mount = sanitize_text_field($_POST['mount']);
+    $window_name = sanitize_text_field($_POST['window_name']);
+    $blind = sanitize_text_field($_POST['blind']);
+    $color = sanitize_text_field($_POST['color']);
+
+    WC()->cart->add_to_cart($product_id, $quantity, 0, array(), array(
+        'custom_price' => $custom_price,
+        'custom_quantity' => $custom_quantity,
+        'width' => $width,
+        'height' => $height,
+        'mount' => $mount,
+        'window_name' => $window_name,
+        'blind' => $blind,
+        'color' => $color,
+    ));
+
+
+    wp_die();
+}
+
+add_action('woocommerce_before_calculate_totals', 'update_custom_price_in_cart', 10, 1);
+function update_custom_price_in_cart($cart_obj) {
+    if (is_admin() && !defined('DOING_AJAX')) return;
+
+    foreach ($cart_obj->get_cart() as $key => $value) {
+        if (isset($value['custom_price'])) {
+            $value['data']->set_price($value['custom_price']);
+        }
+    }
+}
+
+add_filter('woocommerce_add_cart_item_data', 'save_custom_data_to_cart', 10, 2);
+function save_custom_data_to_cart($cart_item_data, $product_id) {
+    if (isset($_POST['color'])) {
+        $cart_item_data['color'] = sanitize_text_field($_POST['color']);
+    }
+    if (isset($_POST['width'])) {
+        $cart_item_data['width'] = sanitize_text_field($_POST['width']);
+    }
+    if (isset($_POST['height'])) {
+        $cart_item_data['height'] = sanitize_text_field($_POST['height']);
+    }
+    if (isset($_POST['mount'])) {
+        $cart_item_data['mount'] = sanitize_text_field($_POST['mount']);
+    }
+    if (isset($_POST['window_name'])) {
+        $cart_item_data['window_name'] = sanitize_text_field($_POST['window_name']);
+    }
+    if (isset($_POST['blind'])) {
+        $cart_item_data['blind'] = sanitize_text_field($_POST['blind']);
+    }
+    if (isset($_POST['custom_price'])) {
+        $cart_item_data['custom_price'] = floatval($_POST['custom_price']);
+        $cart_item_data['unique_key'] = md5(microtime().rand()); // Ensure unique key for each cart item
+    }
+    if (isset($_POST['custom_quantity'])) {
+        $cart_item_data['custom_quantity'] = intval($_POST['custom_quantity']); // Capture custom quantity
+    }
+    return $cart_item_data;
+}
+
+add_filter('woocommerce_get_cart_item_from_session', 'get_cart_items_from_session', 10, 2);
+function get_cart_items_from_session($cart_item, $values) {
+    if (isset($values['color'])) {
+        $cart_item['color'] = $values['color'];
+    }
+    if (isset($values['width'])) {
+        $cart_item['width'] = $values['width'];
+    }
+    if (isset($values['height'])) {
+        $cart_item['height'] = $values['height'];
+    }
+    if (isset($values['mount'])) {
+        $cart_item['mount'] = $values['mount'];
+    }
+    if (isset($values['window_name'])) {
+        $cart_item['window_name'] = $values['window_name'];
+    }
+    if (isset($values['blind'])) {
+        $cart_item['blind'] = $values['blind'];
+    }
+    if (isset($values['custom_price'])) {
+        $cart_item['custom_price'] = $values['custom_price'];
+    }
+    return $cart_item;
+}
+
+add_filter('woocommerce_get_item_data', 'display_custom_data_in_cart', 10, 2);
+function display_custom_data_in_cart($item_data, $cart_item) {
+
+    if ($cart_item['custom_quantity']) {
+        $item_data[] = array(
+            'name' => 'Number of window',
+            'value' => intval($cart_item['custom_quantity']) // Display the custom quantity
+        );
+    }
+
+    if ($cart_item['color']) {
+        $item_data[] = array(
+            'name' => 'Color',
+            'value' => sanitize_text_field($cart_item['color'])
+        );
+    }
+
+    if ($cart_item['width']) {
+        $item_data[] = array(
+            'name' => 'Width',
+            'value' => sanitize_text_field($cart_item['width'])
+        );
+    }
+
+    if ($cart_item['height']) {
+        $item_data[] = array(
+            'name' => 'Height',
+            'value' => sanitize_text_field($cart_item['height'])
+        );
+    }
+    if ($cart_item['mount']) {
+        $item_data[] = array(
+            'name' => 'Mount',
+            'value' => sanitize_text_field($cart_item['mount'])
+        );
+    }
+    if ($cart_item['window_name']) {
+        $item_data[] = array(
+            'name' => 'Window Name',
+            'value' => sanitize_text_field($cart_item['window_name'])
+        );
+    }
+    if ($cart_item['blind']) {
+        $item_data[] = array(
+            'name' => 'Returns',
+            'value' => sanitize_text_field($cart_item['blind'])
+        );
+    }
+    if (($cart_item['custom_price'])) {
+        $item_data[] = array(
+            'name' => 'Custom Price',
+            'value' => wc_price($cart_item['custom_price'])
+        );
+    }
+    return $item_data;
+}
+
+add_filter('woocommerce_cart_item_price', 'display_custom_price_cart', 10, 3);
+function display_custom_price_cart($price, $cart_item, $cart_item_key) {
+    if (isset($cart_item['custom_price'])) {
+        $price = wc_price($cart_item['custom_price']);
+    }
+    return $price;
+}
+
+// ====================================//
+//  >>  Cart -> Adding Installation Fee
+// ====================================//
+
+add_action('woocommerce_after_cart_table', 'add_installation_checkbox');
+function add_installation_checkbox() {
+    ?>
+    <div class="installation-checkbox">
+        <label>
+            <input type="checkbox" id="installation_required" name="installation_required" value="yes">
+            I need installation (additional cost)
+        </label>
+    </div>
+    <?php
+}
+
+add_action('wp_footer', 'add_installation_checkbox_script');
+function add_installation_checkbox_script() {
+    if (is_cart()) {
+        ?>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+
+                function calculateInstallationPrice() {
+                    // Select all product rows in the cart
+                    var $productRows = $('.woocommerce-cart-form .woocommerce-cart-form__contents tbody tr');
+                    
+                    // Initialize variables for counting widths
+                    var countWidthLessThan36 = 0;
+                    var countWidth36to72 = 0;
+                    var countWidthMoreThan72 = 0;
+                
+                    // Iterate through each product row to count widths
+                    $productRows.each(function() {
+                        var widthText = $(this).find('.variation-Width p').eq(0).text();
+                        var width = parseInt(widthText);
+                
+                        if (width <= 36) {
+                            countWidthLessThan36++;
+                        } else if (width > 36 && width <= 72) {
+                            countWidth36to72++;
+                        } else if (width > 72) {
+                            countWidthMoreThan72++;
+                        }
+                        console.log('width : ', width)
+                
+                    });
+                
+                    // Calculate additional fees based on the counts
+                    var additionalFee = countWidthLessThan36 * 25 + countWidth36to72 * 30 + countWidthMoreThan72 * 35;
+                
+                    // Minimum installation fee is $75
+                    var installationFee = Math.max(75, additionalFee);
+                
+                    return installationFee;
+                }
+    
+                function update_installation_fee() {
+                    
+                    var installation_required = $('#installation_required').is(':checked') ? 'yes' : 'no';
+                    
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                        data: {
+                            action: 'update_installation_fee',
+                            installation_required: installation_required,
+                            installationPrice:calculateInstallationPrice() ,
+                        },
+                        success: function(response) {
+                            $('body').trigger('update_checkout');
+                        }
+                    });
+                }
+
+                $('#installation_required').on('change', function() {
+                    update_installation_fee();
+                });
+            });
+        </script>
+        <?php
+    }
+}
+
+add_action('wp_ajax_update_installation_fee', 'update_installation_fee');
+add_action('wp_ajax_nopriv_update_installation_fee', 'update_installation_fee');
+function update_installation_fee() {
+
+    if(isset($_POST['installationPrice'])){
+        $installationPrice = $_POST['installationPrice'];
+        WC()->session->set('installationPrice', $installationPrice);
+    }
+    if (isset($_POST['installation_required']) && $_POST['installation_required'] === 'yes') {
+        WC()->session->set('installation_required', true);
+    } else {
+        WC()->session->set('installation_required', false);
+    }
+
+    WC()->cart->calculate_totals();
+    wp_die();
+}
+
+add_action('woocommerce_cart_calculate_fees', 'add_installation_fee');
+function add_installation_fee() {
+    // Ensure the session is initialized
+    if (WC()->session === null) {
+        return;
+    }
+
+    // Check if the installation fee should be added
+    if (WC()->session->get('installation_required') === true) {
+        $installation_fee = WC()->session->get('installationPrice');
+        WC()->cart->add_fee('Installation Fee', $installation_fee, true, 'standard');
+    }
+}
+
+// Initialize the session variable to false if not set
+add_action('wp', 'initialize_installation_session');
+function initialize_installation_session() {
+    if (is_cart() && WC()->session->get('installation_required') === null) {
+        WC()->session->set('installation_required', false);
+    }
+}
+
+// ====================================//
+//  >>  Fedex Tracking System
+// ====================================//
+
+// Shortcode to display the tracking form
+function fedex_tracking_form() {
+    ob_start();
+    include 'product_tracking.php';
+    return ob_get_clean();
+}
+add_shortcode('fedex_tracking_form', 'fedex_tracking_form');
+
+function get_fedex_access_token($client_id, $client_secret) {
+    $url = 'https://apis.fedex.com/oauth/token';
+
+    $data = [
+        'grant_type' => 'client_credentials',
+        'client_id' => $client_id,
+        'client_secret' => $client_secret,
+    ];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/x-www-form-urlencoded',
+    ]);
+
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    if (curl_errno($ch)) {
+        $error_msg = curl_error($ch);
+        curl_close($ch);
+        die("cURL error: $error_msg");
+    }
+
+    curl_close($ch);
+
+    $response_data = json_decode($response);
+
+    if (isset($response_data->access_token)) {
+        return $response_data->access_token;
+    } else {
+        echo "Error: HTTP code $http_code\n";
+        echo "Response: $response\n";
+        return false;
+    }
+}
+
+function track_fedex_package() {
+    $client_id = 'l706fce85ef82c468d8d27e8f5c461a8e2';
+    $client_secret = '05fe661b99384c2c94187b34b19e9328';
+
+    $tracking_number = sanitize_text_field($_POST['tracking_number']);
+    $access_token = get_fedex_access_token($client_id, $client_secret);
+
+    if (!$access_token) {
+        echo 'Failed to obtain access token.';
+        wp_die();
+    }
+
+    $url = 'https://apis.fedex.com/track/v1/trackingnumbers';
+
+    $headers = [
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $access_token,
+        'Accept-Encoding: gzip',
+    ];
+
+    $body = [
+        'trackingInfo' => [
+            [
+                'trackingNumberInfo' => [
+                    'trackingNumber' => $tracking_number,
+                ],
+            ],
+        ],
+        'includeDetailedScans' => true,
+    ];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
+    
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    
+    if (curl_errno($ch)) {
+        echo 'Curl error: ' . curl_error($ch);
+    } else {
+        if ($http_code !== 200) {
+            error_log('HTTP error (' . $http_code . '): ' . $response);
+            echo 'HTTP error (' . $http_code . ')';
+        } else {
+            if (strpos(curl_getinfo($ch, CURLINFO_CONTENT_TYPE), 'gzip') !== false) {
+                $response = gzdecode($response);
+            }
+            error_log('API Response: ' . print_r($response, true));
+            wp_send_json_success(json_decode($response, true));
+        }
+    }
+
+
+    curl_close($ch);
+
+    wp_die();
+}
+
+add_action('wp_ajax_track_fedex_package', 'track_fedex_package');
+add_action('wp_ajax_nopriv_track_fedex_package', 'track_fedex_package');
+
+// Hook to save custom fields into the order
+
+add_action('woocommerce_checkout_create_order_line_item', 'save_custom_fields_to_order_meta', 10, 4);
+function save_custom_fields_to_order_meta( $item, $cart_item_key, $values, $order ) {
+    if ( isset( $values['width'] ) ) {
+        $item->add_meta_data( 'Width', $values['width'] );
+    }
+
+    if ( isset( $values['height'] ) ) {
+        $item->add_meta_data( 'Height', $values['height'] );
+    }
+
+    if ( isset( $values['mount'] ) ) {
+        $item->add_meta_data( 'Mount', $values['mount'] );
+    }
+
+    if ( isset( $values['window_name'] ) ) {
+        $item->add_meta_data( 'Window Name', $values['window_name'] );
+    }
+
+    if ( isset( $values['blind'] ) ) {
+        $item->add_meta_data( 'Returns', $values['blind'] );
+    }
+
+    if ( isset( $values['color'] ) ) {
+        $item->add_meta_data( 'Color', $values['color'] );
+    }
+}
+
+// ====================================//
+//  >>  Generate custom coupon code
+// ====================================//
+
+// Register the AJAX actions
+add_action('wp_ajax_generate_custom_discount_code', 'generate_custom_discount_code');
+add_action('wp_ajax_nopriv_generate_custom_discount_code', 'generate_custom_discount_code');
+
+// Function to generate a random discount code
+function generate_custom_discount_code() {
+    $amount = isset($_POST['coupon_amount']) ? sanitize_text_field($_POST['coupon_amount']) : '0';
+    $code = 'Fitrite-' . wp_generate_password(4, false, false);
+    $discount_type = 'fixed_cart'; 
+    $expiration_timestamp = time() + (5 * 60); // Current time + 5 minutes
+    $expiration_date = date('Y-m-d H:i:s', $expiration_timestamp); // Format for WooCommerce
+
+    if (!wc_get_coupon_id_by_code($code)) {
+        $coupon = array(
+            'post_title' => $code,
+            'post_content' => '',
+            'post_excerpt' => 'Auto-generated discount code.',
+            'post_status' => 'publish',
+            'post_author' => 1,
+            'post_type' => 'shop_coupon',
+        );
+        $new_coupon_id = wp_insert_post($coupon);
+
+        // Set the coupon properties
+        update_post_meta($new_coupon_id, 'discount_type', $discount_type);
+        update_post_meta($new_coupon_id, 'coupon_amount', $amount);
+        update_post_meta($new_coupon_id, 'individual_use', 'yes');
+        update_post_meta($new_coupon_id, 'usage_limit', '1');
+        update_post_meta($new_coupon_id, 'expiry_date', $expiration_date); // Set expiration date for backend display
+        update_post_meta($new_coupon_id, 'custom_expiration_timestamp', $expiration_timestamp); // Custom expiration timestamp for cron job if needed
+    }
+
+    wp_send_json_success(array('coupon_code' => $code));
+}
+
+// ====================================//
+//  >>  Remove the last cart item for fitrite product 
+// ====================================//
+
+// Action hook to handle removing duplicate products in the cart
+add_action('woocommerce_add_to_cart', 'remove_duplicate_product_from_cart', 10, 6);
+
+function remove_duplicate_product_from_cart($cart_item_key, $product_id, $quantity, $variation_id, $variation, $cart_item_data) {
+    // Check if the product ID is 1058 (targeted product)
+    if ($product_id == 1058) {
+        $cart = WC()->cart;
+        $latest_item_key = null;
+
+        // Loop through cart items to find the latest instance of the product
+        foreach ($cart->get_cart() as $key => $item) {
+            if ($item['product_id'] == $product_id) {
+                // If there is already an instance, remove the previous one(s)
+                if ($latest_item_key !== null) {
+                    $cart->remove_cart_item($latest_item_key);
+                }
+                // Set the current key as the latest item key
+                $latest_item_key = $key;
+            }
+        }
+    }
+}
+
+// ====================================//
+//  >>  Apply coupon code
+// ====================================//
+
+// Register AJAX action for applying custom discount
+add_action('wp_ajax_apply_custom_discount', 'apply_custom_discount');
+add_action('wp_ajax_nopriv_apply_custom_discount', 'apply_custom_discount');
+
+function apply_custom_discount() {
+    // Verify nonce
+    check_ajax_referer('custom_price_update_nonce', 'nonce');
+
+    // Get the coupon code from the AJAX request
+    $coupon_code = sanitize_text_field($_POST['coupon_code']);
+
+    // Check if product ID 1058 is in the cart
+    $product_in_cart = false;
+    foreach (WC()->cart->get_cart() as $cart_item) {
+        if ($cart_item['product_id'] == 1058) {
+            $product_in_cart = true;
+            break;
+        }
+    }
+
+    // If the product is not in the cart, return an error message
+    if (!$product_in_cart) {
+        wp_send_json_error(array('message' => 'This coupon is only valid for specific products in your cart.'));
+    }
+
+    // Proceed to apply the coupon if valid
+    $coupon = new WC_Coupon($coupon_code);
+    if (!$coupon->is_valid()) {
+        wp_send_json_error(array('message' => 'Invalid or expired coupon code.'));
+    }
+
+    // Check if the coupon is already applied
+    $applied_coupons = WC()->cart->get_applied_coupons();
+    if (!in_array($coupon_code, $applied_coupons)) {
+        // Apply the coupon to the cart
+        WC()->cart->apply_coupon($coupon_code);
+    }
+
+    // Recalculate totals
+    WC()->cart->calculate_totals();
+
+    // Get the new cart total and discount amount
+    $discount_amount = $coupon->get_amount();
+    $cart_total = WC()->cart->total;
+
+    // Send response with discount amount and new cart total
+    wp_send_json_success(array(
+        'discount_amount' => wc_price($discount_amount),
+        'new_total' => wc_price($cart_total)
+    ));
+}
