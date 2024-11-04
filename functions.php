@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.0.7' );
+    define( '_S_VERSION', '1.0.08' );
 }
 
 //====================================//
@@ -670,24 +670,30 @@ function apply_custom_discount() {
 // ====================================//
 //  >>  Email Coupon Code to customer
 // ====================================//
-function send_dynamic_discount_based_on_custom_quantity($order_id) {
+function send_discount_coupon_if_product_1056($order_id) {
     // Get the order
     $order = wc_get_order($order_id);
     $customer_email = $order->get_billing_email();
 
-    // Calculate the discount based on custom quantity in the cart
+    // Initialize discount amount based on custom quantity
     $discount_amount = 0;
+    $product_1056_in_order = false;
+
     foreach ($order->get_items() as $item_id => $item) {
-        // Check if the custom attribute 'custom_quantity' exists
+        // Check if the item is product ID 1056
+        if ($item->get_product_id() == 1056) {
+            $product_1056_in_order = true;
+        }
+
+        // If the item has 'custom_quantity', calculate the discount amount
         $custom_quantity = $item->get_meta('custom_quantity');
-        
         if ($custom_quantity) {
             $discount_amount += intval($custom_quantity) * 10; // Multiply custom quantity by $10
         }
     }
 
-    // If no discount is calculated, no need to create a coupon
-    if ($discount_amount <= 0) {
+    // Only proceed if product 1056 is in the order and a discount amount is calculated
+    if (!$product_1056_in_order || $discount_amount <= 0) {
         return;
     }
 
@@ -698,11 +704,11 @@ function send_dynamic_discount_based_on_custom_quantity($order_id) {
     if (!wc_get_coupon_id_by_code($coupon_code)) {
         $coupon = new WC_Coupon();
         $coupon->set_code($coupon_code);
-        $coupon->set_discount_type('fixed_cart');
+        $coupon->set_discount_type('fixed_cart'); // Apply discount to the entire cart
         $coupon->set_amount($discount_amount);
         $coupon->set_usage_limit(1); // One-time use
         $coupon->set_individual_use(true); // Cannot be combined with other coupons
-        $coupon->set_exclude_product_ids(array(1056, 1058)); // Exclude specific products
+        $coupon->set_exclude_product_ids(array(1056)); // Exclude product 1056 from discount applicability
         $coupon->set_date_expires(strtotime('+30 days')); // Set expiry date
         $coupon->save();
     }
@@ -710,7 +716,7 @@ function send_dynamic_discount_based_on_custom_quantity($order_id) {
     // Email content
     $subject = 'Thank You for Your Order! Here’s a Discount for Your Next Purchase';
     $message = sprintf(
-        "Hi %s,\n\nThank you for your recent order with us! Based on your purchase, here’s a discount for your next purchase:\n\nCoupon Code: %s\nDiscount Amount: %s\n\nPlease note, this code excludes specific products.\n\nThank you for shopping with us!\n\nBest regards,\nYour Store Team",
+        "Hi %s,\n\nThank you for your recent order with us! Based on your purchase, here’s a discount for your next purchase on other products:\n\nCoupon Code: %s\nDiscount Amount: %s\n\nPlease note, this discount cannot be applied to the product you ordered (ID: 1056).\n\nThank you for shopping with us!\n\nBest regards,\nYour Store Team",
         $order->get_billing_first_name(),
         $coupon_code,
         wc_price($discount_amount)
@@ -720,4 +726,4 @@ function send_dynamic_discount_based_on_custom_quantity($order_id) {
     wp_mail($customer_email, $subject, $message);
 }
 
-add_action('woocommerce_order_status_completed', 'send_dynamic_discount_based_on_custom_quantity', 10, 1);
+add_action('woocommerce_checkout_order_processed', 'send_discount_coupon_if_product_1056', 10, 1);
