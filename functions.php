@@ -670,39 +670,31 @@ function apply_custom_discount() {
 // ====================================//
 //  >>  Email Coupon Code to customer
 // ====================================//
-// Hook into WooCommerce checkout success to send a discount coupon email if product 1056 is in the order
-add_action('woocommerce_checkout_order_processed', 'send_discount_coupon_if_product_1056', 10, 1);
+add_action('woocommerce_checkout_order_processed', 'send_static_discount_coupon_if_product_1056', 10, 1);
 
-function send_discount_coupon_if_product_1056($order_id) {
+function send_static_discount_coupon_if_product_1056($order_id) {
     // Get the order and customer email
     $order = wc_get_order($order_id);
     $customer_email = $order->get_billing_email();
 
-    // Initialize discount amount based on custom quantity
-    $discount_amount = 0;
+    // Check if product ID 1056 is in the order
     $product_1056_in_order = false;
 
-    // Check each item in the order
     foreach ($order->get_items() as $item) {
-        // Check if the item is product ID 1056
         if ($item->get_product_id() == 1056) {
             $product_1056_in_order = true;
-        }
-
-        // Calculate discount based on custom quantity meta
-        $custom_quantity = $item->get_meta('custom_quantity');
-        if ($custom_quantity) {
-            $discount_amount += intval($custom_quantity) * 10; // Multiply custom quantity by $10
+            break; // No need to continue checking other items
         }
     }
 
-    // Only proceed if product 1056 is in the order and a discount amount is calculated
-    if (!$product_1056_in_order || $discount_amount <= 0) {
-        return; // Exit if conditions are not met
+    // Only proceed if product 1056 is in the order
+    if (!$product_1056_in_order) {
+        return; // Exit if the condition is not met
     }
 
-    // Generate a unique coupon code
-    $coupon_code = 'FITrite_' . $order_id;
+    // Set a static coupon code and discount amount
+    $coupon_code = 'WELCOME10';
+    $discount_amount = 10; // Static $10 discount
 
     // Check if the coupon already exists or create it
     if (!wc_get_coupon_id_by_code($coupon_code)) {
@@ -717,7 +709,7 @@ function send_discount_coupon_if_product_1056($order_id) {
         $coupon->save();
     }
 
-    // Email content with simplified message
+    // Email content with the static coupon code
     $subject = 'Thank You for Your Order! Here’s a Discount for Your Next Purchase';
     $message = sprintf(
         "Hi %s,\n\nThank you for your recent order with us! Here’s a discount for your next purchase:\n\nCoupon Code: %s\nDiscount Amount: %s\n\nThis discount can be used on any products except the item you just ordered (ID: 1056).\n\nBest regards,\nYour Store Team",
@@ -729,6 +721,7 @@ function send_discount_coupon_if_product_1056($order_id) {
     // Send the email
     wp_mail($customer_email, $subject, $message);
 }
+
 
 
 // // Hook into WooCommerce checkout success to send a test email
