@@ -698,7 +698,7 @@ function send_discount_coupon_if_product_1056($order_id) {
     }
 
     // Generate a unique coupon code
-    $coupon_code = 'DISCOUNT_' . $order_id;
+    $coupon_code = 'FITrite' . $order_id;
 
     // Check if the coupon already exists or create it
     if (!wc_get_coupon_id_by_code($coupon_code)) {
@@ -727,3 +727,19 @@ function send_discount_coupon_if_product_1056($order_id) {
 }
 
 add_action('woocommerce_checkout_order_processed', 'send_discount_coupon_if_product_1056', 10, 1);
+
+// Hook into WooCommerce checkout success to send a test email
+add_action('woocommerce_checkout_order_processed', 'send_test_email_on_checkout_success', 10, 1);
+
+function send_test_email_on_checkout_success($order_id) {
+    // Get the order
+    $order = wc_get_order($order_id);
+    $customer_email = $order->get_billing_email();
+
+    // Email subject and message
+    $subject = 'Hello World - Test Email';
+    $message = 'Hello World testing...';
+
+    // Send the email
+    wp_mail($customer_email, $subject, $message);
+}
