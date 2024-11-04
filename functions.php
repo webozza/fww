@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.0.4' );
+    define( '_S_VERSION', '1.0.5' );
 }
 
 //====================================//
@@ -587,7 +587,7 @@ function remove_duplicate_product_from_cart($cart_item_key, $product_id, $quanti
     // Check if the product ID is 1056 (targeted product)
 
     $hostName = $_SERVER['HTTP_HOST'];
-    $fitriteProduct = ($hostName == "fauxwoodwarehouse.com") ? 1068 : 1056;
+    $fitriteProduct = ($hostName == "fauxwoodwarehouse.com") ? 1056 : 1068;
 
     if ($product_id == $fitriteProduct) {
         $cart = WC()->cart;
@@ -624,7 +624,7 @@ function apply_custom_discount() {
 
     // Check if product ID 1056 is in the cart
     $hostName = $_SERVER['HTTP_HOST'];
-    $fitriteProduct = ($hostName == "fauxwoodwarehouse.com") ? 1068 : 1056;
+    $fitriteProduct = ($hostName == "fauxwoodwarehouse.com") ? 1056 : 1068;
 
     $product_in_cart = false;
     foreach (WC()->cart->get_cart() as $cart_item) {

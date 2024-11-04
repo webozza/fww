@@ -5,9 +5,9 @@ jQuery(document).ready(function ($) {
   let fitriteProduct;
 
   if (hostName == "fauxwoodwarehouse.com") {
-    fitriteProduct = 1068;
-  } else {
     fitriteProduct = 1056;
+  } else {
+    fitriteProduct = 1068;
   }
 
   let measuringFee = 75;

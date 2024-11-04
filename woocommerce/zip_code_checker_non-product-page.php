@@ -2,7 +2,7 @@
 function display_zip_code_checker() {
 
     $hostName = $_SERVER['HTTP_HOST'];
-    $product_id = ($hostName == "fauxwoodwarehouse.com") ? 1068 : 1056;
+    $product_id = ($hostName == "fauxwoodwarehouse.com") ? 1056 : 1068;
 
     // Get the value of the ACF field 'zip_code' and 'available_zip_codes'
     $available_zip_codes = get_field('zip_code', $product_id);
