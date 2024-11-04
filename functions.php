@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.0.5' );
+    define( '_S_VERSION', '1.0.7' );
 }
 
 //====================================//
@@ -587,7 +587,7 @@ function remove_duplicate_product_from_cart($cart_item_key, $product_id, $quanti
     // Check if the product ID is 1056 (targeted product)
 
     $hostName = $_SERVER['HTTP_HOST'];
-    $fitriteProduct = ($hostName == "fauxwoodwarehouse.com") ? 1056 : 1068;
+    $fitriteProduct = ($hostName == "fauxwoodwarehouse.com") ? 1056 : 1058;
 
     if ($product_id == $fitriteProduct) {
         $cart = WC()->cart;
@@ -624,7 +624,7 @@ function apply_custom_discount() {
 
     // Check if product ID 1056 is in the cart
     $hostName = $_SERVER['HTTP_HOST'];
-    $fitriteProduct = ($hostName == "fauxwoodwarehouse.com") ? 1056 : 1068;
+    $fitriteProduct = ($hostName == "fauxwoodwarehouse.com") ? 1056 : 1058;
 
     $product_in_cart = false;
     foreach (WC()->cart->get_cart() as $cart_item) {
@@ -665,3 +665,59 @@ function apply_custom_discount() {
         'new_total' => wc_price($cart_total)
     ));
 }
+
+
+// ====================================//
+//  >>  Email Coupon Code to customer
+// ====================================//
+function send_dynamic_discount_based_on_custom_quantity($order_id) {
+    // Get the order
+    $order = wc_get_order($order_id);
+    $customer_email = $order->get_billing_email();
+
+    // Calculate the discount based on custom quantity in the cart
+    $discount_amount = 0;
+    foreach ($order->get_items() as $item_id => $item) {
+        // Check if the custom attribute 'custom_quantity' exists
+        $custom_quantity = $item->get_meta('custom_quantity');
+        
+        if ($custom_quantity) {
+            $discount_amount += intval($custom_quantity) * 10; // Multiply custom quantity by $10
+        }
+    }
+
+    // If no discount is calculated, no need to create a coupon
+    if ($discount_amount <= 0) {
+        return;
+    }
+
+    // Generate a unique coupon code
+    $coupon_code = 'DISCOUNT_' . $order_id;
+
+    // Check if the coupon already exists or create it
+    if (!wc_get_coupon_id_by_code($coupon_code)) {
+        $coupon = new WC_Coupon();
+        $coupon->set_code($coupon_code);
+        $coupon->set_discount_type('fixed_cart');
+        $coupon->set_amount($discount_amount);
+        $coupon->set_usage_limit(1); // One-time use
+        $coupon->set_individual_use(true); // Cannot be combined with other coupons
+        $coupon->set_exclude_product_ids(array(1056, 1058)); // Exclude specific products
+        $coupon->set_date_expires(strtotime('+30 days')); // Set expiry date
+        $coupon->save();
+    }
+
+    // Email content
+    $subject = 'Thank You for Your Order! Here’s a Discount for Your Next Purchase';
+    $message = sprintf(
+        "Hi %s,\n\nThank you for your recent order with us! Based on your purchase, here’s a discount for your next purchase:\n\nCoupon Code: %s\nDiscount Amount: %s\n\nPlease note, this code excludes specific products.\n\nThank you for shopping with us!\n\nBest regards,\nYour Store Team",
+        $order->get_billing_first_name(),
+        $coupon_code,
+        wc_price($discount_amount)
+    );
+
+    // Send the email
+    wp_mail($customer_email, $subject, $message);
+}
+
+add_action('woocommerce_order_status_completed', 'send_dynamic_discount_based_on_custom_quantity', 10, 1);

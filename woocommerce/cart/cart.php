@@ -173,26 +173,28 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 		?>
 		<div>
-				<?php display_zip_code_checker();?>
+				<?php // display_zip_code_checker();?>
 				<table class="shop_table shop_table_responsive cart woocommerce-cart-form__contents">
 					<tr>
 						<td colspan="6" class="actions">
-							<div class="discount-code">
-								<span>Discount Code : <span class='coupon-code'><u>Generate Code</u></span> </span>
-								<span class='copy-prompt'>Copy!</span>
-							</div>
-							<h5>Get 10$ off for each blind</h5>
-							<p>*Only aplicable for FitWrite Program</p>
-							<br>
-							<?php if ( wc_coupons_enabled() ) { ?>
-								<div class="coupon">
-									<!-- <label for="coupon_code" class="screen-reader-text"><?php esc_html_e( 'Coupon:', 'woocommerce' ); ?></label>  -->
-									<input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="Enter Your Coupon Code" /> <button type="submit" class="button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" name="apply_coupon" value="<?php esc_attr_e( 'Apply coupon', 'woocommerce' ); ?>"><?php esc_html_e( 'Apply coupon', 'woocommerce' ); ?></button>
-									<?php do_action( 'woocommerce_cart_coupon' ); ?>
+							<div style="display:none">
+								<div class="discount-code">
+									<span>Discount Code : <span class='coupon-code'><u>Generate Code</u></span> </span>
+									<span class='copy-prompt'>Copy!</span>
 								</div>
-							<?php } ?>
+								<h5>Get 10$ off for each blind</h5>
+								<p>*Only aplicable for FitWrite Program</p>
+								<br>
+								<?php if ( wc_coupons_enabled() ) { ?>
+									<div class="coupon">
+										<!-- <label for="coupon_code" class="screen-reader-text"><?php esc_html_e( 'Coupon:', 'woocommerce' ); ?></label>  -->
+										<input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="Enter Your Coupon Code" /> <button type="submit" class="button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" name="apply_coupon" value="<?php esc_attr_e( 'Apply coupon', 'woocommerce' ); ?>"><?php esc_html_e( 'Apply coupon', 'woocommerce' ); ?></button>
+										<?php do_action( 'woocommerce_cart_coupon' ); ?>
+									</div>
+								<?php } ?>
 
-							<!-- <button type="submit" class="button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" name="update_cart" value="<?php esc_attr_e( 'Update cart', 'woocommerce' ); ?>"><?php esc_html_e( 'Update cart', 'woocommerce' ); ?></button> -->
+								<!-- <button type="submit" class="button<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" name="update_cart" value="<?php esc_attr_e( 'Update cart', 'woocommerce' ); ?>"><?php esc_html_e( 'Update cart', 'woocommerce' ); ?></button> -->
+							</div>
 
 							<?php do_action( 'woocommerce_cart_actions' ); ?>
 
