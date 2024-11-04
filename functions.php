@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.0.2' );
+    define( '_S_VERSION', '1.0.3' );
 }
 
 //====================================//
@@ -585,7 +585,11 @@ add_action('woocommerce_add_to_cart', 'remove_duplicate_product_from_cart', 10, 
 
 function remove_duplicate_product_from_cart($cart_item_key, $product_id, $quantity, $variation_id, $variation, $cart_item_data) {
     // Check if the product ID is 1058 (targeted product)
-    if ($product_id == 1058) {
+
+    $hostName = $_SERVER['HTTP_HOST'];
+    $fitriteProduct = ($hostName == "fauxwoodwarehouse.com") ? 1068 : 1058;
+
+    if ($product_id == $fitriteProduct) {
         $cart = WC()->cart;
         $latest_item_key = null;
 
@@ -619,9 +623,12 @@ function apply_custom_discount() {
     $coupon_code = sanitize_text_field($_POST['coupon_code']);
 
     // Check if product ID 1058 is in the cart
+    $hostName = $_SERVER['HTTP_HOST'];
+    $fitriteProduct = ($hostName == "fauxwoodwarehouse.com") ? 1068 : 1058;
+
     $product_in_cart = false;
     foreach (WC()->cart->get_cart() as $cart_item) {
-        if ($cart_item['product_id'] == 1058) {
+        if ($cart_item['product_id'] == $fitriteProduct) {
             $product_in_cart = true;
             break;
         }
