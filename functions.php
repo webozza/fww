@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.0.08' );
+    define( '_S_VERSION', '1.0.09' );
 }
 
 //====================================//
@@ -670,57 +670,7 @@ function apply_custom_discount() {
 // ====================================//
 //  >>  Email Coupon Code to customer
 // ====================================//
-add_action('woocommerce_checkout_order_processed', 'send_static_discount_coupon_if_product_1056', 10, 1);
 
-function send_static_discount_coupon_if_product_1056($order_id) {
-    // Get the order and customer email
-    $order = wc_get_order($order_id);
-    $customer_email = $order->get_billing_email();
-
-    // Check if product ID 1056 is in the order
-    $product_1056_in_order = false;
-
-    foreach ($order->get_items() as $item) {
-        if ($item->get_product_id() == 1056) {
-            $product_1056_in_order = true;
-            break; // No need to continue checking other items
-        }
-    }
-
-    // Only proceed if product 1056 is in the order
-    if (!$product_1056_in_order) {
-        return; // Exit if the condition is not met
-    }
-
-    // Set a static coupon code and discount amount
-    $coupon_code = 'WELCOME10';
-    $discount_amount = 10; // Static $10 discount
-
-    // Check if the coupon already exists or create it
-    if (!wc_get_coupon_id_by_code($coupon_code)) {
-        $coupon = new WC_Coupon();
-        $coupon->set_code($coupon_code);
-        $coupon->set_discount_type('fixed_cart'); // Apply discount to the entire cart
-        $coupon->set_amount($discount_amount);
-        $coupon->set_usage_limit(1); // One-time use
-        $coupon->set_individual_use(true); // Cannot be combined with other coupons
-        $coupon->set_exclude_product_ids(array(1056)); // Exclude product 1056 from discount applicability
-        $coupon->set_date_expires(strtotime('+30 days')); // Set expiry date
-        $coupon->save();
-    }
-
-    // Email content with the static coupon code
-    $subject = 'Thank You for Your Order! Here’s a Discount for Your Next Purchase';
-    $message = sprintf(
-        "Hi %s,\n\nThank you for your recent order with us! Here’s a discount for your next purchase:\n\nCoupon Code: %s\nDiscount Amount: %s\n\nThis discount can be used on any products except the item you just ordered (ID: 1056).\n\nBest regards,\nYour Store Team",
-        $order->get_billing_first_name(),
-        $coupon_code,
-        wc_price($discount_amount)
-    );
-
-    // Send the email
-    wp_mail($customer_email, $subject, $message);
-}
 
 
 
