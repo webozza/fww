@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.0.11' );
+    define( '_S_VERSION', '1.0.12' );
 }
 
 //====================================//
@@ -206,7 +206,7 @@ function display_custom_data_in_cart($item_data, $cart_item) {
 
     if ($cart_item['custom_quantity']) {
         $item_data[] = array(
-            'name' => 'Number of window',
+            'name' => 'Number of Windows:',
             'value' => intval($cart_item['custom_quantity']) // Display the custom quantity
         );
     }
@@ -541,6 +541,7 @@ function save_custom_fields_to_order_meta( $item, $cart_item_key, $values, $orde
     }
 }
 
+
 // ====================================//
 //  >>  Generate custom coupon code
 // ====================================//
@@ -723,15 +724,13 @@ function generate_discount_coupon_on_checkout($order_id) {
     }
 }
 
-
-
 // ====================================//
 //  >>  Apply coupon code
 // ====================================//
 
 // Register AJAX action for applying custom discount
-add_action('wp_ajax_apply_custom_discount', 'apply_custom_discount');
-add_action('wp_ajax_nopriv_apply_custom_discount', 'apply_custom_discount');
+// add_action('wp_ajax_apply_custom_discount', 'apply_custom_discount');
+// add_action('wp_ajax_nopriv_apply_custom_discount', 'apply_custom_discount');
 
 function apply_custom_discount() {
     // Verify nonce
@@ -786,24 +785,31 @@ function apply_custom_discount() {
 
 
 // ====================================//
-//  >>  Email Coupon Code to customer
+//  >>  Disable tax for FITrite
 // ====================================//
+add_filter('woocommerce_product_get_tax_class', 'disable_tax_for_specific_product', 10, 2);
 
+function disable_tax_for_specific_product($tax_class, $product) {
 
+    $hostName = $_SERVER['HTTP_HOST'];
+    $fitriteProduct = ($hostName == "fauxwoodwarehouse.com") ? 1056 : 1058;
 
+    // Replace 123 with the ID of your specific product
+    if ($product->get_id() === $fitriteProduct) {
+        return 'No Tax'; // Return the tax class that you've set to be tax exempt
+    }
+    return $tax_class;
+}
 
-// // Hook into WooCommerce checkout success to send a test email
-// add_action('woocommerce_checkout_order_processed', 'send_test_email_on_checkout_success', 10, 1);
+// ====================================//
+//  >>  Label for custom_quantity
+// ====================================//
+add_filter('woocommerce_order_item_display_meta_key', 'change_custom_quantity_label', 10, 2);
 
-// function send_test_email_on_checkout_success($order_id) {
-//     // Get the order
-//     $order = wc_get_order($order_id);
-//     $customer_email = $order->get_billing_email();
-
-//     // Email subject and message
-//     $subject = 'Hello World - Test Email';
-//     $message = 'Hello World testing...';
-
-//     // Send the email
-//     wp_mail($customer_email, $subject, $message);
-// }
+function change_custom_quantity_label($display_key, $meta) {
+    // Check if the key is 'custom_quantity'
+    if ($display_key === 'custom_quantity') {
+        return __('Number of Windows', 'woocommerce'); // Change label to 'Number of Windows'
+    }
+    return $display_key; // Return original key if it does not match
+}

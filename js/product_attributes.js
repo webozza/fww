@@ -424,49 +424,6 @@ jQuery(document).ready(function ($) {
     return discountPrice;
   }
 
-  function generateCouponCode() {
-    let totalWindow;
-    let couponAmount = discountPrice();
-    $.ajax({
-      url: customPriceUpdateParams.ajax_url,
-      type: "POST",
-      data: {
-        action: "generate_custom_discount_code",
-        coupon_amount: couponAmount,
-      },
-      success: function (response) {
-        if (response.success) {
-          let coupon = response.data.coupon_code;
-          $(".coupon-code").text(coupon);
-          $('[name="coupon_code"]').val(coupon);
-          // $('.copy-prompt').slideDown()
-          $(".copy-prompt").click(function () {
-            navigator.clipboard.writeText(coupon);
-            $(this).text("Copied 😊");
-            setTimeout(() => {
-              $(this).fadeOut();
-            }, 700);
-          });
-
-          $(".coupon-code").click(function () {
-            navigator.clipboard.writeText(coupon);
-            $(".copy-prompt").text("Copied 😊");
-            $(".copy-prompt").show();
-            setTimeout(() => {
-              $(".copy-prompt").fadeOut();
-            }, 700);
-          });
-          console.log("Generated Coupon Code:", coupon);
-        } else {
-          console.log("Failed to generate coupon code.");
-        }
-      },
-      error: function (xhr, status, error) {
-        console.log("AJAX Error:", error);
-      },
-    });
-  }
-
   //====================================//
   //  >>   Count Fitrite Product
   //====================================//
@@ -501,13 +458,6 @@ jQuery(document).ready(function ($) {
   //====================================//
   //  >>   handle Events
   //====================================//
-
-  if ($("body").hasClass("woocommerce-cart")) {
-    if (fitriteCount() != 0) {
-      generateCouponCode();
-    }
-    removeDiscount();
-  }
 
   $(document).on("click", ".product-remove", function () {
     setTimeout(() => {
