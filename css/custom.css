@@ -441,6 +441,13 @@ body.single-product .product_attribute .select2-container {
   min-width: 100px !important;
 }
 
+.video_container .dashicons-controls-play:before {
+  content: "\f522";
+  color: #fff;
+  border-radius: 50%;
+  background-color: rgba(43, 51, 63, 0.7);
+}
+
 /*====================================================================================
 ** FITrite Product Page
 ====================================================================================*/
