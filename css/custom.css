@@ -1,410 +1,405 @@
 .woocommerce-order-received ul.wc-item-meta li {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .woocommerce-order-received ul.wc-item-meta {
-    padding: 0;
-    padding-top: 20px;
+  padding: 0;
+  padding-top: 20px;
 }
 
-.woocommerce-order-received ul.wc-item-meta p{
-    margin-bottom:0;
+.woocommerce-order-received ul.wc-item-meta p {
+  margin-bottom: 0;
 }
-
 
 .measuring_price {
-    font-size: 1.2rem;
-    padding-bottom: 10px;
+  font-size: 1.2rem;
+  padding-bottom: 10px;
 }
 
 .zip-available svg {
-    width: 20px;
-    margin-left: 5px;
-    opacity: .7;
-    margin-bottom: -5px;
+  width: 20px;
+  margin-left: 5px;
+  opacity: 0.7;
+  margin-bottom: -5px;
 }
-
-
 
 /* fitrite product page */
 
-
-
 .fitrite-measurement-container {
-    width: 100%;
-    margin: 0 auto;
-    background-image: url('/wp-content/uploads/2024/10/Rectangle-2.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    padding: 100px 40px;
+  width: 100%;
+  margin: 0 auto;
+  background-image: url("/wp-content/uploads/2024/10/Rectangle-2.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 100px 40px;
 }
 
 .inner-content {
-    display: flex;
-    gap: 20px;
-    max-width: 1140px;
-    margin: auto;
+  display: flex;
+  gap: 20px;
+  max-width: 1140px;
+  margin: auto;
 }
-.fitrite-image{
-    width: 45%;
+.fitrite-image {
+  width: 45%;
 }
-.fitrite-content{
-    width: 55%;
+.fitrite-content {
+  width: 55%;
 }
 
 .fitrite-image img {
-    max-width: 100%;
-    height: 100%;
-    object-fit: cover;
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .fitrite-content h1 {
-    font-size: 32px;
-    color: #333;
-    margin-top: 0px;
-    /* font-weight: bold; */
+  font-size: 32px;
+  color: #333;
+  margin-top: 0px;
+  /* font-weight: bold; */
 }
 
 .fitrite-measurement-container .fitrite-content h2 {
-    font-size: 18px;
-    color: #777;
-    margin-bottom: 1em;
-    line-height: normal;
-    letter-spacing: normal;
-    text-transform: capitalize;
-    text-align: left;
-    font-weight: 400;
-    max-width: 400px;
-    padding-bottom: 10px;
+  font-size: 18px;
+  color: #777;
+  margin-bottom: 1em;
+  line-height: normal;
+  letter-spacing: normal;
+  text-transform: capitalize;
+  text-align: left;
+  font-weight: 400;
+  max-width: 400px;
+  padding-bottom: 10px;
 }
 
 .fitrite-content ul {
-    font-size: 14px;
-    color: #000000;
-    line-height: 1.6;
-    list-style-type: none;
-    padding: 0;
-    margin-bottom: 20px;
+  font-size: 14px;
+  color: #000000;
+  line-height: 1.6;
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 20px;
 }
 
-.fitrite-content ul li{
-    padding-bottom: 5px;
+.fitrite-content ul li {
+  padding-bottom: 5px;
 }
-
 
 .cost-calculation {
-    background: #1E1E1E;
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    margin-top: 20px;
-    color: #f9f9f9;
-    padding: 25px 20px;
-    border-radius: 15px;
-    justify-content: space-around;
+  background: #1e1e1e;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 20px;
+  color: #f9f9f9;
+  padding: 25px 20px;
+  border-radius: 15px;
+  justify-content: space-around;
 }
 
-.cost-row{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    font-size: 1.2em;
-    color: #f9f9f9;
-    gap: 8px;
+.cost-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 1.2em;
+  color: #f9f9f9;
+  gap: 8px;
 }
 
-.cost-row span:first-child{
-    font-size:14px ;
-    font-weight: bold;
+.cost-row span:first-child {
+  font-size: 14px;
+  font-weight: bold;
 }
 
-.cost-row span:last-child{
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
+.cost-row span:last-child {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
 }
 
-
-.window-calculation{
-    display: flex;
+.window-calculation {
+  display: flex;
 }
 
-.window-calculation input{
-    max-width: 60px;
-    height: 40px;
-    border: none;
-    outline: none;
-    color: #1E1E1E;
-    padding: 5px 10px;
+.window-calculation input {
+  max-width: 60px;
+  height: 40px;
+  border: none;
+  outline: none;
+  color: #1e1e1e;
+  padding: 5px 10px;
 }
 
-.window-calculation .plus-minus-btn{
-    display: flex;
-    width: 60px;
-    height: 40px;
+.window-calculation .plus-minus-btn {
+  display: flex;
+  width: 60px;
+  height: 40px;
 }
 
-.window-calculation .plus-minus-btn svg{
-    width: 15px;
+.window-calculation .plus-minus-btn svg {
+  width: 15px;
 }
 
-.window-calculation .plus-minus-btn > div{
-    width: 50%;
-    height: 100%;
-    background: #B23507;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
+.window-calculation .plus-minus-btn > div {
+  width: 50%;
+  height: 100%;
+  background: #b23507;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
 }
 
-.window-calculation .plus-minus-btn > div:active{
-    opacity: .8;
+.window-calculation .plus-minus-btn > div:active {
+  opacity: 0.8;
 }
 
-.window-calculation .plus-minus-btn .plus{
-    padding-left: 5px;
+.window-calculation .plus-minus-btn .plus {
+  padding-left: 5px;
 }
-.window-calculation .plus-minus-btn .minus{
-    padding-right: 5px;
+.window-calculation .plus-minus-btn .minus {
+  padding-right: 5px;
 }
 
 .total-cost {
-    display: flex;
-    justify-content: space-between;
-    font-size: 1.2em;
-    color: #333;
-    font-weight: bold;
-    margin-top: 20px;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.2em;
+  color: #333;
+  font-weight: bold;
+  margin-top: 20px;
+  align-items: center;
 }
 
-.total-cost span:first-child{
-    color: #B23507;
-    font-size: 20px
+.total-cost span:first-child {
+  color: #b23507;
+  font-size: 20px;
 }
 
-.total-cost #total-cost{
-    font-size: 24px;
-
+.total-cost #total-cost {
+  font-size: 24px;
 }
 .discount-offer {
-    background: white;
-    box-shadow: 0px 0px 20px 0px #1e1e1e14;
-    padding: 10px;
-    margin-top: 20px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: max-content;
-    position: relative;
+  background: white;
+  box-shadow: 0px 0px 20px 0px #1e1e1e14;
+  padding: 10px;
+  margin-top: 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: max-content;
+  position: relative;
 }
-.offer-icon{
-    position: absolute;
-    left: 93%;
+.offer-icon {
+  position: absolute;
+  left: 93%;
 }
 .discount-text {
-    color: black;
-    font-weight: bold;
-    font-size: 26px;
-    line-height: 32px;
-    padding: 3px;
+  color: black;
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 32px;
+  padding: 3px;
 }
-.discount-text span{
-    color: #e53935;
-    font-size: 34px;
+.discount-text span {
+  color: #e53935;
+  font-size: 34px;
 }
 
 .discount-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .discount-code {
-    position: relative;
-    color: #333;
-    font-size: 1em;
-    font-weight: 600;
+  position: relative;
+  color: #333;
+  font-size: 1em;
+  font-weight: 600;
 }
 
 span.copy-prompt {
-    display: none;
-    background: #1E1E1E;
-    color: white;
-    padding: 5px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    position: absolute;
-    top: 35px;
-    left: 125px;
-    transition: .3s;
-    user-select: none;
+  display: none;
+  background: #1e1e1e;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  top: 35px;
+  left: 125px;
+  transition: 0.3s;
+  user-select: none;
 }
 
-
-span.copy-prompt:hover{
-    scale: 1.05;
+span.copy-prompt:hover {
+  scale: 1.05;
 }
 
-
-span.copy-prompt:active{
-    scale: 1.1;
+span.copy-prompt:active {
+  scale: 1.1;
 }
-
-
-
 
 span.copy-prompt::before {
-    content: '';
-    position: absolute;
-    top: -20px; /* Position above the box */
-    left: 50%; /* Center the triangle */
-    transform: translateX(-50%); /* Offset by half the width */
-    border-width: 10px; /* Height of the triangle */
-    border-style: solid;
-    border-color: transparent transparent #1E1E1E transparent; /* Arrow color */
+  content: "";
+  position: absolute;
+  top: -20px; /* Position above the box */
+  left: 50%; /* Center the triangle */
+  transform: translateX(-50%); /* Offset by half the width */
+  border-width: 10px; /* Height of the triangle */
+  border-style: solid;
+  border-color: transparent transparent #1e1e1e transparent; /* Arrow color */
 }
 
-
 .discount-code span > span {
-    color: #B23507;
+  color: #b23507;
 }
 
 .fitrite-button {
-    background-color: #d84315;
-    color: #fff;
-    padding: 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1.1em;
-    margin-top: 20px;
+  background-color: #d84315;
+  color: #fff;
+  padding: 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.1em;
+  margin-top: 20px;
 }
 
 .fitrite-button:hover {
-    background-color: #bf360c;
+  background-color: #bf360c;
 }
-
 
 .fitrite-form button {
-    background-color: #B23507 !important;
-    color: white !important;
-    font-weight: 600 !important;
-    border:2px solid #B23507 !important;
-    transition: .3s !important;
+  background-color: #b23507 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border: 2px solid #b23507 !important;
+  transition: 0.3s !important;
 }
 
-.fitrite-form button:hover{
-    background-color: white !important;
-    color: #B23507 !important;
-    font-weight: 600 !important;
+.fitrite-form button:hover {
+  background-color: white !important;
+  color: #b23507 !important;
+  font-weight: 600 !important;
 }
 
-
-.coupon-code{
-    cursor: pointer;
+.coupon-code {
+  cursor: pointer;
 }
 
-.coupon-code:active{
-    opacity: .7;
-    user-select: none;
+.coupon-code:active {
+  opacity: 0.7;
+  user-select: none;
 }
 
 /* Coupon section cart  */
 
-table.shop_table.shop_table_responsive.cart.woocommerce-cart-form__contents button {
-    display: flex !important;
+table.shop_table.shop_table_responsive.cart.woocommerce-cart-form__contents
+  button {
+  display: flex !important;
 }
 .woocommerce-cart .shop_table.cart tbody td.actions .coupon #coupon_code {
-    bottom: 0px !important;
-    height: 46px !important;
+  bottom: 0px !important;
+  height: 46px !important;
 }
 
 .woocommerce-cart .shop_table.cart tbody td.actions .coupon {
-    display: flex;
-    align-items: center;
-    padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
 }
 
 .woocommerce-cart .shop_table.cart {
-    margin-top: 0.125rem !important;
+  margin-top: 0.125rem !important;
 }
 
 .woocommerce-cart .shop_table.cart tbody td.actions .coupon .button {
-    margin-left: 1.25rem !important;
-    width: -webkit-fill-available;
+  margin-left: 1.25rem !important;
+  width: -webkit-fill-available;
 }
 
 .woocommerce-cart .cart-collaterals .wc-proceed-to-checkout {
-    width: 378px !important;
+  width: 378px !important;
 }
 
-
 #zip_code_result img {
-    width: 25px;
-    margin-top: -2px !important;
+  width: 25px;
+  margin-top: -2px !important;
 }
 
 /* Responsive css  */
 
-
 @media screen and (max-width: 900px) {
-    .fitrite-measurement-container {
-        padding: 40px 40px;
-        padding-bottom: 60px;
-    }
-    .fitrite-measurement-container .inner-content{
-        flex-direction: column;
-    }
-    .fitrite-measurement-container .inner-content > div{
-        width: 100%;
-    }
-    .discount-text {
-        font-size: 21px;
-    }
-    .discount-text span {
-        font-size: 26px;
-    }
-    .discount-code {
-        text-align: left;
-        padding-top: 45px;
-    }
-    .fitrite-form button {
-        width: 100% !important;
-    }
-    .cost-row span:first-child {
-        font-size: 12px;
-    }
-    .cost-calculation .cost-row:nth-child(2) span:nth-child(1){
-        text-align: right;
-    }
-    .cost-calculation .cost-row:nth-child(3) span:nth-child(1){
-        text-align: right;
-    }
-    .cost-row span:last-child{
-        text-align: right;
-    }
-    .window-calculation input {
-        max-width: 45px;
-    }    
-    span.copy-prompt {
-        top: 60px;
-    }
-    .woocommerce-cart .shop_table.cart tbody td.actions .coupon .button {
-        margin-top: 0 !important;
-    }
-    .woocommerce-cart .shop_table.cart tbody td.actions .coupon {
-        margin-top: 20px !important;
-    }
+  .fitrite-measurement-container {
+    padding: 40px 40px;
+    padding-bottom: 60px;
+  }
+  .fitrite-measurement-container .inner-content {
+    flex-direction: column;
+  }
+  .fitrite-measurement-container .inner-content > div {
+    width: 100%;
+  }
+  .discount-text {
+    font-size: 21px;
+  }
+  .discount-text span {
+    font-size: 26px;
+  }
+  .discount-code {
+    text-align: left;
+    padding-top: 45px;
+  }
+  .fitrite-form button {
+    width: 100% !important;
+  }
+  .cost-row span:first-child {
+    font-size: 12px;
+  }
+  .cost-calculation .cost-row:nth-child(2) span:nth-child(1) {
+    text-align: right;
+  }
+  .cost-calculation .cost-row:nth-child(3) span:nth-child(1) {
+    text-align: right;
+  }
+  .cost-row span:last-child {
+    text-align: right;
+  }
+  .window-calculation input {
+    max-width: 45px;
+  }
+  span.copy-prompt {
+    top: 60px;
+  }
+  .woocommerce-cart .shop_table.cart tbody td.actions .coupon .button {
+    margin-top: 0 !important;
+  }
+  .woocommerce-cart .shop_table.cart tbody td.actions .coupon {
+    margin-top: 20px !important;
+  }
 }
 
-
 @media (min-width: 71.25em) {
-    .woocommerce-cart .shop_table.cart tbody td.actions .coupon {
-        width: 60% !important;
-    }
+  .woocommerce-cart .shop_table.cart tbody td.actions .coupon {
+    width: 60% !important;
+  }
+}
+
+/*====================================================================================
+** Cart Page
+====================================================================================*/
+.woocommerce-cart .cart-collaterals .cart_totals #shipping_method {
+  margin: 0;
+}
+
+.woocommerce-cart .cart-collaterals .cart_totals #shipping_method label {
+  padding-left: 0 !important;
+  margin: 0;
+  font-size: 15px;
 }
