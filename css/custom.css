@@ -403,3 +403,12 @@ table.shop_table.shop_table_responsive.cart.woocommerce-cart-form__contents
   margin: 0;
   font-size: 15px;
 }
+
+/*====================================================================================
+** Blog
+====================================================================================*/
+body.blog .entry-meta,
+body.single-post .entry-header .entry-meta,
+body.single-post nav.navigation.post-navigation {
+  display: none !important;
+}
