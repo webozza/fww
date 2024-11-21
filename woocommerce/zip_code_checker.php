@@ -21,7 +21,7 @@ function display_zip_code_checker() {
         // Pass the PHP variables to JavaScript
         let available_zip_codes = "<?php echo esc_js($available_zip_codes); ?>".split(',');
         //  let sucess_text =  `<span class="zip-available"><img src="<?= $tick_icon?>"> YES, get started <a href="/measuring">click here</a>`;
-        let sucess_text =  `<span class="zip-available"><img src="<?= $tick_icon?>"> YES, get started <a href="/product/2-cordless-faux-wood-blinds-new?measuring=available">click here</a>`;
+        let sucess_text =  `<span class="zip-available"><img src="<?= $tick_icon?>"> YES, get started <a href="/fitrite">click here</a>`;
          let unavailable_text = `<span class="zip-not-available"><img src="<?= $cros_icon?>"> Unfortunately not at this time</span>`
          
          console.log(sucess_text);
