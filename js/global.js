@@ -25,6 +25,7 @@ jQuery(document).ready(function ($) {
 
     if (measurementAddedToCart) {
       $("tr.woocommerce-shipping-totals.shipping").hide();
+      $(".woocommerce-shipping-fields").hide();
     }
   };
 
