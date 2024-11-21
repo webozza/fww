@@ -432,3 +432,17 @@ body.single-post nav.navigation.post-navigation {
 .product_attribute .height select option[value="78 (7/8)"] {
   display: none;
 }
+
+body.single-product .product_attribute > div:first-child > div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+body.single-product .product_attribute > div > div label {
+  margin: 0;
+}
+
+body.single-product .product_attribute .select2-container {
+  min-width: 100px !important;
+}
