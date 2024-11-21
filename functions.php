@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.0.23' );
+    define( '_S_VERSION', '1.0.24' );
 }
 
 //====================================//
@@ -553,7 +553,7 @@ add_action('wp_ajax_nopriv_generate_custom_discount_code', 'generate_custom_disc
 // Function to generate a random discount code
 function generate_custom_discount_code() {
     $amount = isset($_POST['coupon_amount']) ? sanitize_text_field($_POST['coupon_amount']) : '0';
-    $code = 'Fitrite-' . wp_generate_password(4, false, false);
+    $code = 'FITrite-' . wp_generate_password(4, false, false);
     $discount_type = 'fixed_cart'; 
     $expiration_timestamp = time() + (5 * 60); // Current time + 5 minutes
     $expiration_date = date('Y-m-d H:i:s', $expiration_timestamp); // Format for WooCommerce
@@ -582,7 +582,7 @@ function generate_custom_discount_code() {
 }
 
 // ====================================//
-//  >>  Remove the last cart item for fitrite product 
+//  >>  Remove the last cart item for FITrite product 
 // ====================================//
 
 // Action hook to handle removing duplicate products in the cart

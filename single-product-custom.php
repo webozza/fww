@@ -66,7 +66,7 @@ if ($product) :
 
             <!-- WooCommerce Add to Cart Button -->
             <form class="fitrite-form" action="<?php echo esc_url(wc_get_cart_url()); ?>" method="post">
-                <button type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" class="fitrite-button">REQUEST FITRITE SERVICE</button>
+                <button type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" class="fitrite-button">REQUEST FITrite SERVICE</button>
             </form>
         </div>
     </div>

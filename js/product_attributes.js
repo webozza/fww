@@ -367,7 +367,7 @@ jQuery(document).ready(function ($) {
   }
 
   //====================================//
-  //  >>   Handle Fitrite
+  //  >>   Handle FITrite
   //====================================//
 
   //====================================//
@@ -425,7 +425,7 @@ jQuery(document).ready(function ($) {
   }
 
   //====================================//
-  //  >>   Count Fitrite Product
+  //  >>   Count FITrite Product
   //====================================//
 
   function fitriteCount() {
