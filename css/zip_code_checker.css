@@ -411,11 +411,11 @@ dl.variation dd {
   display: none;
 }
 
-.zip-code-check p {
+.zip-code-check p:first-child {
   font-size: 22px;
-  padding-bottom: 18px;
   font-weight: 700;
   padding-top: 15px;
+  margin-bottom: 0;
 }
 
 .woocommerce-cart .cart-collaterals {

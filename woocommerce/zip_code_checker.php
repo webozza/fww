@@ -11,7 +11,7 @@ function display_zip_code_checker() {
     ?>
     <div class="zip-code-check">
         <p>Is Measuring available in my area?</p>
-        <p>Enter your zip code below to see if <strong style="color:#52A37F">FIT</strong>rite is available in your area</p>
+        <p>Enter your zip code below to see if <strong style="color:#52A37F">FIT</strong>rite<br> is available in your area</p>
         <label for="zip_code">ZIP CODE</label>
         <input type="text" id="zip_code" name="zip_code" placeholder="90210">
         <button id="check_zip_code">CHECK</button>
