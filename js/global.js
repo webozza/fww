@@ -17,6 +17,7 @@ jQuery(document).ready(function ($) {
 
   let isCart = $("body.woocommerce-cart").length;
   let isCheckout = $("body.woocommerce-checkout").length;
+  let isProduct = $("body.single-product").length;
 
   let noShippingForMeasurement = () => {
     let measurementAddedToCart = $(
@@ -44,11 +45,19 @@ jQuery(document).ready(function ($) {
     }
   };
 
+  let enableSelect2 = () => {
+    $(".product_attribute select").select2();
+  };
+
   if (isCart || isCheckout) {
     noShippingForMeasurement();
   }
 
   if (isCart) {
     cartItems3();
+  }
+
+  if (isProduct) {
+    enableSelect2();
   }
 });
