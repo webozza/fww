@@ -13,7 +13,7 @@ jQuery(function ($) {
         return;
       }
 
-      // Block the checkout form to show a loader
+      // Show a loader and disable the button
       $("form.woocommerce-checkout").block({
         message: null,
         overlayCSS: {
@@ -24,7 +24,7 @@ jQuery(function ($) {
 
       $.ajax({
         type: "POST",
-        url: "/wp-admin/admin-ajax.php",
+        url: customCouponAjax.ajax_url,
         data: {
           action: "apply_coupon",
           coupon_code: coupon_code,
@@ -32,12 +32,13 @@ jQuery(function ($) {
         },
         success: function (response) {
           if (response.success) {
-            $("body").trigger("update_checkout"); // Update checkout totals dynamically
+            // Trigger WooCommerce checkout refresh
+            $("body").trigger("update_checkout");
           } else if (response.data && response.data.message) {
             alert(response.data.message);
           }
 
-          // Unblock the checkout form
+          // Unblock the form
           $("form.woocommerce-checkout").unblock();
         },
         error: function () {

@@ -1,9 +1,9 @@
 <?php
-// Remove the default coupon form placement
-remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10 );
+// Remove the default coupon message and toggle
+remove_action('woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10);
 
-// Add the coupon form right after the review order table, before the payment section
-add_action( 'woocommerce_review_order_before_payment', 'woocommerce_checkout_coupon_form' );
+// Add the coupon form directly where you want (e.g., after the order review totals)
+add_action('woocommerce_review_order_after_order_total', 'woocommerce_checkout_coupon_form');
 
 // Enqueue custom JavaScript to handle AJAX coupon application
 function custom_coupon_ajax_script() {

@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.0.42' );
+    define( '_S_VERSION', '1.0.43' );
 }
 
 //====================================//
@@ -24,6 +24,22 @@ function enqueue_zip_code_checker_assets() {
     
     // Global JS file with static version
     wp_enqueue_script('global-js', get_stylesheet_directory_uri() . '/js/global.js', array(), _S_VERSION, true);
+
+    if (is_checkout()) {
+        wp_enqueue_script(
+            'custom-coupon-ajax', // Handle for the script
+            get_stylesheet_directory_uri() . '/js/custom-coupon-ajax.js', // Path to the script
+            array('jquery'), // Dependencies (jQuery in this case)
+            _S_VERSION, // Version (replace _S_VERSION with a specific version if not defined)
+            true // Load in the footer
+        );
+
+        // Pass localized variables to the script
+        wp_localize_script('custom-coupon-ajax', 'customCouponAjax', array(
+            'ajax_url' => admin_url('admin-ajax.php'), // WordPress AJAX URL
+            'nonce'    => wp_create_nonce('apply_coupon_nonce') // Security nonce
+        ));
+    }
     
     // Conditional styles and scripts for product and cart pages
     if (is_product() || is_cart()) {
