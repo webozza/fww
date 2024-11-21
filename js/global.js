@@ -45,6 +45,18 @@ jQuery(document).ready(function ($) {
     }
   };
 
+  let removeFractions78 = () => {
+    $(
+      ".product_attribute .width select, .product_attribute .height select"
+    ).select2();
+    $(
+      '.product_attribute .width select option[value="78 (1/8)"], .product_attribute .height select option[value="78 (1/8)"], .product_attribute .width select option[value="78 (1/4)"], .product_attribute .height select option[value="78 (1/4)"], .product_attribute .width select option[value="78 (3/8)"], .product_attribute .height select option[value="78 (3/8)"], .product_attribute .width select option[value="78 (1/2)"], .product_attribute .height select option[value="78 (1/2)"], .product_attribute .width select option[value="78 (5/8)"], .product_attribute .height select option[value="78 (5/8)"], .product_attribute .width select option[value="78 (3/4)"], .product_attribute .height select option[value="78 (3/4)"], .product_attribute .width select option[value="78 (7/8)"], .product_attribute .height select option[value="78 (7/8)"]'
+    ).remove();
+    $(
+      ".product_attribute .width select, .product_attribute .height select"
+    ).trigger("change.select2");
+  };
+
   let enableSelect2 = () => {
     $(".product_attribute select").select2();
   };
@@ -59,5 +71,6 @@ jQuery(document).ready(function ($) {
 
   if (isProduct) {
     enableSelect2();
+    removeFractions78();
   }
 });
