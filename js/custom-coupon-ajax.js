@@ -9,7 +9,7 @@ jQuery(function ($) {
       var coupon_code = $("input#coupon_code").val();
 
       if (!coupon_code) {
-        alert("Please enter a coupon code.");
+        console.log("No coupon code entered.");
         return;
       }
 
@@ -32,17 +32,19 @@ jQuery(function ($) {
         },
         success: function (response) {
           if (response.success) {
-            // Trigger WooCommerce checkout refresh
+            console.log("Coupon applied successfully.");
             $("body").trigger("update_checkout");
           } else if (response.data && response.data.message) {
-            alert(response.data.message);
+            console.log("Error applying coupon: ", response.data.message);
+          } else {
+            console.log("An unknown error occurred while applying the coupon.");
           }
 
           // Unblock the form
           $("form.woocommerce-checkout").unblock();
         },
-        error: function () {
-          alert("An error occurred. Please try again.");
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.log("AJAX error: " + textStatus, errorThrown);
           $("form.woocommerce-checkout").unblock();
         },
       });

@@ -470,18 +470,12 @@ body.page-id-759 h1.entry-title span {
   background: #f9f9f9;
   padding: 20px;
   border: 1px solid #ddd;
-  margin-bottom: 20px;
+  margin-top: 20px;
   border-radius: 5px;
 }
 
-.woocommerce form.woocommerce-form-coupon label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
 .woocommerce form.woocommerce-form-coupon input#coupon_code {
-  width: calc(100% - 120px);
+  width: 70%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -492,19 +486,12 @@ body.page-id-759 h1.entry-title span {
   padding: 10px 20px;
   background-color: #52a37f;
   color: #fff;
-  font-weight: bold;
   border: none;
   border-radius: 4px;
-  cursor: pointer;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 .woocommerce form.woocommerce-form-coupon button:hover {
   background-color: #449a6b;
-}
-
-.woocommerce form.woocommerce-form-coupon p {
-  margin-bottom: 15px;
-  font-size: 14px;
-  color: #555;
 }
