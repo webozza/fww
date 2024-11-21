@@ -835,4 +835,4 @@ function change_custom_quantity_label($display_key, $meta) {
 // ====================================//
 require_once(get_stylesheet_directory() . '/actions/no-shipping-for-measurement.php');
 require_once(get_stylesheet_directory() . '/actions/standalone-measurement-on-cart.php');
-// require_once(get_stylesheet_directory() . '/actions/alter-coupon-code-position.php');
+require_once(get_stylesheet_directory() . '/actions/alter-coupon-code-position.php');
