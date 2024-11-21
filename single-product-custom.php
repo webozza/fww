@@ -30,7 +30,7 @@ if ($product) :
         
         <div class="fitrite-content">
             <h1>Professionally Measured</h1>
-            <h2>Our <span style="color: #52A37F; font-weight: bold">FIT</span><strong>rite</strong> Program Ensures Your Blinds Fit Right The First Time!</h2>
+            <h2>Our <span style="color: #52A37F">FIT</span>rite Program Ensures Your Blinds Fit Right The First Time!</h2>
             
             <ul>
                 <li>3. Professional Measurement: A skilled installer will come to your home and measure each window accurately, ensuring a seamless fit for all your window coverings.</li>

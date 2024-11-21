@@ -392,6 +392,17 @@ table.shop_table.shop_table_responsive.cart.woocommerce-cart-form__contents
 }
 
 /*====================================================================================
+** Header
+====================================================================================*/
+#menu-item-901 a {
+  text-transform: initial !important;
+}
+
+#menu-item-901 a span {
+  color: #52a37f;
+}
+
+/*====================================================================================
 ** Cart Page
 ====================================================================================*/
 .woocommerce-cart .cart-collaterals .cart_totals #shipping_method {
