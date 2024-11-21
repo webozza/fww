@@ -429,3 +429,14 @@ body.single-product .product_attribute > div > div label {
 body.single-product .product_attribute .select2-container {
   min-width: 100px !important;
 }
+
+/*====================================================================================
+** FITrite Product Page
+====================================================================================*/
+body.page-id-759 h1.entry-title {
+  text-transform: initial !important;
+}
+
+body.page-id-759 h1.entry-title span {
+  color: #52a37f;
+}
