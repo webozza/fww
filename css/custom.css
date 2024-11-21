@@ -466,8 +466,8 @@ body.page-id-759 h1.entry-title span {
 /*====================================================================================
 ** Checkout - Coupon Code Area
 ====================================================================================*/
-.woocomerce-checkout #order_review #custom-coupon-box:nth-child(2),
-.woocomerce-checkout .woocommerce-form-coupon-toggle {
+.woocommerce-checkout #order_review #custom-coupon-box:nth-child(2),
+.woocommerce-checkout .woocommerce-form-coupon-toggle {
   display: none !important;
 }
 
