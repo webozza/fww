@@ -71,24 +71,26 @@ jQuery(document).ready(function ($) {
         }
       });
     } else if (isCheckout) {
-      $("td.product-name").each(function () {
-        let productName = $(this)
-          .contents()
-          .filter(function () {
-            return this.nodeType === Node.TEXT_NODE; // Get the text node directly
-          })
-          .text()
-          .trim();
+      setTimeout(() => {
+        $("td.product-name").each(function () {
+          let productName = $(this)
+            .contents()
+            .filter(function () {
+              return this.nodeType === Node.TEXT_NODE; // Get the text node directly
+            })
+            .text()
+            .trim();
 
-        if (productName.startsWith("FITrite: Professional Measurement")) {
-          $(this).html(function (index, oldHtml) {
-            return oldHtml.replace(
-              "FITrite: Professional Measurement",
-              '<span style="color:#52A37F">FIT</span>rite: Professional Measurement'
-            );
-          });
-        }
-      });
+          if (productName.startsWith("FITrite: Professional Measurement")) {
+            $(this).html(function (index, oldHtml) {
+              return oldHtml.replace(
+                "FITrite: Professional Measurement",
+                '<span style="color:#52A37F">FIT</span>rite: Professional Measurement'
+              );
+            });
+          }
+        });
+      }, 1200);
     }
   };
 
