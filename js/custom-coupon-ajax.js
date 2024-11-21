@@ -1,4 +1,19 @@
 jQuery(function ($) {
+  let isCheckout = $("body").hasClass("woocommerce-checkout");
+
+  let creditCardFix = () => {
+    $(".sq-card-iframe-container iframe").attr(
+      "style",
+      "left:unset; position:relative"
+    );
+  };
+
+  if (isCheckout) {
+    setTimeout(() => {
+      creditCardFix();
+    }, 3000);
+  }
+
   $("#apply_custom_coupon").on("click", function (e) {
     e.preventDefault();
 
