@@ -26,6 +26,12 @@ jQuery(document).ready(function ($) {
     if (measurementAddedToCart) {
       $("tr.woocommerce-shipping-totals.shipping").hide();
       $(".woocommerce-shipping-fields").hide();
+
+      if (isCheckout) {
+        setTimeout(() => {
+          $("tr.woocommerce-shipping-totals.shipping").hide();
+        }, 1200);
+      }
     }
   };
 
