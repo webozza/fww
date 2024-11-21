@@ -35,7 +35,20 @@ jQuery(document).ready(function ($) {
     }
   };
 
+  let cartItems3 = () => {
+    let itemsOnCartCount = $(".woocommerce-cart-form__cart-item").length;
+
+    if (itemsOnCartCount >= 3) {
+      $("tr.woocommerce-shipping-totals.shipping > td").hide();
+      $("tr.woocommerce-shipping-totals.shipping > th").text(`FREE SHIPPING`);
+    }
+  };
+
   if (isCart || isCheckout) {
     noShippingForMeasurement();
+  }
+
+  if (isCart) {
+    cartItems3();
   }
 });
