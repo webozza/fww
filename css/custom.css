@@ -444,6 +444,10 @@ body.single-product .product_attribute .select2-container {
 /*====================================================================================
 ** FITrite Product Page
 ====================================================================================*/
+body.page-id-759 .zip-code-check p:first-child {
+  margin-bottom: 20px;
+}
+
 body.page-id-759 h1.entry-title {
   text-transform: initial !important;
 }
