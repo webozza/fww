@@ -29,19 +29,19 @@ if ($product) :
         </div>
         
         <div class="fitrite-content">
-            <h1>Perfectly Measured, Perfectly Fitted</h1>
-            <h2>Ensure Your Blinds Fit Perfectly – Schedule Your Measurement Today!</h2>
+            <h1>Professionally Measured</h1>
+            <h2>Our FITrite Program Ensures Your Blinds Fit Right The First Time!</h2>
             
             <ul>
-                <li>1. Professional Measurement: A skilled expert will come to your home and measure each window accurately, ensuring a seamless fit for all your window coverings.</li>
-                <li>2. $75 Measurement Fee: The total cost for the measurement service is just $75. A $10 deposit per window is required to schedule your appointment.</li>
-                <li>3. Discount Per Blind: After your measurement, receive a discount code for $10 off each blind at checkout!</li>
+                <li>3. Professional Measurement: A skilled installer will come to your home and measure each window accurately, ensuring a seamless fit for all your window coverings.</li>
+                <li>2. Cost: We charge you $75 for the measurement and take a $10 deposit on each window you are having measured..</li>
+                <li>3. Discount Code: We will email you a discount code for the amount of your deposit which you can apply at checkout.</li>
             </ul>
             
             <!-- Dynamic Cost Calculation Section -->
             <div class="cost-calculation">
                 <div class="cost-row">
-                    <span>Total Window</span>
+                    <span>Total Windows</span>
                     <div class="window-calculation">
                         <input type="text" id="window-count" name="window_count" min="1" max='99' value="1" required>
                         <div class="plus-minus-btn">
@@ -51,7 +51,7 @@ if ($product) :
                     </div>
                 </div>
                 <div class="cost-row">
-                    <span>Each Window Cost</span>
+                    <span>Deposit per Window</span>
                     <span>$10</span>
                 </div>
                 <div class="cost-row">
@@ -66,7 +66,7 @@ if ($product) :
 
             <!-- WooCommerce Add to Cart Button -->
             <form class="fitrite-form" action="<?php echo esc_url(wc_get_cart_url()); ?>" method="post">
-                <button type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" class="fitrite-button">Request Measurement Service</button>
+                <button type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" class="fitrite-button">REQUEST FITRITE SERVICE</button>
             </form>
         </div>
     </div>
