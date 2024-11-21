@@ -8,21 +8,21 @@
     <div class="video_container">
         <h2>INSIDE OR OUTSIDE MOUNT</h2>
         <div class="video_box">
-            <!-- <div class="icon"><span class="dashicons dashicons-controls-play"></span></div> -->
+            <div class="icon"><span class="dashicons dashicons-controls-play"></span></div>
             <div class='img'><img src="https://fauxwoodwarehouse.com/wp-content/uploads/2024/10/video_placeholder.png" alt=""></div>
         </div>
     </div>
     <div class="video_container">
         <h2>WHAT IS A RETURN</h2>
         <div class="video_box">
-            <!-- <div class="icon"><span class="dashicons dashicons-controls-play"></span></div> -->
+            <div class="icon"><span class="dashicons dashicons-controls-play"></span></div>
             <div class='img'><img src="https://fauxwoodwarehouse.com/wp-content/uploads/2024/10/video_placeholder.png" alt=""></div>
         </div>
     </div>
     <div class="video_container">
         <h2>WE MEASURE AND INSTALL</h2>
         <div class="video_box">
-            <!-- <div class="icon"><span class="dashicons dashicons-controls-play"></span></div> -->
+            <div class="icon"><span class="dashicons dashicons-controls-play"></span></div>
             <div class='img'><img src="https://fauxwoodwarehouse.com/wp-content/uploads/2024/10/video_placeholder.png" alt=""></div>
         </div>
     </div>
