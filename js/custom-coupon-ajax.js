@@ -9,9 +9,9 @@ jQuery(function ($) {
   };
 
   if (isCheckout) {
-    setTimeout(() => {
+    setInterval(() => {
       creditCardFix();
-    }, 3000);
+    }, 1000);
   }
 
   $("#apply_custom_coupon").on("click", function (e) {
