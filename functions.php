@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.0.41' );
+    define( '_S_VERSION', '1.0.42' );
 }
 
 //====================================//
@@ -813,12 +813,6 @@ function change_custom_quantity_label($display_key, $meta) {
     }
     return $display_key; // Return original key if it does not match
 }
-
-// ====================================//
-//  >>  Label for custom_quantity
-// ====================================//
-// remove_action('woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10);
-// add_action('woocommerce_review_order_after_order_total', 'woocommerce_checkout_coupon_form');
 
 // ====================================//
 //  >>  ACTIONS

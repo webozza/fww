@@ -20,7 +20,7 @@ add_action( 'wp_enqueue_scripts', 'custom_coupon_ajax_script' );
 // AJAX handler for applying the coupon
 function apply_coupon_ajax() {
     if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'apply_coupon_nonce' ) ) {
-        wp_send_json_error();
+        wp_send_json_error(array('message' => 'Invalid request.'));
         wp_die();
     }
 
@@ -29,10 +29,12 @@ function apply_coupon_ajax() {
         $result = WC()->cart->apply_coupon( $coupon_code );
 
         if ( $result ) {
-            wc_clear_notices(); // Clear WooCommerce notices to prevent display
+            wc_clear_notices(); // Clear WooCommerce notices
             wp_send_json_success();
         } else {
-            wp_send_json_error();
+            $error_messages = wc_get_notices('error'); // Get WooCommerce error messages
+            wc_clear_notices(); // Clear notices to avoid duplicates
+            wp_send_json_error(array('message' => implode(', ', $error_messages)));
         }
     }
     wp_die();
