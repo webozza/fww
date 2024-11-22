@@ -37,7 +37,7 @@ function child_theme_pricing_table_page() {
             <table class="widefat fixed" style="margin-bottom: 20px; border-collapse: collapse;">
                 <thead>
                     <tr style="background: #f9f9f9;">
-                        <th style="padding: 10px; border: 1px solid #ddd;">Height</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;"></th>
                         <th style="padding: 10px; border: 1px solid #ddd;">24"</th>
                         <th style="padding: 10px; border: 1px solid #ddd;">28"</th>
                         <th style="padding: 10px; border: 1px solid #ddd;">34"</th>
