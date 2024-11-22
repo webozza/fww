@@ -167,27 +167,57 @@ jQuery(document).ready(function ($) {
     let height = $("#height").val();
     let width = $("#width").val();
 
+    // Convert fractions to decimals for calculations
     height = convertFractionToDecimal(height.split(" ")[0]);
     width = convertFractionToDecimal(width.split(" ")[0]);
 
-    let heightKey = getNearestKey(
-      height,
-      Object.keys(pricingTable).map(Number)
-    );
-    let widthKey = getNearestKey(
-      width,
-      Object.keys(pricingTable[heightKey]).map(Number)
-    );
+    // Helper function to find the appropriate range key
+    function getRangeValue(value, keys) {
+      keys = keys.map(Number).sort((a, b) => a - b);
+      for (let i = 0; i < keys.length; i++) {
+        if (value <= keys[i]) {
+          return keys[i];
+        }
+      }
+      return keys[keys.length - 1]; // If value is greater than the largest key
+    }
 
-    let price = pricingTable[heightKey][widthKey] || "Not Available";
-    let priceIncludingInstallation = Number(price) + InstallationCharge;
+    // Get the appropriate height and width keys based on ranges
+    let heightKeys = Object.keys(pricingTable).map(Number);
+    let heightKey = getRangeValue(height, heightKeys);
 
+    let widthKeys = Object.keys(pricingTable[heightKey]).map(Number);
+    let widthKey = getRangeValue(width, widthKeys);
+
+    // Calculate the price and apply additional charges
+    let basePrice = pricingTable[heightKey][widthKey] || "Not Available";
+
+    // Handle edge cases where price is "Not Available"
+    if (basePrice === "Not Available") {
+      $(".new_price h3").text(basePrice);
+      console.error("Price not available for given dimensions");
+      return;
+    }
+
+    // Convert price to a number and add installation charge
+    let priceIncludingInstallation = Number(basePrice) + InstallationCharge;
+
+    // Update the price display
     $(".new_price h3").text(`$${priceIncludingInstallation}`);
 
-    console.log("price : ", price);
+    console.log("Calculated price:", priceIncludingInstallation);
 
     // Return the calculated price for later use
     return priceIncludingInstallation;
+  }
+
+  // Helper function to convert fractional strings to decimals
+  function convertFractionToDecimal(fraction) {
+    if (fraction.includes("/")) {
+      let [numerator, denominator] = fraction.split("/").map(Number);
+      return numerator / denominator;
+    }
+    return parseFloat(fraction);
   }
 
   //====================================//
