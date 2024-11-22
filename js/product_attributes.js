@@ -171,27 +171,25 @@ jQuery(document).ready(function ($) {
     height = convertFractionToDecimal(height.split(" ")[0]);
     width = convertFractionToDecimal(width.split(" ")[0]);
 
-    // Extract predefined points dynamically from the pricing table
-    const heightKeys = Object.keys(pricingTable)
-      .map(Number)
-      .sort((a, b) => a - b);
-    const widthKeys = Object.keys(pricingTable[heightKeys[0]] || {})
-      .map(Number)
-      .sort((a, b) => a - b);
+    // Predefined height and width points
+    const predefinedHeights = [30, 36, 42, 48, 54, 60, 66, 72, 78];
+    const predefinedWidths = [24, 30, 36, 42, 48, 54, 60, 66, 72, 78];
 
-    // Helper function to find the nearest valid key (width or height)
-    function getValidKey(value, keys) {
-      for (let i = 0; i < keys.length; i++) {
-        if (value <= keys[i]) {
-          return keys[i];
+    // Helper function to find the closest valid range key
+    function getValidRange(value, predefinedKeys) {
+      let currentRange = predefinedKeys[0];
+      for (let i = 1; i < predefinedKeys.length; i++) {
+        if (value < predefinedKeys[i]) {
+          return currentRange;
         }
+        currentRange = predefinedKeys[i];
       }
-      return keys[keys.length - 1];
+      return currentRange;
     }
 
-    // Get the nearest height and width keys
-    let validHeightKey = getValidKey(height, heightKeys);
-    let validWidthKey = getValidKey(width, widthKeys);
+    // Get the valid height and width keys based on predefined points
+    let validHeightKey = getValidRange(height, predefinedHeights);
+    let validWidthKey = getValidRange(width, predefinedWidths);
 
     // Ensure the keys exist in the pricing table
     if (
@@ -213,6 +211,15 @@ jQuery(document).ready(function ($) {
 
     // Return the calculated price for later use
     return Number(basePrice) + InstallationCharge;
+  }
+
+  // Helper function to convert fractional strings to decimals
+  function convertFractionToDecimal(fraction) {
+    if (fraction.includes("/")) {
+      let [numerator, denominator] = fraction.split("/").map(Number);
+      return numerator / denominator;
+    }
+    return parseFloat(fraction);
   }
 
   // Helper function to convert fractional strings to decimals
