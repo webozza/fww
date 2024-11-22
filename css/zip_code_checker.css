@@ -142,6 +142,7 @@ img.zoomImg {
 
 .video_container {
   text-align: center;
+  position: relative;
 }
 
 .video_section video {

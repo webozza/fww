@@ -11,6 +11,7 @@
             <source type="video/mp4" src="/wp-content/uploads/2024/11/Faux-Wood-Blinds-Deciding-on-Inside-or-Outside-Mount-Blinds.mp4">
             Your browser does not support the video tag.
         </video>
+        <div class="play_button"></div>
     </div>
     <div class="video_container">
         <h2>Measure Inside Mount</h2>
@@ -18,6 +19,7 @@
             <source type="video/mp4" src="/wp-content/uploads/2024/11/Faux-Wood-Warehouse_-Measuring-for-an-Inside-Mount-Blind.mp4">
             Your browser does not support the video tag.
         </video>
+        <div class="play_button"></div>
     </div>
     <div class="video_container">
         <h2>Measure Outside Mount</h2>
@@ -25,6 +27,7 @@
             <source type="video/mp4" src="/wp-content/uploads/2024/11/Faux-Wood-Warehouse_-Measuring-for-an-Outside-Mount-Blind.mp4">
             Your browser does not support the video tag.
         </video>
+        <div class="play_button"></div>
     </div>
 </div>
 
