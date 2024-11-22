@@ -573,7 +573,7 @@ body.page-id-759 h1.entry-title span {
 }
 
 /*====================================================================================
-** Responsive Handles
+** Media Query Responsive Handles
 ====================================================================================*/
 @media (max-width: 768px) {
   .video_section video {
