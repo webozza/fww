@@ -171,6 +171,9 @@ jQuery(document).ready(function ($) {
     height = convertFractionToDecimal(height.split(" ")[0]);
     width = convertFractionToDecimal(width.split(" ")[0]);
 
+    // Predefined change points for width and height
+    const predefinedKeys = [30, 36, 42, 48, 54, 60, 66, 72, 78];
+
     // Helper function to find the appropriate range key
     function getRangeValue(value, keys) {
       keys = keys.map(Number).sort((a, b) => a - b);
@@ -182,25 +185,22 @@ jQuery(document).ready(function ($) {
       return keys[keys.length - 1]; // If value is greater than the largest key
     }
 
-    // Get the appropriate height and width keys based on ranges
-    let heightKeys = Object.keys(pricingTable).map(Number);
-    let heightKey = getRangeValue(height, heightKeys);
+    // Get the appropriate height and width keys based on predefined change points
+    let heightKey = getRangeValue(height, predefinedKeys);
+    let widthKey = getRangeValue(width, predefinedKeys);
 
-    let widthKeys = Object.keys(pricingTable[heightKey]).map(Number);
-    let widthKey = getRangeValue(width, widthKeys);
-
-    // Calculate the price and apply additional charges
-    let basePrice = pricingTable[heightKey][widthKey] || "Not Available";
-
-    // Handle edge cases where price is "Not Available"
-    if (basePrice === "Not Available") {
-      $(".new_price h3").text(basePrice);
+    // Ensure the keys exist in the pricing table
+    if (!pricingTable[heightKey] || !pricingTable[heightKey][widthKey]) {
+      $(".new_price h3").text("Not Available");
       console.error("Price not available for given dimensions");
       return;
     }
 
-    // Convert price to a number and add installation charge
-    let priceIncludingInstallation = Number(basePrice) + InstallationCharge;
+    // Calculate the base price and apply the initial additional charge if applicable
+    let basePrice = pricingTable[heightKey][widthKey];
+    let initialCharge = heightKey === 30 && widthKey === 24 ? 12 : 0;
+    let priceIncludingInstallation =
+      Number(basePrice) + initialCharge + InstallationCharge;
 
     // Update the price display
     $(".new_price h3").text(`$${priceIncludingInstallation}`);
@@ -209,6 +209,24 @@ jQuery(document).ready(function ($) {
 
     // Return the calculated price for later use
     return priceIncludingInstallation;
+  }
+
+  // Helper function to convert fractional strings to decimals
+  function convertFractionToDecimal(fraction) {
+    if (fraction.includes("/")) {
+      let [numerator, denominator] = fraction.split("/").map(Number);
+      return numerator / denominator;
+    }
+    return parseFloat(fraction);
+  }
+
+  // Helper function to convert fractional strings to decimals
+  function convertFractionToDecimal(fraction) {
+    if (fraction.includes("/")) {
+      let [numerator, denominator] = fraction.split("/").map(Number);
+      return numerator / denominator;
+    }
+    return parseFloat(fraction);
   }
 
   // Helper function to convert fractional strings to decimals
