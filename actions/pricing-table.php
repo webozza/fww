@@ -4,7 +4,7 @@ add_action('admin_menu', 'child_theme_pricing_table_menu');
 
 function child_theme_pricing_table_menu() {
     add_menu_page(
-        'Pricing Table Manager',
+        'Faux Wood Warehouse Pricing Table Manager',
         'Pricing Table',
         'manage_options',
         'child-theme-pricing-table',
