@@ -196,11 +196,9 @@ jQuery(document).ready(function ($) {
       return;
     }
 
-    // Calculate the base price and apply the initial additional charge if applicable
+    // Calculate the price and apply additional charges
     let basePrice = pricingTable[heightKey][widthKey];
-    let initialCharge = heightKey === 30 && widthKey === 24 ? 12 : 0;
-    let priceIncludingInstallation =
-      Number(basePrice) + initialCharge + InstallationCharge;
+    let priceIncludingInstallation = Number(basePrice) + InstallationCharge;
 
     // Update the price display
     $(".new_price h3").text(`$${priceIncludingInstallation}`);
@@ -209,6 +207,15 @@ jQuery(document).ready(function ($) {
 
     // Return the calculated price for later use
     return priceIncludingInstallation;
+  }
+
+  // Helper function to convert fractional strings to decimals
+  function convertFractionToDecimal(fraction) {
+    if (fraction.includes("/")) {
+      let [numerator, denominator] = fraction.split("/").map(Number);
+      return numerator / denominator;
+    }
+    return parseFloat(fraction);
   }
 
   // Helper function to convert fractional strings to decimals
