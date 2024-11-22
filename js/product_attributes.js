@@ -163,12 +163,12 @@ jQuery(document).ready(function ($) {
   //  >> Price update on height and width
   //====================================//
 
-  $(document).ready(function () {
-    // Trigger initial selection change to apply the $12 fee
-    let initialWidth = $("#width").val();
-    $("#width").val(predefinedWidths[1]).trigger("change"); // Change to a different width
-    $("#width").val(initialWidth).trigger("change"); // Revert back to the initial width
-  });
+  const predefinedWidths = [24, 30, 36, 42, 48, 54, 60, 66, 72, 78];
+
+  // Trigger initial selection change to apply the $12 fee
+  let initialWidth = $("#width").val();
+  $("#width").val(predefinedWidths[1]).trigger("change"); // Change to a different width
+  $("#width").val(initialWidth).trigger("change");
 
   function updatePrice() {
     let height = $("#height").val();
@@ -221,6 +221,15 @@ jQuery(document).ready(function ($) {
 
     // Return the calculated price for later use
     return Number(basePrice) + additionalCharge + InstallationCharge;
+  }
+
+  // Helper function to convert fractional strings to decimals
+  function convertFractionToDecimal(fraction) {
+    if (fraction.includes("/")) {
+      let [numerator, denominator] = fraction.split("/").map(Number);
+      return numerator / denominator;
+    }
+    return parseFloat(fraction);
   }
 
   // Helper function to convert fractional strings to decimals
