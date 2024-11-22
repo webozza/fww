@@ -464,8 +464,21 @@ body.page-id-759 h1.entry-title span {
 }
 
 /*====================================================================================
-** Checkout - Coupon Code Area
+** Checkout
 ====================================================================================*/
+#shipping_method li {
+  text-align: right;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row-reverse;
+  gap: 10px;
+}
+
+#shipping_method li input,
+#shipping_method li label {
+  cursor: pointer;
+}
+
 .woocommerce-checkout #order_review #custom-coupon-box:nth-child(2),
 .woocommerce-checkout .woocommerce-form-coupon-toggle {
   display: none !important;
