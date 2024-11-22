@@ -163,8 +163,7 @@ jQuery(document).ready(function ($) {
   //  >> Price update on height and width
   //====================================//
 
-  $('.hwFieldSelect option[value="25"]').prop("selected", true);
-  $('.hwFieldSelect option[value="24"]').prop("selected", true);
+  $(".new_price h3").text(`$123`);
 
   function updatePrice() {
     let height = $("#height").val();
