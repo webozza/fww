@@ -4,7 +4,7 @@ add_action('admin_menu', 'child_theme_pricing_table_menu');
 
 function child_theme_pricing_table_menu() {
     add_menu_page(
-        'Faux Wood Warehouse Pricing Table Manager',
+        'Faux Wood Warehouse',
         'Pricing Table',
         'manage_options',
         'child-theme-pricing-table',
@@ -39,7 +39,7 @@ function child_theme_pricing_table_page() {
 
     ?>
     <div class="wrap">
-        <h1>Pricing Table Manager</h1>
+        <h1>Faux Wood Warehouse Pricing Table Manager</h1>
         <form method="POST">
             <label for="discount_percentage" style="display: block; margin-bottom: 10px;">
                 <strong>Discount Percentage:</strong>
