@@ -72,3 +72,17 @@ function child_theme_pricing_table_page() {
     </div>
     <?php
 }
+
+add_action('wp_footer', 'output_pricing_table_script');
+
+function output_pricing_table_script() {
+    if (is_product()) { // Check if it's a single product page
+        $pricing_table_data = get_option('child_theme_pricing_table_data', []);
+        ?>
+        <script>
+            const pricingTable = <?php echo json_encode($pricing_table_data); ?>;
+            console.log('Pricing Table:', pricingTable);
+        </script>
+        <?php
+    }
+}
