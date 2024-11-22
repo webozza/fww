@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.0.53' );
+    define( '_S_VERSION', '1.0.54' );
 }
 
 //====================================//
@@ -836,3 +836,4 @@ function change_custom_quantity_label($display_key, $meta) {
 require_once(get_stylesheet_directory() . '/actions/no-shipping-for-measurement.php');
 require_once(get_stylesheet_directory() . '/actions/standalone-measurement-on-cart.php');
 require_once(get_stylesheet_directory() . '/actions/alter-coupon-code-position.php');
+require_once(get_stylesheet_directory() . '/actions/pricing-table.php');

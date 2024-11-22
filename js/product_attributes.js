@@ -33,6 +33,8 @@ jQuery(document).ready(function ($) {
   //  >> Get Product Attributes from product page
   //====================================//
 
+  console.log("pricing-table", pricingTableData);
+
   const pricingTable = {
     30: {
       24: 111,
@@ -101,7 +103,7 @@ jQuery(document).ready(function ($) {
       40: 225,
       46: 244,
       52: 275,
-      58: 258,
+      58: 291,
       64: 332,
       70: 362,
       76: 397,
