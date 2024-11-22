@@ -163,12 +163,8 @@ jQuery(document).ready(function ($) {
   //  >> Price update on height and width
   //====================================//
 
-  const predefinedWidths = [24, 30, 36, 42, 48, 54, 60, 66, 72, 78];
-
-  // Trigger initial selection change to apply the $12 fee
-  let initialWidth = $("#width").val();
-  $("#width").val(predefinedWidths[1]).trigger("change"); // Change to a different width
-  $("#width").val(initialWidth).trigger("change");
+  $('.hwFieldSelect option[value="25"]').prop("selected", true);
+  $('.hwFieldSelect option[value="24"]').prop("selected", true);
 
   function updatePrice() {
     let height = $("#height").val();
@@ -210,35 +206,14 @@ jQuery(document).ready(function ($) {
 
     // Calculate the price from the table
     let basePrice = pricingTable[validHeightKey][validWidthKey];
-    let additionalCharge = 12; // Apply the $12 additional charge
 
     // Update the price display
-    $(".new_price h3").text(
-      `$${Number(basePrice) + additionalCharge + InstallationCharge}`
-    );
+    $(".new_price h3").text(`$${Number(basePrice) + InstallationCharge}`);
 
     console.log("Calculated price:", basePrice);
 
     // Return the calculated price for later use
-    return Number(basePrice) + additionalCharge + InstallationCharge;
-  }
-
-  // Helper function to convert fractional strings to decimals
-  function convertFractionToDecimal(fraction) {
-    if (fraction.includes("/")) {
-      let [numerator, denominator] = fraction.split("/").map(Number);
-      return numerator / denominator;
-    }
-    return parseFloat(fraction);
-  }
-
-  // Helper function to convert fractional strings to decimals
-  function convertFractionToDecimal(fraction) {
-    if (fraction.includes("/")) {
-      let [numerator, denominator] = fraction.split("/").map(Number);
-      return numerator / denominator;
-    }
-    return parseFloat(fraction);
+    return Number(basePrice) + InstallationCharge;
   }
 
   // Helper function to convert fractional strings to decimals
