@@ -2,12 +2,25 @@
 // Add an admin menu for managing the pricing table
 add_action('admin_menu', 'child_theme_pricing_table_menu');
 
+function child_theme_pricing_table_menu() {
+    add_menu_page(
+        'Faux Wood Warehouse Pricing Table Manager',
+        'Pricing Table',
+        'manage_options',
+        'child-theme-pricing-table',
+        'child_theme_pricing_table_page',
+        'dashicons-editor-table',
+        20
+    );
+}
+
+// Display the admin page
 function child_theme_pricing_table_page() {
     if (!current_user_can('manage_options')) {
         return;
     }
 
-    // Save the updated table data
+    // Save the updated table data and discount percentage
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['pricing_table'])) {
             $pricing_table = $_POST['pricing_table'];
@@ -20,7 +33,7 @@ function child_theme_pricing_table_page() {
         echo '<div class="updated"><p>Pricing table and discount updated successfully!</p></div>';
     }
 
-    // Retrieve existing table data
+    // Retrieve existing table data and discount percentage
     $pricing_table_data = get_option('child_theme_pricing_table_data', []);
     $discount_percentage = get_option('child_theme_discount_percentage', 0);
 
@@ -65,6 +78,7 @@ function child_theme_pricing_table_page() {
     <?php
 }
 
+// Output pricing table and discount percentage in JavaScript
 add_action('wp_footer', 'output_pricing_table_script');
 function output_pricing_table_script() {
     if (is_product()) { // Check if it's a single product page
@@ -75,8 +89,8 @@ function output_pricing_table_script() {
             const pricingTable = <?php echo json_encode($pricing_table_data); ?>;
             const discountPercentage = <?php echo floatval($discount_percentage); ?>;
 
-            // Apply discount to the pricing table
-            const discountedPricingTable = JSON.parse(JSON.stringify(pricingTable)); // Deep clone
+            // Apply discount to the pricing table dynamically
+            const discountedPricingTable = JSON.parse(JSON.stringify(pricingTable));
             Object.keys(discountedPricingTable).forEach(height => {
                 Object.keys(discountedPricingTable[height]).forEach(width => {
                     discountedPricingTable[height][width] = 
@@ -84,6 +98,7 @@ function output_pricing_table_script() {
                 });
             });
 
+            console.log('Pricing Table:', pricingTable);
             console.log('Discounted Pricing Table:', discountedPricingTable);
         </script>
         <?php
