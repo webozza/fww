@@ -577,6 +577,6 @@ body.page-id-759 h1.entry-title span {
 ====================================================================================*/
 @media (max-width: 768px) {
   .video_section video {
-    max-width: 100%;
+    max-width: 100% !important;
   }
 }
