@@ -94,6 +94,12 @@ jQuery(document).ready(function ($) {
     }
   };
 
+  let videoPlayer = () => {
+    $(".video_section video").click(function () {
+      $(this).attr("controls", "");
+    });
+  };
+
   if (isCart || isCheckout) {
     noShippingForMeasurement();
     alterCartTextFITrite();
@@ -106,5 +112,6 @@ jQuery(document).ready(function ($) {
   if (isProduct) {
     enableSelect2();
     removeFractions78();
+    videoPlayer();
   }
 });

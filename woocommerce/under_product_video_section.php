@@ -28,28 +28,6 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const videos = document.querySelectorAll('video');
-
-        videos.forEach(video => {
-            // Show controls only when the video is played
-            video.addEventListener('play', () => {
-                video.setAttribute('controls', 'controls');
-            });
-
-            // Remove controls when the video is paused or ends
-            video.addEventListener('pause', () => {
-                video.removeAttribute('controls');
-            });
-
-            video.addEventListener('ended', () => {
-                video.removeAttribute('controls');
-            });
-        });
-    });
-</script>
-
 
 <!-- Hidden video popups -->
 <?php

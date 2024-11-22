@@ -131,16 +131,26 @@ img.zoomImg {
 
 .video_section {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: flex-start;
   margin: 20px auto;
   padding-top: 50px;
   padding-bottom: 50px;
   max-width: 1350px;
+  gap: 30px;
 }
 
 .video_container {
   text-align: center;
+}
+
+.video_section video {
+  max-width: 223.5px;
+  cursor: pointer;
+}
+
+.video_section h2 {
+  text-transform: initial !important;
 }
 
 .video_container h2 {
