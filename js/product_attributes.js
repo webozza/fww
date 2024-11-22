@@ -171,12 +171,16 @@ jQuery(document).ready(function ($) {
     height = convertFractionToDecimal(height.split(" ")[0]);
     width = convertFractionToDecimal(width.split(" ")[0]);
 
-    // Predefined change points for width and height
-    const predefinedKeys = [24, 30, 36, 42, 48, 54, 60, 66, 72, 78];
+    // Extract predefined points dynamically from the pricing table
+    const heightKeys = Object.keys(pricingTable)
+      .map(Number)
+      .sort((a, b) => a - b);
+    const widthKeys = Object.keys(pricingTable[heightKeys[0]] || {})
+      .map(Number)
+      .sort((a, b) => a - b);
 
     // Helper function to find the appropriate range key
     function getEffectiveRange(value, keys) {
-      keys = keys.map(Number).sort((a, b) => a - b);
       let currentRange = keys[0];
       for (let i = 1; i < keys.length; i++) {
         if (value < keys[i]) {
@@ -187,9 +191,9 @@ jQuery(document).ready(function ($) {
       return currentRange;
     }
 
-    // Get the effective height and width keys based on predefined change points
-    let effectiveHeightKey = getEffectiveRange(height, predefinedKeys);
-    let effectiveWidthKey = getEffectiveRange(width, predefinedKeys);
+    // Get the effective height and width keys based on dynamically extracted keys
+    let effectiveHeightKey = getEffectiveRange(height, heightKeys);
+    let effectiveWidthKey = getEffectiveRange(width, widthKeys);
 
     // Ensure the keys exist in the pricing table
     if (
