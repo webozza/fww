@@ -95,13 +95,15 @@ jQuery(document).ready(function ($) {
   };
 
   let videoPlayer = () => {
-    $(".video_section .play_button").click(function* () {
-      $(this).parent().find("video").attr("controls", "");
-      $(this).hide();
+    $(".video_section .play_button").click(function () {
+      const video = $(this).siblings("video");
+      video.attr("controls", ""); // Add controls to the video
+      video[0].play(); // Start playing the video
+      $(this).remove(); // Hide the play button
     });
 
     $(".video_section video").click(function () {
-      $(this).find(".play_button").trigger();
+      $(this).siblings(".play_button").trigger("click");
     });
   };
 
