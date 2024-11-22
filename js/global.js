@@ -95,8 +95,13 @@ jQuery(document).ready(function ($) {
   };
 
   let videoPlayer = () => {
+    $(".video_section .play_button").click(function* () {
+      $(this).parent().find("video").attr("controls", "");
+      $(this).hide();
+    });
+
     $(".video_section video").click(function () {
-      $(this).attr("controls", "");
+      $(this).find(".play_button").trigger();
     });
   };
 
