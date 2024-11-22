@@ -817,6 +817,19 @@ function disable_tax_for_specific_product($tax_class, $product) {
     return $tax_class;
 }
 
+
+// ==================================================//
+//  >>  Plugin Code Patch to Hide Vide Player Icon
+// =================================================//
+function aiovg_custom_player_css() {
+    ?>
+    <style type="text/css">
+        body.aiovg-player .video-js .vjs-big-play-button { opacity: 0 !important; }
+    </style>
+    <?php
+}
+add_action( 'aiovg_player_head', 'aiovg_custom_player_css' );
+
 // ====================================//
 //  >>  Label for custom_quantity
 // ====================================//
