@@ -494,6 +494,7 @@ body.single-product .product_attribute .select2-container {
 
 .video_section .play_button {
   display: none !important;
+  opacity: 0 !important;
 }
 
 /*====================================================================================
