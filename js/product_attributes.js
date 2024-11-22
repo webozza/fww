@@ -172,33 +172,41 @@ jQuery(document).ready(function ($) {
     width = convertFractionToDecimal(width.split(" ")[0]);
 
     // Predefined change points for width and height
-    const predefinedKeys = [30, 36, 42, 48, 54, 60, 66, 72, 78];
+    const predefinedKeys = [24, 30, 36, 42, 48, 54, 60, 66, 72, 78];
 
     // Helper function to find the appropriate range key
-    function getRangeValue(value, keys) {
+    function getEffectiveRange(value, keys) {
       keys = keys.map(Number).sort((a, b) => a - b);
-      for (let i = 0; i < keys.length; i++) {
-        if (value <= keys[i]) {
-          return keys[i];
+      let currentRange = keys[0];
+      for (let i = 1; i < keys.length; i++) {
+        if (value < keys[i]) {
+          return currentRange;
         }
+        currentRange = keys[i];
       }
-      return keys[keys.length - 1]; // If value is greater than the largest key
+      return currentRange;
     }
 
-    // Get the appropriate height and width keys based on predefined change points
-    let heightKey = getRangeValue(height, predefinedKeys);
-    let widthKey = getRangeValue(width, predefinedKeys);
+    // Get the effective height and width keys based on predefined change points
+    let effectiveHeightKey = getEffectiveRange(height, predefinedKeys);
+    let effectiveWidthKey = getEffectiveRange(width, predefinedKeys);
 
     // Ensure the keys exist in the pricing table
-    if (!pricingTable[heightKey] || !pricingTable[heightKey][widthKey]) {
+    if (
+      !pricingTable[effectiveHeightKey] ||
+      !pricingTable[effectiveHeightKey][effectiveWidthKey]
+    ) {
       $(".new_price h3").text("Not Available");
       console.error("Price not available for given dimensions");
       return;
     }
 
     // Calculate the price and apply additional charges
-    let basePrice = pricingTable[heightKey][widthKey];
-    let priceIncludingInstallation = Number(basePrice) + InstallationCharge;
+    let basePrice = pricingTable[effectiveHeightKey][effectiveWidthKey];
+    let additionalCharge =
+      height > effectiveHeightKey || width > effectiveWidthKey ? 12 : 0;
+    let priceIncludingInstallation =
+      Number(basePrice) + additionalCharge + InstallationCharge;
 
     // Update the price display
     $(".new_price h3").text(`$${priceIncludingInstallation}`);
@@ -207,6 +215,15 @@ jQuery(document).ready(function ($) {
 
     // Return the calculated price for later use
     return priceIncludingInstallation;
+  }
+
+  // Helper function to convert fractional strings to decimals
+  function convertFractionToDecimal(fraction) {
+    if (fraction.includes("/")) {
+      let [numerator, denominator] = fraction.split("/").map(Number);
+      return numerator / denominator;
+    }
+    return parseFloat(fraction);
   }
 
   // Helper function to convert fractional strings to decimals
