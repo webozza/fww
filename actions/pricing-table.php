@@ -34,20 +34,20 @@ function child_theme_pricing_table_page() {
     <div class="wrap">
         <h1>Pricing Table Manager</h1>
         <form method="POST">
-            <table class="widefat fixed" style="margin-bottom: 20px;">
+            <table class="widefat fixed" style="margin-bottom: 20px; border-collapse: collapse;">
                 <thead>
-                    <tr>
-                        <th>Height</th>
-                        <th>24"</th>
-                        <th>28"</th>
-                        <th>34"</th>
-                        <th>40"</th>
-                        <th>46"</th>
-                        <th>52"</th>
-                        <th>58"</th>
-                        <th>64"</th>
-                        <th>70"</th>
-                        <th>76"</th>
+                    <tr style="background: #f9f9f9;">
+                        <th style="padding: 10px; border: 1px solid #ddd;">Height</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">24"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">28"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">34"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">40"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">46"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">52"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">58"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">64"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">70"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">76"</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,10 +57,10 @@ function child_theme_pricing_table_page() {
 
                     foreach ($heights as $height) {
                         echo '<tr>';
-                        echo '<td>' . esc_html($height) . '"</td>';
+                        echo '<td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">' . esc_html($height) . '"</td>';
                         foreach ($widths as $width) {
                             $value = isset($pricing_table_data[$height][$width]) ? esc_attr($pricing_table_data[$height][$width]) : '';
-                            echo '<td><input type="number" name="pricing_table[' . $height . '][' . $width . ']" value="' . $value . '" /></td>';
+                            echo '<td style="padding: 10px; border: 1px solid #ddd;"><input type="number" name="pricing_table[' . $height . '][' . $width . ']" value="' . $value . '" style="width: 100%; box-sizing: border-box; padding: 5px;" /></td>';
                         }
                         echo '</tr>';
                     }
