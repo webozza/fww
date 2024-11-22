@@ -163,6 +163,13 @@ jQuery(document).ready(function ($) {
   //  >> Price update on height and width
   //====================================//
 
+  $(document).ready(function () {
+    // Trigger initial selection change to apply the $12 fee
+    let initialWidth = $("#width").val();
+    $("#width").val(predefinedWidths[1]).trigger("change"); // Change to a different width
+    $("#width").val(initialWidth).trigger("change"); // Revert back to the initial width
+  });
+
   function updatePrice() {
     let height = $("#height").val();
     let width = $("#width").val();
@@ -203,14 +210,26 @@ jQuery(document).ready(function ($) {
 
     // Calculate the price from the table
     let basePrice = pricingTable[validHeightKey][validWidthKey];
+    let additionalCharge = 12; // Apply the $12 additional charge
 
     // Update the price display
-    $(".new_price h3").text(`$${Number(basePrice) + InstallationCharge}`);
+    $(".new_price h3").text(
+      `$${Number(basePrice) + additionalCharge + InstallationCharge}`
+    );
 
     console.log("Calculated price:", basePrice);
 
     // Return the calculated price for later use
-    return Number(basePrice) + InstallationCharge;
+    return Number(basePrice) + additionalCharge + InstallationCharge;
+  }
+
+  // Helper function to convert fractional strings to decimals
+  function convertFractionToDecimal(fraction) {
+    if (fraction.includes("/")) {
+      let [numerator, denominator] = fraction.split("/").map(Number);
+      return numerator / denominator;
+    }
+    return parseFloat(fraction);
   }
 
   // Helper function to convert fractional strings to decimals
