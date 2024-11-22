@@ -39,21 +39,21 @@ function child_theme_pricing_table_page() {
                     <tr style="background: #f9f9f9;">
                         <th style="padding: 10px; border: 1px solid #ddd;"></th>
                         <th style="padding: 10px; border: 1px solid #ddd;">24"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">28"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">34"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">40"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">46"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">52"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">58"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">64"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">70"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">76"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">30"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">36"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">42"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">48"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">54"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">60"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">66"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">72"</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">78"</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $heights = [30, 34, 40, 46, 52, 58, 64, 70, 76];
-                    $widths = [24, 28, 34, 40, 46, 52, 58, 64, 70, 76];
+                    $heights = [30, 36, 42, 48, 54, 60, 66, 72, 78];
+                    $widths = [24, 30, 36, 42, 48, 54, 60, 66, 72, 78];
 
                     foreach ($heights as $height) {
                         echo '<tr>';
