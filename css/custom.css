@@ -472,6 +472,7 @@ body.page-id-759 h1.entry-title span {
   justify-content: flex-start;
   flex-direction: row-reverse;
   gap: 10px;
+  align-items: center;
 }
 
 #shipping_method li input,
@@ -479,8 +480,8 @@ body.page-id-759 h1.entry-title span {
   cursor: pointer;
 }
 
-.woocommerce-checkout #order_review #custom-coupon-box:nth-child(2),
-.woocommerce-checkout .woocommerce-form-coupon-toggle {
+.woocommerce-checkout .woocommerce-form-coupon-toggle,
+#order_review #custom-coupon-box:not(:first-child) {
   display: none !important;
 }
 
