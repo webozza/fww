@@ -2,59 +2,51 @@
 // Add an admin menu for managing the pricing table
 add_action('admin_menu', 'child_theme_pricing_table_menu');
 
-function child_theme_pricing_table_menu() {
-    add_menu_page(
-        'Faux Wood Warehouse Pricing Table Manager',
-        'Pricing Table',
-        'manage_options',
-        'child-theme-pricing-table',
-        'child_theme_pricing_table_page',
-        'dashicons-editor-table',
-        20
-    );
-}
-
-// Display the admin page
 function child_theme_pricing_table_page() {
     if (!current_user_can('manage_options')) {
         return;
     }
 
     // Save the updated table data
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pricing_table'])) {
-        $pricing_table = $_POST['pricing_table'];
-        update_option('child_theme_pricing_table_data', $pricing_table);
-        echo '<div class="updated"><p>Pricing table updated successfully!</p></div>';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['pricing_table'])) {
+            $pricing_table = $_POST['pricing_table'];
+            update_option('child_theme_pricing_table_data', $pricing_table);
+        }
+        if (isset($_POST['discount_percentage'])) {
+            $discount_percentage = floatval($_POST['discount_percentage']);
+            update_option('child_theme_discount_percentage', $discount_percentage);
+        }
+        echo '<div class="updated"><p>Pricing table and discount updated successfully!</p></div>';
     }
 
     // Retrieve existing table data
     $pricing_table_data = get_option('child_theme_pricing_table_data', []);
+    $discount_percentage = get_option('child_theme_discount_percentage', 0);
 
     ?>
     <div class="wrap">
         <h1>Pricing Table Manager</h1>
         <form method="POST">
+            <label for="discount_percentage" style="display: block; margin-bottom: 10px;">
+                <strong>Discount Percentage:</strong>
+                <input type="number" id="discount_percentage" name="discount_percentage" value="<?php echo esc_attr($discount_percentage); ?>" step="0.01" style="width: 100px;" />%
+            </label>
             <table class="widefat fixed" style="margin-bottom: 20px; border-collapse: collapse;">
                 <thead>
                     <tr style="background: #f9f9f9;">
                         <th style="padding: 10px; border: 1px solid #ddd;"></th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">24"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">30"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">36"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">42"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">48"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">54"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">60"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">66"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">72"</th>
-                        <th style="padding: 10px; border: 1px solid #ddd;">78"</th>
+                        <?php
+                        $widths = [24, 30, 36, 42, 48, 54, 60, 66, 72, 78];
+                        foreach ($widths as $width) {
+                            echo '<th style="padding: 10px; border: 1px solid #ddd;">' . esc_html($width) . '"</th>';
+                        }
+                        ?>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     $heights = [30, 36, 42, 48, 54, 60, 66, 72, 78];
-                    $widths = [24, 30, 36, 42, 48, 54, 60, 66, 72, 78];
-
                     foreach ($heights as $height) {
                         echo '<tr>';
                         echo '<td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">' . esc_html($height) . '"</td>';
@@ -74,14 +66,25 @@ function child_theme_pricing_table_page() {
 }
 
 add_action('wp_footer', 'output_pricing_table_script');
-
 function output_pricing_table_script() {
     if (is_product()) { // Check if it's a single product page
         $pricing_table_data = get_option('child_theme_pricing_table_data', []);
+        $discount_percentage = get_option('child_theme_discount_percentage', 0);
         ?>
         <script>
             const pricingTable = <?php echo json_encode($pricing_table_data); ?>;
-            console.log('Pricing Table:', pricingTable);
+            const discountPercentage = <?php echo floatval($discount_percentage); ?>;
+
+            // Apply discount to the pricing table
+            const discountedPricingTable = JSON.parse(JSON.stringify(pricingTable)); // Deep clone
+            Object.keys(discountedPricingTable).forEach(height => {
+                Object.keys(discountedPricingTable[height]).forEach(width => {
+                    discountedPricingTable[height][width] = 
+                        (discountedPricingTable[height][width] * (1 - discountPercentage / 100)).toFixed(2);
+                });
+            });
+
+            console.log('Discounted Pricing Table:', discountedPricingTable);
         </script>
         <?php
     }
