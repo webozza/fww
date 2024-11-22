@@ -180,7 +180,7 @@ jQuery(document).ready(function ($) {
     );
 
     let price = pricingTable[heightKey][widthKey] || "Not Available";
-    let priceIncludingInstallation = price + InstallationCharge;
+    let priceIncludingInstallation = Number(price) + InstallationCharge;
 
     $(".new_price h3").text(`$${priceIncludingInstallation}`);
 
