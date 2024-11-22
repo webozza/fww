@@ -60,7 +60,7 @@ do_action( 'woocommerce_email_before_order_table', $order, $sent_to_admin, $plai
                         $height = wc_get_order_item_meta( $item_id, 'Height', true );
                         $mount = wc_get_order_item_meta( $item_id, 'Mount', true );
                         $window_name = wc_get_order_item_meta( $item_id, 'Window Name', true );
-                        $returns = wc_get_order_item_meta( $item_id, 'Returns', true );
+                        // $returns = wc_get_order_item_meta( $item_id, 'Returns', true );
                         $color = wc_get_order_item_meta( $item_id, 'Color', true );
         
                         // Display each custom field in the product line
@@ -76,9 +76,9 @@ do_action( 'woocommerce_email_before_order_table', $order, $sent_to_admin, $plai
                         if ( $window_name ) {
                             echo '<p style="margin: 0 0 5px;"><strong>Window Name:</strong> ' . esc_html( $window_name ) . '</p>';
                         }
-                        if ( $returns ) {
-                            echo '<p style="margin: 0 0 5px;"><strong>Returns:</strong> ' . esc_html( $returns ) . '</p>';
-                        }
+                        // if ( $returns ) {
+                        //     echo '<p style="margin: 0 0 5px;"><strong>Returns:</strong> ' . esc_html( $returns ) . '</p>';
+                        // }
                         if ( $color ) {
                             echo '<p style="margin: 0 0 5px;"><strong>Color:</strong> ' . esc_html( $color ) . '</p>';
                         }

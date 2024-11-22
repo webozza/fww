@@ -49,7 +49,7 @@ $product_price = $product->get_price();
 					<label for="window_name">Window Name</label>
 					<input name="window_name" type="text" placeholder="Living Room Left">
 				</div>
-				<div>
+				<div style="display: none">
 					<label for="need_returns">Does your blind need returns</label>
 					<select id="return_size" name="return_size">
 						<option value="select size">select size</option>

@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.0.60' );
+    define( '_S_VERSION', '1.0.61' );
 }
 
 //====================================//
@@ -259,12 +259,12 @@ function display_custom_data_in_cart($item_data, $cart_item) {
             'value' => sanitize_text_field($cart_item['window_name'])
         );
     }
-    if ($cart_item['blind']) {
-        $item_data[] = array(
-            'name' => 'Returns',
-            'value' => sanitize_text_field($cart_item['blind'])
-        );
-    }
+    // if ($cart_item['blind']) {
+    //     $item_data[] = array(
+    //         'name' => 'Returns',
+    //         'value' => sanitize_text_field($cart_item['blind'])
+    //     );
+    // }
     if (($cart_item['custom_price'])) {
         $item_data[] = array(
             'name' => 'Custom Price',
@@ -544,9 +544,9 @@ function save_custom_fields_to_order_meta( $item, $cart_item_key, $values, $orde
         $item->add_meta_data( 'Window Name', $values['window_name'] );
     }
 
-    if ( isset( $values['blind'] ) ) {
-        $item->add_meta_data( 'Returns', $values['blind'] );
-    }
+    // if ( isset( $values['blind'] ) ) {
+    //     $item->add_meta_data( 'Returns', $values['blind'] );
+    // }
 
     if ( isset( $values['color'] ) ) {
         $item->add_meta_data( 'Color', $values['color'] );
