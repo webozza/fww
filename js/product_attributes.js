@@ -179,46 +179,49 @@ jQuery(document).ready(function ($) {
       .map(Number)
       .sort((a, b) => a - b);
 
-    // Helper function to find the appropriate range key
-    function getEffectiveRange(value, keys) {
-      let currentRange = keys[0];
-      for (let i = 1; i < keys.length; i++) {
-        if (value < keys[i]) {
-          return currentRange;
+    // Helper function to find the nearest valid key (width or height)
+    function getValidKey(value, keys) {
+      for (let i = 0; i < keys.length; i++) {
+        if (value <= keys[i]) {
+          return keys[i];
         }
-        currentRange = keys[i];
       }
-      return currentRange;
+      return keys[keys.length - 1];
     }
 
-    // Get the effective height and width keys based on dynamically extracted keys
-    let effectiveHeightKey = getEffectiveRange(height, heightKeys);
-    let effectiveWidthKey = getEffectiveRange(width, widthKeys);
+    // Get the nearest height and width keys
+    let validHeightKey = getValidKey(height, heightKeys);
+    let validWidthKey = getValidKey(width, widthKeys);
 
     // Ensure the keys exist in the pricing table
     if (
-      !pricingTable[effectiveHeightKey] ||
-      !pricingTable[effectiveHeightKey][effectiveWidthKey]
+      !pricingTable[validHeightKey] ||
+      !pricingTable[validHeightKey][validWidthKey]
     ) {
       $(".new_price h3").text("Not Available");
       console.error("Price not available for given dimensions");
       return;
     }
 
-    // Calculate the price and apply additional charges
-    let basePrice = pricingTable[effectiveHeightKey][effectiveWidthKey];
-    let additionalCharge =
-      height > effectiveHeightKey || width > effectiveWidthKey ? 12 : 0;
-    let priceIncludingInstallation =
-      Number(basePrice) + additionalCharge + InstallationCharge;
+    // Calculate the price from the table
+    let basePrice = pricingTable[validHeightKey][validWidthKey];
 
     // Update the price display
-    $(".new_price h3").text(`$${priceIncludingInstallation}`);
+    $(".new_price h3").text(`$${Number(basePrice) + InstallationCharge}`);
 
-    console.log("Calculated price:", priceIncludingInstallation);
+    console.log("Calculated price:", basePrice);
 
     // Return the calculated price for later use
-    return priceIncludingInstallation;
+    return Number(basePrice) + InstallationCharge;
+  }
+
+  // Helper function to convert fractional strings to decimals
+  function convertFractionToDecimal(fraction) {
+    if (fraction.includes("/")) {
+      let [numerator, denominator] = fraction.split("/").map(Number);
+      return numerator / denominator;
+    }
+    return parseFloat(fraction);
   }
 
   // Helper function to convert fractional strings to decimals
