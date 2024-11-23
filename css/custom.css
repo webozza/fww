@@ -578,6 +578,13 @@ body.page-id-759 h1.entry-title span {
   font-style: italic;
 }
 
+.free-shipping-message {
+  color: #af312e;
+  font-size: 14px;
+  margin-top: 5px;
+  font-weight: bold;
+}
+
 /*====================================================================================
 ** Media Query Responsive Handles
 ====================================================================================*/
