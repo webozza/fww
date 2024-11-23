@@ -516,6 +516,22 @@ body.page-id-759 h1.entry-title span {
 /*====================================================================================
 ** Checkout
 ====================================================================================*/
+.woocommerce-checkout
+  form.checkout
+  #order_review
+  .payment_methods
+  li
+  .payment_box {
+  margin-left: 8px;
+}
+
+.wc-square-credit-card-new-payment-method-form.js-wc-square-credit-card-new-payment-method-form
+  p.form-row.woocommerce-validated {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
 #shipping_method li {
   text-align: right;
   display: flex;
@@ -549,7 +565,7 @@ body.page-id-759 h1.entry-title span {
 }
 
 #custom-coupon-box input {
-  width: calc(100% - 110px);
+  width: calc(100% - 60%);
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
