@@ -565,7 +565,7 @@ body.page-id-759 h1.entry-title span {
 }
 
 #custom-coupon-box input {
-  width: calc(100% - 60%);
+  width: calc(100% - 60%) !important;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
