@@ -112,10 +112,6 @@ jQuery(document).ready(function ($) {
     alterCartTextFITrite();
   }
 
-  if (isCart) {
-    cartItems3();
-  }
-
   if (isProduct) {
     enableSelect2();
     removeFractions78();
