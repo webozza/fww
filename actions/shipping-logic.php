@@ -32,7 +32,7 @@ function add_free_shipping_message() {
     if ($item_count < 3) {
         $items_needed = 3 - $item_count; // Calculate items needed for free shipping
         echo '<p class="free-shipping-message">';
-        echo sprintf(__('%d more = FREE', 'woocommerce'), $items_needed);
+        echo sprintf(__('Add %d more blind(s) to get FREE shipping!', 'woocommerce'), $items_needed);
         echo '</p>';
     }
 }
