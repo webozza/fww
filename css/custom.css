@@ -580,10 +580,14 @@ body.page-id-759 h1.entry-title span {
 
 .free-shipping-hint {
   font-size: 12px;
-  color: #666;
+  color: #666; /* Subtle gray */
   margin: 5px 0 0;
   line-height: 1.4;
-  text-align: right;
+  text-align: left; /* Aligns nicely under the shipping cost */
+}
+.woocommerce-cart .cart_totals .shipping {
+  border: none; /* Optional: Remove unnecessary borders */
+  padding: 0; /* Adjust spacing */
 }
 
 /*====================================================================================

@@ -1,5 +1,16 @@
 <?php
 
+add_filter('woocommerce_package_rates', 'remove_default_shipping_methods', 10, 2);
+function remove_default_shipping_methods($rates, $package) {
+    // Unset all shipping methods except the custom fee logic
+    foreach ($rates as $rate_id => $rate) {
+        if ($rate_id !== 'custom_shipping_method') {
+            unset($rates[$rate_id]);
+        }
+    }
+    return $rates;
+}
+
 add_action('woocommerce_cart_calculate_fees', 'custom_shipping_with_message');
 function custom_shipping_with_message() {
     if (is_cart() || is_checkout()) {
