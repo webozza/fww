@@ -582,14 +582,6 @@ body.woocommerce-cart tr.woocommerce-shipping-totals.shipping {
   display: none;
 }
 
-.free-shipping-message {
-  font-size: 12px;
-  color: #666; /* Subtle gray for the message */
-  margin: 5px 0 0;
-  line-height: 1.4;
-  text-align: left; /* Align neatly under the shipping line */
-}
-
 /*====================================================================================
 ** Media Query Responsive Handles
 ====================================================================================*/

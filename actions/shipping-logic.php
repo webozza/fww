@@ -31,7 +31,7 @@ function add_free_shipping_message() {
     // Display message only if less than 3 items are in the cart
     if ($item_count < 3) {
         $items_needed = 3 - $item_count; // Calculate items needed for free shipping
-        echo '<p class="free-shipping-message" style="margin: 5px 0 0; font-size: 12px; color: #666; line-height: 1.4;">';
+        echo '<p class="free-shipping-message">';
         echo sprintf(__('%d more = FREE', 'woocommerce'), $items_needed);
         echo '</p>';
     }
