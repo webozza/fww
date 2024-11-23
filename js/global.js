@@ -134,7 +134,7 @@ jQuery(document).ready(function ($) {
   }
 
   if (isCart) {
-    moveShippingFreeMsg();
+    // moveShippingFreeMsg();
   }
 
   if (isProduct) {
