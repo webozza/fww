@@ -584,10 +584,11 @@ body.woocommerce-checkout tr.woocommerce-shipping-totals.shipping {
 }
 
 .free-shipping-message {
-  background: #90ee90;
+  background-color: #dff0d8;
+  border-color: #d0e9c6;
+  color: #3c763d;
   border-radius: 4px;
   padding: 0 10px;
-  font-weight: bold;
 }
 
 /*====================================================================================
