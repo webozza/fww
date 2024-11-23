@@ -107,9 +107,34 @@ jQuery(document).ready(function ($) {
     });
   };
 
+  let moveShippingFreeMsg = () => {
+    var freeShippingMessage = $(".free-shipping-message").text(); // Get the message
+    var shippingFee = $(
+      '.fee td[data-title="Shipping"] .woocommerce-Price-amount'
+    ); // Locate the shipping fee
+
+    if (freeShippingMessage && shippingFee.length) {
+      // Append the message to the shipping fee in brackets
+      var currentShippingText = shippingFee.html();
+      shippingFee.html(
+        currentShippingText +
+          ' <span style="font-size: 12px; color: #666;">(' +
+          freeShippingMessage +
+          ")</span>"
+      );
+
+      // Remove the original message from its location
+      $(".free-shipping-message").remove();
+    }
+  };
+
   if (isCart || isCheckout) {
     noShippingForMeasurement();
     alterCartTextFITrite();
+  }
+
+  if (isCart) {
+    moveShippingFreeMsg();
   }
 
   if (isProduct) {
