@@ -578,7 +578,8 @@ body.page-id-759 h1.entry-title span {
   font-style: italic;
 }
 
-body.woocommerce-cart tr.woocommerce-shipping-totals.shipping {
+body.woocommerce-cart tr.woocommerce-shipping-totals.shipping,
+body.woocommerce-checkout tr.woocommerce-shipping-totals.shipping {
   display: none;
 }
 
