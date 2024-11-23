@@ -850,3 +850,4 @@ require_once(get_stylesheet_directory() . '/actions/no-shipping-for-measurement.
 require_once(get_stylesheet_directory() . '/actions/standalone-measurement-on-cart.php');
 require_once(get_stylesheet_directory() . '/actions/alter-coupon-code-position.php');
 require_once(get_stylesheet_directory() . '/actions/pricing-table.php');
+require_once(get_stylesheet_directory() . '/actions/shipping-logic.php');
