@@ -1,18 +1,12 @@
 <?php
 
-add_filter('woocommerce_package_rates', 'remove_default_shipping_methods', 10, 2);
-function remove_default_shipping_methods($rates, $package) {
-    // Unset all shipping methods except the custom fee logic
-    foreach ($rates as $rate_id => $rate) {
-        if ($rate_id !== 'custom_shipping_method') {
-            unset($rates[$rate_id]);
-        }
-    }
-    return $rates;
+add_filter('woocommerce_package_rates', 'remove_all_default_shipping_methods', 10, 2);
+function remove_all_default_shipping_methods($rates, $package) {
+    return []; // Removes all default shipping methods
 }
 
-add_action('woocommerce_cart_calculate_fees', 'custom_shipping_with_message');
-function custom_shipping_with_message() {
+add_action('woocommerce_cart_calculate_fees', 'custom_shipping_fee_and_message');
+function custom_shipping_fee_and_message() {
     if (is_cart() || is_checkout()) {
         global $woocommerce;
 
@@ -27,17 +21,17 @@ function custom_shipping_with_message() {
     }
 }
 
-add_action('woocommerce_cart_totals_after_shipping', 'display_free_shipping_hint');
-function display_free_shipping_hint() {
+add_action('woocommerce_cart_totals_after_shipping', 'add_free_shipping_message');
+function add_free_shipping_message() {
     global $woocommerce;
 
     // Count the total number of items in the cart
     $item_count = $woocommerce->cart->get_cart_contents_count();
 
-    // If items are less than 3, show a dynamic message
+    // Display message only if less than 3 items are in the cart
     if ($item_count < 3) {
         $items_needed = 3 - $item_count; // Calculate items needed for free shipping
-        echo '<p class="free-shipping-hint" style="margin: 5px 0 0; font-size: 12px; color: #666; line-height: 1.4;">';
+        echo '<p class="free-shipping-message" style="margin: 5px 0 0; font-size: 12px; color: #666; line-height: 1.4;">';
         echo sprintf(__('%d more = FREE', 'woocommerce'), $items_needed);
         echo '</p>';
     }
