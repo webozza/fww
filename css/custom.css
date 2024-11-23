@@ -578,11 +578,12 @@ body.page-id-759 h1.entry-title span {
   font-style: italic;
 }
 
-.free-shipping-message {
-  color: #af312e;
-  font-size: 14px;
-  margin-top: 5px;
-  font-weight: bold;
+.free-shipping-hint {
+  font-size: 12px;
+  color: #666;
+  margin: 5px 0 0;
+  line-height: 1.4;
+  text-align: right;
 }
 
 /*====================================================================================
