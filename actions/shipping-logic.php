@@ -31,8 +31,9 @@ function add_free_shipping_message() {
     // Display message only if less than 3 items are in the cart
     if ($item_count < 3) {
         $items_needed = 3 - $item_count; // Calculate items needed for free shipping
+        $blind_label = ($items_needed > 1) ? 'blinds' : 'blind'; // Use singular or plural based on the count
         echo '<p class="free-shipping-message">';
-        echo sprintf(__('Add %d more blind(s) to get FREE shipping!', 'woocommerce'), $items_needed);
+        echo sprintf(__('Add %d more %s to get FREE shipping!', 'woocommerce'), $items_needed, $blind_label);
         echo '</p>';
     }
 }
