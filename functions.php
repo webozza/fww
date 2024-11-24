@@ -304,21 +304,6 @@ function add_installation_checkbox() {
     <?php
 }
 
-/**
- * Helper function to check if the cart contains a specific product ID.
- *
- * @param int $product_id Product ID to check for.
- * @return bool True if the product is in the cart, false otherwise.
- */
-function cart_contains_product($product_id) {
-    foreach (WC()->cart->get_cart() as $cart_item) {
-        if ($cart_item['product_id'] == $product_id) {
-            return true;
-        }
-    }
-    return false;
-}
-
 add_action('wp_footer', 'add_installation_checkbox_script');
 function add_installation_checkbox_script() {
     if (is_cart()) {
