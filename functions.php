@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.1.10' );
+    define( '_S_VERSION', '1.1.11' );
 }
 
 //====================================//
@@ -288,6 +288,12 @@ function display_custom_price_cart($price, $cart_item, $cart_item_key) {
 
 add_action('woocommerce_after_cart_table', 'add_installation_checkbox');
 function add_installation_checkbox() {
+    // Check if the cart contains product with ID 1056
+    if (cart_contains_product(1056)) {
+        return; // Do not show the installation checkbox if product ID 1056 is in the cart
+    }
+
+    // Display the installation checkbox
     ?>
     <div class="installation-checkbox">
         <label>
@@ -296,6 +302,21 @@ function add_installation_checkbox() {
         </label>
     </div>
     <?php
+}
+
+/**
+ * Helper function to check if the cart contains a specific product ID.
+ *
+ * @param int $product_id Product ID to check for.
+ * @return bool True if the product is in the cart, false otherwise.
+ */
+function cart_contains_product($product_id) {
+    foreach (WC()->cart->get_cart() as $cart_item) {
+        if ($cart_item['product_id'] == $product_id) {
+            return true;
+        }
+    }
+    return false;
 }
 
 add_action('wp_footer', 'add_installation_checkbox_script');

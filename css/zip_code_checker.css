@@ -414,8 +414,21 @@ dl.variation dd {
   border-top: 1px solid #80808026;
 }
 
+.installation-checkbox label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.installation-checkbox label input {
+  width: fit-content;
+  cursor: pointer;
+}
+
 .installation-checkbox {
-  display: none;
+  margin-bottom: 30px;
 }
 
 .zip-code-check p:first-child {
