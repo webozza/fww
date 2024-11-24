@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.1.17' );
+    define( '_S_VERSION', '1.1.18' );
 }
 
 //====================================//
@@ -728,3 +728,4 @@ require_once(get_stylesheet_directory() . '/actions/alter-coupon-code-position.p
 require_once(get_stylesheet_directory() . '/actions/pricing-table.php');
 require_once(get_stylesheet_directory() . '/actions/shipping-logic.php');
 require_once(get_stylesheet_directory() . '/actions/installation-fee.php');
+require_once(get_stylesheet_directory() . '/actions/handling-fee.php');
