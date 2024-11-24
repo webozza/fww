@@ -519,9 +519,20 @@ body.page-id-759 h1.entry-title span {
 }
 
 /*====================================================================================
-** Checkout
+** Checkout Page
 ====================================================================================*/
-.woocommerce-checkout
+body.woocommerce-checkout
+  .shop_table.woocommerce-checkout-review-order-table
+  .product-name {
+  width: 70%;
+}
+
+body.woocommerce-checkout dd.variation-WindowName p {
+  font-weight: bold;
+  color: #000;
+}
+
+body.woocommerce-checkout
   form.checkout
   #order_review
   .payment_methods
