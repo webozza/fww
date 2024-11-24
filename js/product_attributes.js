@@ -163,7 +163,10 @@ jQuery(document).ready(function ($) {
   //  >> Price update on height and width
   //====================================//
 
-  $(".new_price h3").text(`$123`);
+  let product759 = $("body").hasClass("page-id-759");
+  if (product759) {
+    $(".new_price h3").text(`$123`);
+  }
 
   function updatePrice() {
     let height = $("#height").val();
