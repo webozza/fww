@@ -163,7 +163,7 @@ jQuery(document).ready(function ($) {
   //  >> Price update on height and width
   //====================================//
 
-  let product759 = $("body").hasClass("page-id-759");
+  let product759 = $("body").hasClass("postid-465");
   if (product759) {
     $(".new_price h3").text(`$123`);
   }

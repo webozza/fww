@@ -5,7 +5,6 @@ function add_installation_checkbox() {
     if (cart_contains_product(1056)) {
         return; // Do not show the installation checkbox if product ID 1056 is in the cart
     }
-
     ?>
     <div class="installation-checkbox">
         <label>
@@ -99,23 +98,23 @@ function remove_installation_fee_if_product_in_cart() {
 
 add_action('woocommerce_remove_cart_item', 'remove_installation_fee_on_item_removal', 10, 2);
 function remove_installation_fee_on_item_removal($cart_item_key, $cart) {
-    $product_id = $cart->cart_contents[$cart_item_key]['product_id'];
-    
-    // Check if the removed item was the one triggering the installation fee
-    if (cart_contains_product(1056) || WC()->session->get('installation_required')) {
+    if (!cart_contains_product(1056) && !WC()->session->get('installation_required')) {
         WC()->session->set('installation_required', false);
         WC()->session->set('installationPrice', 0);
         WC()->cart->calculate_totals();
     }
 }
 
-function cart_contains_product($product_id) {
-    foreach (WC()->cart->get_cart() as $cart_item) {
-        if ($cart_item['product_id'] == $product_id) {
-            return true;
+// Declare cart_contains_product only if it doesn't already exist
+if (!function_exists('cart_contains_product')) {
+    function cart_contains_product($product_id) {
+        foreach (WC()->cart->get_cart() as $cart_item) {
+            if ($cart_item['product_id'] == $product_id) {
+                return true;
+            }
         }
+        return false;
     }
-    return false;
 }
 
 add_action('wp', 'initialize_installation_session');
