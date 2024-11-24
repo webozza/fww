@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.1.12' );
+    define( '_S_VERSION', '1.1.14' );
 }
 
 //====================================//
@@ -280,149 +280,6 @@ function display_custom_price_cart($price, $cart_item, $cart_item_key) {
         $price = wc_price($cart_item['custom_price']);
     }
     return $price;
-}
-
-// ====================================//
-//  >>  Cart -> Adding Installation Fee
-// ====================================//
-
-add_action('woocommerce_after_cart_table', 'add_installation_checkbox');
-function add_installation_checkbox() {
-    // Check if the cart contains product with ID 1056
-    if (cart_contains_product(1056)) {
-        return; // Do not show the installation checkbox if product ID 1056 is in the cart
-    }
-
-    // Display the installation checkbox
-    ?>
-    <div class="installation-checkbox">
-        <label>
-            <input type="checkbox" id="installation_required" name="installation_required" value="yes">
-            I need installation (additional cost)
-        </label>
-    </div>
-    <?php
-}
-
-add_action('wp_footer', 'add_installation_checkbox_script');
-function add_installation_checkbox_script() {
-    if (is_cart()) {
-        ?>
-        <script type="text/javascript">
-            jQuery(document).ready(function($) {
-
-                function calculateInstallationPrice() {
-                    // Select all product rows in the cart
-                    var $productRows = $('.woocommerce-cart-form .woocommerce-cart-form__contents tbody tr');
-                    
-                    // Initialize variables for counting widths
-                    var countWidthLessThan36 = 0;
-                    var countWidth36to72 = 0;
-                    var countWidthMoreThan72 = 0;
-                
-                    // Iterate through each product row to count widths
-                    $productRows.each(function() {
-                        var widthText = $(this).find('.variation-Width p').eq(0).text();
-                        var width = parseInt(widthText);
-                
-                        if (width <= 36) {
-                            countWidthLessThan36++;
-                        } else if (width > 36 && width <= 72) {
-                            countWidth36to72++;
-                        } else if (width > 72) {
-                            countWidthMoreThan72++;
-                        }
-                        console.log('width : ', width)
-                
-                    });
-                
-                    // Calculate additional fees based on the counts
-                    var additionalFee = countWidthLessThan36 * 25 + countWidth36to72 * 30 + countWidthMoreThan72 * 35;
-                
-                    // Minimum installation fee is $75
-                    var installationFee = Math.max(75, additionalFee);
-                
-                    return installationFee;
-                }
-    
-                function update_installation_fee() {
-                    
-                    var installation_required = $('#installation_required').is(':checked') ? 'yes' : 'no';
-                    
-                    $.ajax({
-                        type: 'POST',
-                        url: '<?php echo admin_url('admin-ajax.php'); ?>',
-                        data: {
-                            action: 'update_installation_fee',
-                            installation_required: installation_required,
-                            installationPrice:calculateInstallationPrice() ,
-                        },
-                        success: function(response) {
-                            $('body').trigger('update_checkout');
-                        }
-                    });
-                }
-
-                $('#installation_required').on('change', function() {
-                    update_installation_fee();
-                });
-            });
-        </script>
-        <?php
-    }
-}
-
-add_action('wp_ajax_update_installation_fee', 'update_installation_fee');
-add_action('wp_ajax_nopriv_update_installation_fee', 'update_installation_fee');
-function update_installation_fee() {
-
-    if(isset($_POST['installationPrice'])){
-        $installationPrice = $_POST['installationPrice'];
-        WC()->session->set('installationPrice', $installationPrice);
-    }
-    if (isset($_POST['installation_required']) && $_POST['installation_required'] === 'yes') {
-        WC()->session->set('installation_required', true);
-    } else {
-        WC()->session->set('installation_required', false);
-    }
-
-    WC()->cart->calculate_totals();
-    wp_die();
-}
-
-add_action('woocommerce_cart_calculate_fees', 'add_installation_fee');
-function add_installation_fee() {
-    // Ensure the session is initialized
-    if (WC()->session === null) {
-        return;
-    }
-
-    // Check if the installation fee should be added
-    if (WC()->session->get('installation_required') === true) {
-        $installation_fee = WC()->session->get('installationPrice');
-        WC()->cart->add_fee('Installation Fee', $installation_fee, true, 'standard');
-    }
-}
-
-add_action('woocommerce_cart_calculate_fees', 'remove_installation_fee_if_product_in_cart');
-function remove_installation_fee_if_product_in_cart() {
-    // Check if product ID 1056 is in the cart
-    if (cart_contains_product(1056)) {
-        // Remove the installation fee by ensuring it's not added
-        foreach (WC()->cart->get_fees() as $key => $fee) {
-            if ($fee->name === 'Installation Fee') {
-                unset(WC()->cart->fees[$key]);
-            }
-        }
-    }
-}
-
-// Initialize the session variable to false if not set
-add_action('wp', 'initialize_installation_session');
-function initialize_installation_session() {
-    if (is_cart() && WC()->session->get('installation_required') === null) {
-        WC()->session->set('installation_required', false);
-    }
 }
 
 // ====================================//
@@ -870,3 +727,4 @@ require_once(get_stylesheet_directory() . '/actions/standalone-measurement-on-ca
 require_once(get_stylesheet_directory() . '/actions/alter-coupon-code-position.php');
 require_once(get_stylesheet_directory() . '/actions/pricing-table.php');
 require_once(get_stylesheet_directory() . '/actions/shipping-logic.php');
+require_once(get_stylesheet_directory() . '/actions/installation-fee.php');
