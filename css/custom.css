@@ -415,6 +415,11 @@ table.shop_table.shop_table_responsive.cart.woocommerce-cart-form__contents
   font-size: 15px;
 }
 
+.woocommerce-cart dd.variation-WindowName p {
+  font-weight: bold;
+  color: #000;
+}
+
 /*====================================================================================
 ** Blog
 ====================================================================================*/
