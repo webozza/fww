@@ -404,6 +404,19 @@ function add_installation_fee() {
     }
 }
 
+add_action('woocommerce_cart_calculate_fees', 'remove_installation_fee_if_product_in_cart');
+function remove_installation_fee_if_product_in_cart() {
+    // Check if product ID 1056 is in the cart
+    if (cart_contains_product(1056)) {
+        // Remove the installation fee by ensuring it's not added
+        foreach (WC()->cart->get_fees() as $key => $fee) {
+            if ($fee->name === 'Installation Fee') {
+                unset(WC()->cart->fees[$key]);
+            }
+        }
+    }
+}
+
 // Initialize the session variable to false if not set
 add_action('wp', 'initialize_installation_session');
 function initialize_installation_session() {
