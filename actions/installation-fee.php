@@ -44,7 +44,11 @@ function add_installation_fee_calculation_script() {
                     });
 
                     // Return the total fee
-                    return baseFee + additionalFee;
+                    if (additionalFee < 75) {
+                        return baseFee
+                    } else {
+                        return additionalFee
+                    }
                 }
 
                 // Update the installation fee dynamically
