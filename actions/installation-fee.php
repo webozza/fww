@@ -3,11 +3,6 @@
 // Add checkboxes for installation on the cart page
 add_action('woocommerce_after_cart_item_name', 'add_installation_checkbox_to_cart_item', 10, 2);
 function add_installation_checkbox_to_cart_item($cart_item, $cart_item_key) {
-    // Exclude product with ID 1056
-    if ($cart_item['product_id'] == 1056) {
-        return;
-    }
-
     // Add a checkbox for each cart item
     $checked = isset($cart_item['installation_required']) && $cart_item['installation_required'] === 'yes' ? 'checked' : '';
     echo '<div class="installation-checkbox">';
@@ -29,6 +24,7 @@ function add_installation_checkbox_script() {
                     var cartKey = $(this).data('cart-key');
                     var installationRequired = $(this).is(':checked') ? 'yes' : 'no';
 
+                    // Dynamically retrieve the product's width for fee calculation
                     var widthText = $(this).closest('tr').find('.variation-Width p').text();
                     var width = parseInt(widthText) || 0;
 
@@ -43,6 +39,7 @@ function add_installation_checkbox_script() {
                         }
                     }
 
+                    // Send the data to the server
                     $.ajax({
                         type: 'POST',
                         url: '<?php echo admin_url('admin-ajax.php'); ?>',
@@ -80,7 +77,7 @@ function update_cart_item_installation() {
     $installation_required = sanitize_text_field($_POST['installation_required']);
     $installation_fee = floatval($_POST['installation_fee']);
 
-    // Update cart item data
+    // Update the specific cart item's meta
     $cart = WC()->cart->get_cart();
     if (isset($cart[$cart_key])) {
         WC()->cart->cart_contents[$cart_key]['installation_required'] = $installation_required;
@@ -98,6 +95,7 @@ function update_cart_item_installation() {
 add_action('woocommerce_cart_calculate_fees', 'add_installation_fees_to_cart');
 function add_installation_fees_to_cart() {
     foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
+        // Check if the item requires installation
         if (isset($cart_item['installation_required']) && $cart_item['installation_required'] === 'yes') {
             $fee = isset($cart_item['installation_fee']) ? floatval($cart_item['installation_fee']) : 0;
             if ($fee > 0) {
@@ -106,6 +104,7 @@ function add_installation_fees_to_cart() {
         }
     }
 }
+
 
 // Utility function to check if a product is in the cart
 if (!function_exists('cart_contains_product')) {
