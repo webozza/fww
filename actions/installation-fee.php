@@ -1,4 +1,5 @@
 <?php
+
 // Add checkboxes for installation on the cart page
 add_action('woocommerce_after_cart_item_name', 'add_installation_checkbox_to_cart_item', 10, 2);
 function add_installation_checkbox_to_cart_item($cart_item, $cart_item_key) {
@@ -11,7 +12,7 @@ function add_installation_checkbox_to_cart_item($cart_item, $cart_item_key) {
     $checked = isset($cart_item['installation_required']) && $cart_item['installation_required'] === 'yes' ? 'checked' : '';
     echo '<div class="installation-checkbox">';
     echo '<label>';
-    echo '<input type="checkbox" class="installation-required" data-cart-key="' . $cart_item_key . '" value="yes" ' . $checked . '>';
+    echo '<input type="checkbox" class="installation-required" data-cart-key="' . esc_attr($cart_item_key) . '" value="yes" ' . $checked . '>';
     echo ' I need installation (additional cost)';
     echo '</label>';
     echo '</div>';
@@ -80,11 +81,10 @@ function update_cart_item_installation() {
     $installation_fee = floatval($_POST['installation_fee']);
 
     // Update cart item data
-    foreach (WC()->cart->get_cart() as $key => $cart_item) {
-        if ($key === $cart_key) {
-            WC()->cart->cart_contents[$key]['installation_required'] = $installation_required;
-            WC()->cart->cart_contents[$key]['installation_fee'] = $installation_fee;
-        }
+    $cart = WC()->cart->get_cart();
+    if (isset($cart[$cart_key])) {
+        WC()->cart->cart_contents[$cart_key]['installation_required'] = $installation_required;
+        WC()->cart->cart_contents[$cart_key]['installation_fee'] = $installation_fee;
     }
 
     // Save the cart session and recalculate totals
@@ -93,7 +93,6 @@ function update_cart_item_installation() {
 
     wp_send_json_success(['message' => 'Installation fee updated for item']);
 }
-
 
 // Add installation fees to the cart
 add_action('woocommerce_cart_calculate_fees', 'add_installation_fees_to_cart');
