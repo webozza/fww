@@ -3,6 +3,10 @@
 // Add a single installation checkbox on the cart page
 add_action('woocommerce_cart_totals_before_order_total', 'add_installation_checkbox_to_cart_totals');
 function add_installation_checkbox_to_cart_totals() {
+    if (product_1056_in_cart()) {
+        return; // Do not display the checkbox if product ID 1056 is in the cart
+    }
+
     $checked = WC()->session->get('installation_required') === 'yes' ? 'checked' : '';
     echo '<div class="installation-checkbox">';
     echo '<label>';
@@ -15,7 +19,7 @@ function add_installation_checkbox_to_cart_totals() {
 // Add script to handle checkbox changes dynamically
 add_action('wp_footer', 'add_installation_checkbox_script');
 function add_installation_checkbox_script() {
-    if (is_cart()) {
+    if (is_cart() && !product_1056_in_cart()) {
         ?>
         <script type="text/javascript">
             jQuery(document).ready(function ($) {
@@ -63,12 +67,23 @@ add_action('woocommerce_cart_calculate_fees', 'add_combined_installation_fee_to_
 function add_combined_installation_fee_to_cart(WC_Cart $cart) {
     $installation_required = WC()->session->get('installation_required');
 
+    // Remove installation fee if product ID 1056 is in the cart
+    if (product_1056_in_cart()) {
+        WC()->session->set('installation_required', 'no');
+        return; // Exit without applying the fee
+    }
+
     if ($installation_required === 'yes') {
         $base_fee = 75; // Base installation fee
         $additional_fee = 0; // Additional fee for all items
 
         // Iterate through all items in the cart
         foreach ($cart->get_cart() as $cart_item) {
+            // Exclude product with ID 1056 from the fee calculation
+            if ($cart_item['product_id'] == 1056) {
+                continue;
+            }
+
             // Check if the width is stored in the item's metadata
             if (isset($cart_item['variation']['Width'])) {
                 $width = intval($cart_item['variation']['Width']); // Get the width
@@ -87,22 +102,26 @@ function add_combined_installation_fee_to_cart(WC_Cart $cart) {
         // Total fee is the base fee plus all additional fees
         $total_fee = $base_fee + $additional_fee;
 
+        // Log the calculation details
+        $log_file = WP_CONTENT_DIR . '/installation-fee-debug.log';
+        $log_data = [
+            'base_fee' => $base_fee,
+            'additional_fee' => $additional_fee,
+            'total_fee' => $total_fee,
+        ];
+        file_put_contents($log_file, json_encode($log_data, JSON_PRETTY_PRINT) . PHP_EOL, FILE_APPEND);
+
         // Add the installation fee to the cart
         $cart->add_fee('Installation Fee', $total_fee, true, 'standard');
     }
 }
 
-
-
-
-// Utility function to check if a product is in the cart
-if (!function_exists('cart_contains_product')) {
-    function cart_contains_product($product_id) {
-        foreach (WC()->cart->get_cart() as $cart_item) {
-            if ($cart_item['product_id'] == $product_id) {
-                return true;
-            }
+// Helper function to check if product ID 1056 is in the cart
+function product_1056_in_cart() {
+    foreach (WC()->cart->get_cart() as $cart_item) {
+        if ($cart_item['product_id'] == 1056) {
+            return true;
         }
-        return false;
     }
+    return false;
 }
