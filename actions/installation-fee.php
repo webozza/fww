@@ -84,11 +84,14 @@ function add_combined_installation_fee_to_cart(WC_Cart $cart) {
                 continue;
             }
 
-            // Check if the width is stored in the item's metadata
+            // Attempt to retrieve width from the item's variation
+            $width = null;
             if (isset($cart_item['variation']['Width'])) {
-                $width = intval($cart_item['variation']['Width']); // Get the width
+                $width = intval($cart_item['variation']['Width']);
+            }
 
-                // Calculate fee based on width
+            // Calculate additional fee based on width
+            if (!is_null($width)) {
                 if ($width > 0 && $width <= 36) {
                     $additional_fee += 25; // Add $25 for widths <= 36
                 } elseif ($width > 36 && $width <= 72) {
