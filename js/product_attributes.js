@@ -33,7 +33,9 @@ jQuery(document).ready(function ($) {
   //  >> Get Product Attributes from product page
   //====================================//
 
-  console.log(pricingTable);
+  if ($("body").hasClass("postid-465")) {
+    console.log(pricingTable);
+  }
   // const pricingTable = {
   //   30: {
   //     24: 111,
