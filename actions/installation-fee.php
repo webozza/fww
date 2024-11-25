@@ -21,83 +21,70 @@ add_action('wp_footer', 'add_installation_fee_calculation_script');
 function add_installation_fee_calculation_script() {
     if (is_cart() && !product_1056_in_cart()) {
         ?>
-            <script type="text/javascript">
-                jQuery(document).ready(function ($) {
-                    // Function to calculate the total installation fee
-                    function calculateInstallationFee() {
-                        let additionalFee = 0;
+        <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+                // Function to calculate the total installation fee
+                function calculateInstallationFee() {
+                    let additionalFee = 0; // Additional fee based on widths
 
-                        // Iterate over cart items
-                        $('.cart_item').each(function () {
-                            let widthText = $(this).find('.variation-Width p').text().trim();
-                            let width = parseInt(widthText) || 0;
+                    // Iterate over cart items
+                    $('.cart_item').each(function () {
+                        let widthText = $(this).find('.variation-Width p').text().trim(); // Example selector
+                        let width = parseInt(widthText) || 0;
 
-                            if (width > 0 && width <= 36) {
-                                additionalFee += 25;
-                            } else if (width > 36 && width <= 72) {
-                                additionalFee += 30;
-                            } else if (width > 72) {
-                                additionalFee += 35;
-                            }
-                        });
-
-                        return Math.max(additionalFee, 75); // Minimum fee is $75
-                    }
-
-                    // Update the installation fee dynamically
-                    function updateInstallationFee() {
-                        let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
-                        let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
-
-                        // Send the updated fee to the server
-                        $.ajax({
-                            type: 'POST',
-                            url: '<?php echo admin_url('admin-ajax.php'); ?>',
-                            data: {
-                                action: 'update_installation_fee',
-                                installation_required: installationRequired,
-                                total_fee: totalFee
-                            },
-                            success: function (response) {
-                                if (response.success) {
-                                    // Refresh WooCommerce cart fragments to update the cart totals
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '/wp-admin/admin-ajax.php',
-                                        data: {
-                                            action: 'woocommerce_get_refreshed_fragments'
-                                        },
-                                        success: function (refreshResponse) {
-                                            if (refreshResponse.fragments) {
-                                                $.each(refreshResponse.fragments, function (key, value) {
-                                                    $(key).replaceWith(value);
-                                                });
-                                            }
-                                        },
-                                    });
-                                } else {
-                                    console.error(response);
-                                }
-                            },
-                            error: function (error) {
-                                console.error(error);
-                            },
-                        });
-                    }
-
-                    // Trigger fee calculation on checkbox change
-                    $('#installation-required').on('change', function () {
-                        updateInstallationFee();
-                    });
-
-                    // Trigger fee calculation on cart updates
-                    $('body').on('updated_cart_totals', function () {
-                        if ($('#installation-required').is(':checked')) {
-                            updateInstallationFee();
+                        // Add to the additional fee based on the width
+                        if (width > 0 && width <= 36) {
+                            additionalFee += 25;
+                        } else if (width > 36 && width <= 72) {
+                            additionalFee += 30;
+                        } else if (width > 72) {
+                            additionalFee += 35;
                         }
                     });
+
+                    // Ensure the fee is at least $75
+                    return Math.max(additionalFee, 75);
+                }
+
+                // Update the installation fee dynamically
+                function updateInstallationFee() {
+                    let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
+                    let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
+
+                    // Send the updated fee to the server
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                        data: {
+                            action: 'update_installation_fee',
+                            installation_required: installationRequired,
+                            total_fee: totalFee
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                location.reload(); // Refresh the page to reflect changes
+                            } else {
+                                console.error(response);
+                            }
+                        },
+                        error: function (error) {
+                            console.error(error);
+                        },
+                    });
+                }
+
+                // Trigger fee calculation when the checkbox changes
+                $('#installation-required').on('change', function () {
+                    updateInstallationFee();
                 });
-            </script>
+
+                // Reset the checkbox and fee when the cart is updated
+                $('body').on('updated_cart_totals', function () {
+                    $('#installation-required').prop('checked', false); // Uncheck the checkbox
+                    updateInstallationFee(); // Reset the fee
+                });
+            });
+        </script>
         <?php
     }
 }
@@ -121,6 +108,7 @@ function add_combined_installation_fee_to_cart(WC_Cart $cart) {
     $installation_required = WC()->session->get('installation_required');
     $installation_fee = WC()->session->get('installation_fee');
 
+    // Remove installation fee if product ID 1056 is in the cart
     if (product_1056_in_cart()) {
         WC()->session->set('installation_required', 'no');
         WC()->session->set('installation_fee', 0);
@@ -130,6 +118,13 @@ function add_combined_installation_fee_to_cart(WC_Cart $cart) {
     if ($installation_required === 'yes' && $installation_fee > 0) {
         $cart->add_fee('Installation Fee', $installation_fee, true, 'standard');
     }
+}
+
+// Reset installation fee and checkbox when the cart updates
+add_action('woocommerce_cart_updated', 'reset_installation_fee_on_cart_update');
+function reset_installation_fee_on_cart_update() {
+    WC()->session->set('installation_required', 'no');
+    WC()->session->set('installation_fee', 0);
 }
 
 // Helper function to check if product ID 1056 is in the cart
