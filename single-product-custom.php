@@ -33,9 +33,9 @@ if ($product) :
             <h2>Our <span style="color: #52A37F">FIT</span>rite Program Ensures Your Blinds Fit Right The First Time!</h2>
             
             <ul>
-                <li>3. Professional Measurement: A skilled installer will come to your home and measure each window accurately, ensuring a seamless fit for all your window coverings.</li>
+                <li>1. Professional Measurement: A skilled installer will come to your home and measure each window accurately, ensuring a seamless fit for all your window coverings.</li>
                 <li>2. Cost: We charge you $75 for the measurement and take a $10 deposit on each window you are having measured..</li>
-                <li>3. Discount Code: We will email you a discount code for the amount of your deposit which you can apply at checkout.</li>
+                <li>3. Discount Code: We will email you a discount code for the amount of your deposit which you can apply at checkout when you actually purchase your blinds.</li>
             </ul>
             
             <!-- Dynamic Cost Calculation Section -->
