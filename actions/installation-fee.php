@@ -65,11 +65,18 @@ function add_combined_installation_fee_to_cart(WC_Cart $cart) {
 
     if ($installation_required === 'yes') {
         $base_fee = 75; // Base installation fee
-        $additional_fee = 0;
+        $additional_fee = 0; // Additional fee based on widths
 
+        // Iterate through all items in the cart
         foreach ($cart->get_cart() as $cart_item) {
-            if (isset($cart_item['variation']['Width'])) {
-                $width = intval($cart_item['variation']['Width']); // Get the width of the item
+            $product = $cart_item['data'];
+            $variation = $cart_item['variation']; // Variation data for the product
+
+            // Check if the Width is present in the variation data
+            if (isset($variation['Width'])) {
+                $width = intval($variation['Width']); // Get the width
+
+                // Calculate fee based on width
                 if ($width > 0 && $width <= 36) {
                     $additional_fee += 25; // Add $25 for widths <= 36
                 } elseif ($width > 36 && $width <= 72) {
@@ -80,12 +87,14 @@ function add_combined_installation_fee_to_cart(WC_Cart $cart) {
             }
         }
 
-        // Add the base fee to the additional fees
+        // Total fee: base fee + additional fee
         $total_fee = $base_fee + $additional_fee;
 
+        // Add the installation fee to the cart
         $cart->add_fee('Installation Fee', $total_fee, true, 'standard');
     }
 }
+
 
 
 // Utility function to check if a product is in the cart
