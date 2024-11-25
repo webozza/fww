@@ -719,6 +719,17 @@ function change_custom_quantity_label($display_key, $meta) {
     return $display_key; // Return original key if it does not match
 }
 
+// ===========================================//
+//  >>  Change WooCommerce Email Footer Text
+// ===========================================//
+add_filter('woocommerce_email_footer_text', 'custom_woocommerce_email_footer_text');
+
+function custom_woocommerce_email_footer_text($footer_text) {
+    // Replace this with your custom text
+    $footer_text = 'Faux Wood Warehouse';
+    return $footer_text;
+}
+
 // ====================================//
 //  >>  ACTIONS
 // ====================================//
