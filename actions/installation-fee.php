@@ -7,11 +7,14 @@ function add_installation_checkbox_to_cart_totals() {
     }
 
     $checked = WC()->session->get('installation_required') === 'yes' ? 'checked' : '';
-    echo '<div class="installation-checkbox">';
+    echo '<div class="installation-checkbox" style="background-color: #fff; padding: 10px; border: 1px solid #eee; margin-bottom: 15px;">';
     echo '<label>';
     echo '<input type="checkbox" id="installation-required" value="yes" ' . $checked . '>';
     echo ' Want us to install for you? (additional cost applies)';
     echo '</label>';
+    echo '</div>';
+    echo '<div id="loading-effect" style="display: none; text-align: center; margin-top: 10px;">';
+    echo '<span>Updating...</span>';
     echo '</div>';
 }
 
@@ -20,97 +23,113 @@ add_action('wp_footer', 'add_installation_fee_calculation_script');
 function add_installation_fee_calculation_script() {
     if (is_cart() && !product_1056_in_cart()) {
         ?>
-            <script type="text/javascript">
-                jQuery(document).ready(function ($) {
-                    // Function to calculate the total installation fee
-                    function calculateInstallationFee() {
-                        let additionalFee = 0;
+        <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+                // Function to calculate the total installation fee
+                function calculateInstallationFee() {
+                    let additionalFee = 0;
 
-                        // Iterate over cart items
-                        $('.cart_item').each(function () {
-                            let widthText = $(this).find('.variation-Width p').text().trim();
-                            let width = parseInt(widthText) || 0;
+                    // Iterate over cart items
+                    $('.cart_item').each(function () {
+                        let widthText = $(this).find('.variation-Width p').text().trim();
+                        let width = parseInt(widthText) || 0;
 
-                            if (width > 0 && width <= 36) {
-                                additionalFee += 25;
-                            } else if (width > 36 && width <= 72) {
-                                additionalFee += 30;
-                            } else if (width > 72) {
-                                additionalFee += 35;
-                            }
-                        });
-
-                        return Math.max(additionalFee, 75); // Minimum fee is $75
-                    }
-
-                    // Function to display the installation fee dynamically
-                    function displayInstallationFee(totalFee) {
-                        // Remove existing fee row to prevent duplication
-                        $('.installation-fee-row').remove();
-
-                        // Add the installation fee row dynamically
-                        if (totalFee > 0) {
-                            $('<tr class="installation-fee-row"><th>Installation Fee</th><td>' + wc_price(totalFee) + '</td></tr>')
-                                .insertAfter('.cart_totals .cart-subtotal');
+                        if (width > 0 && width <= 36) {
+                            additionalFee += 25;
+                        } else if (width > 36 && width <= 72) {
+                            additionalFee += 30;
+                        } else if (width > 72) {
+                            additionalFee += 35;
                         }
+                    });
+
+                    return Math.max(additionalFee, 75); // Minimum fee is $75
+                }
+
+                // Function to display the installation fee dynamically
+                function displayInstallationFee(totalFee) {
+                    // Remove existing fee row to prevent duplication
+                    $('.installation-fee-row').remove();
+
+                    // Add the installation fee row dynamically
+                    if (totalFee > 0) {
+                        $('<tr class="installation-fee-row"><th>Installation Fee</th><td>' + wc_price(totalFee) + '</td></tr>')
+                            .insertAfter('.cart_totals .cart-subtotal');
                     }
+                }
 
-                    // Update the installation fee dynamically
-                    function updateInstallationFee() {
-                        let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
-                        let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
-
-                        // Update the fee in the DOM
-                        displayInstallationFee(totalFee);
-
-                        // Send the updated fee to the server
-                        $.ajax({
-                            type: 'POST',
-                            url: '<?php echo admin_url('admin-ajax.php'); ?>',
-                            data: {
-                                action: 'update_installation_fee',
-                                installation_required: installationRequired,
-                                total_fee: totalFee
-                            },
-                            success: function (response) {
-                                if (!response.success) {
-                                    console.error(response);
-                                }
-                            },
-                            error: function (error) {
-                                console.error(error);
-                            },
-                        });
+                // Show and hide loading effect
+                function showLoadingEffect(show) {
+                    if (show) {
+                        $('#loading-effect').fadeIn();
+                    } else {
+                        $('#loading-effect').fadeOut();
                     }
+                }
 
-                    // Trigger fee calculation on checkbox change
-                    $('#installation-required').on('change', function () {
-                        updateInstallationFee();
-                    });
+                // Update the installation fee dynamically
+                function updateInstallationFee() {
+                    let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
+                    let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
 
-                    // Trigger fee calculation on cart updates
-                    $('body').on('updated_cart_totals', function () {
-                        let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
-                        let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
-                        displayInstallationFee(totalFee);
-                    });
+                    // Show loading effect
+                    showLoadingEffect(true);
 
-                    // Initial calculation on page load
-                    $(document).ready(function () {
-                        let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
-                        let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
-                        displayInstallationFee(totalFee);
+                    // Update the fee in the DOM
+                    displayInstallationFee(totalFee);
+
+                    // Send the updated fee to the server
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                        data: {
+                            action: 'update_installation_fee',
+                            installation_required: installationRequired,
+                            total_fee: totalFee
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showLoadingEffect(false); // Hide loading effect
+                            } else {
+                                console.error(response);
+                                showLoadingEffect(false); // Hide loading effect
+                            }
+                        },
+                        error: function (error) {
+                            console.error(error);
+                            showLoadingEffect(false); // Hide loading effect
+                        },
                     });
+                }
+
+                // Trigger fee calculation on checkbox change
+                $('#installation-required').on('change', function () {
+                    updateInstallationFee();
                 });
 
-                // WooCommerce price formatting helper
-                function wc_price(amount) {
-                    return new Intl.NumberFormat('en-US', {
-                        style: 'currency',
-                        currency: '<?php echo get_woocommerce_currency(); ?>'
-                    }).format(amount);
-                }
-            </script>
+                // Trigger fee calculation on cart updates
+                $('body').on('updated_cart_totals', function () {
+                    let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
+                    let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
+                    displayInstallationFee(totalFee);
+                });
+
+                // Initial calculation on page load
+                $(document).ready(function () {
+                    let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
+                    let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
+                    displayInstallationFee(totalFee);
+                });
+            });
+
+            // WooCommerce price formatting helper
+            function wc_price(amount) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: '<?php echo get_woocommerce_currency(); ?>'
+                }).format(amount);
+            }
+        </script>
         <?php
     }
 }
