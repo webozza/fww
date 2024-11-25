@@ -10,8 +10,9 @@ function display_zip_code_checker() {
 
     ?>
     <div class="zip-code-check">
-        <p>Want us to measure your for you?</p>
-        <p>Enter your zip code below to see if <strong style="color:#52A37F">FIT</strong>rite<br> is available in your area</p>
+        <p>Want us to measure for you?</p>
+        <!-- <p>Enter your zip code below to see if <strong style="color:#52A37F">FIT</strong>rite<br> is available in your area</p> -->
+        <p>Enter your Zip code below to see if installation is available in your area</p>
         <label for="zip_code">ZIP CODE</label>
         <input type="text" id="zip_code" name="zip_code" placeholder="90210">
         <button id="check_zip_code">CHECK</button>
@@ -23,10 +24,6 @@ function display_zip_code_checker() {
         //  let sucess_text =  `<span class="zip-available"><img src="<?= $tick_icon?>"> YES, get started <a href="/measuring">click here</a>`;
         let sucess_text =  `<span class="zip-available"><img src="<?= $tick_icon?>"> YES, get started <a href="/fitrite">click here</a>`;
          let unavailable_text = `<span class="zip-not-available"><img src="<?= $cros_icon?>"> Unfortunately not at this time</span>`
-         
-         console.log(sucess_text);
-         console.log(unavailable_text)
-        console.log(available_zip_codes)
 
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('check_zip_code').addEventListener('click', function() {
