@@ -7,14 +7,11 @@ function add_installation_checkbox_to_cart_totals() {
     }
 
     $checked = WC()->session->get('installation_required') === 'yes' ? 'checked' : '';
-    echo '<div class="installation-checkbox" style="background-color: #fff; padding: 10px; border: 1px solid #eee; margin-bottom: 15px;">';
+    echo '<div class="installation-checkbox">';
     echo '<label>';
     echo '<input type="checkbox" id="installation-required" value="yes" ' . $checked . '>';
     echo ' Want us to install for you? (additional cost applies)';
     echo '</label>';
-    echo '</div>';
-    echo '<div id="loading-effect" style="display: none; text-align: center; margin-top: 10px;">';
-    echo '<span>Updating...</span>';
     echo '</div>';
 }
 
@@ -46,9 +43,9 @@ function add_installation_fee_calculation_script() {
                     return Math.max(additionalFee, 75); // Minimum fee is $75
                 }
 
-                // Function to display the installation fee dynamically
+                // Function to display the installation fee
                 function displayInstallationFee(totalFee) {
-                    // Remove existing fee row to prevent duplication
+                    // Remove existing fee row if present
                     $('.installation-fee-row').remove();
 
                     // Add the installation fee row dynamically
@@ -58,22 +55,10 @@ function add_installation_fee_calculation_script() {
                     }
                 }
 
-                // Show and hide loading effect
-                function showLoadingEffect(show) {
-                    if (show) {
-                        $('#loading-effect').fadeIn();
-                    } else {
-                        $('#loading-effect').fadeOut();
-                    }
-                }
-
                 // Update the installation fee dynamically
                 function updateInstallationFee() {
                     let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
                     let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
-
-                    // Show loading effect
-                    showLoadingEffect(true);
 
                     // Update the fee in the DOM
                     displayInstallationFee(totalFee);
@@ -88,16 +73,12 @@ function add_installation_fee_calculation_script() {
                             total_fee: totalFee
                         },
                         success: function (response) {
-                            if (response.success) {
-                                showLoadingEffect(false); // Hide loading effect
-                            } else {
+                            if (!response.success) {
                                 console.error(response);
-                                showLoadingEffect(false); // Hide loading effect
                             }
                         },
                         error: function (error) {
                             console.error(error);
-                            showLoadingEffect(false); // Hide loading effect
                         },
                     });
                 }
@@ -150,13 +131,6 @@ function update_installation_fee() {
 // Add the installation fee to the cart totals
 add_action('woocommerce_cart_calculate_fees', 'add_combined_installation_fee_to_cart');
 function add_combined_installation_fee_to_cart(WC_Cart $cart) {
-    // Remove existing installation fee to avoid duplication
-    foreach ($cart->get_fees() as $key => $fee) {
-        if ($fee->name === 'Installation Fee') {
-            unset($cart->fees_api()->fees[$key]);
-        }
-    }
-
     $installation_required = WC()->session->get('installation_required');
     $installation_fee = WC()->session->get('installation_fee');
 
