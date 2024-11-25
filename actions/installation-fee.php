@@ -64,24 +64,29 @@ function add_combined_installation_fee_to_cart(WC_Cart $cart) {
     $installation_required = WC()->session->get('installation_required');
 
     if ($installation_required === 'yes') {
-        $total_fee = 75; // Base fee for installation
+        $base_fee = 75; // Base installation fee
+        $additional_fee = 0;
 
         foreach ($cart->get_cart() as $cart_item) {
             if (isset($cart_item['variation']['Width'])) {
                 $width = intval($cart_item['variation']['Width']); // Get the width of the item
                 if ($width > 0 && $width <= 36) {
-                    $total_fee += 25; // Add $25 for widths <= 36
+                    $additional_fee += 25; // Add $25 for widths <= 36
                 } elseif ($width > 36 && $width <= 72) {
-                    $total_fee += 30; // Add $30 for widths between 37 and 72
+                    $additional_fee += 30; // Add $30 for widths between 37 and 72
                 } elseif ($width > 72) {
-                    $total_fee += 35; // Add $35 for widths > 72
+                    $additional_fee += 35; // Add $35 for widths > 72
                 }
             }
         }
 
+        // Add the base fee to the additional fees
+        $total_fee = $base_fee + $additional_fee;
+
         $cart->add_fee('Installation Fee', $total_fee, true, 'standard');
     }
 }
+
 
 // Utility function to check if a product is in the cart
 if (!function_exists('cart_contains_product')) {
