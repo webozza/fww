@@ -64,6 +64,7 @@ function add_installation_fee_calculation_script() {
                         success: function (response) {
                             if (response.success) {
                                 $('body').trigger('update_checkout'); // Update totals dynamically
+                                location.reload();
                             } else {
                                 console.error(response);
                             }
