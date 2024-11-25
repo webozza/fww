@@ -1,3 +1,4 @@
+<?php
 // Add checkboxes for installation on the cart page
 add_action('woocommerce_after_cart_item_name', 'add_installation_checkbox_to_cart_item', 10, 2);
 function add_installation_checkbox_to_cart_item($cart_item, $cart_item_key) {
@@ -22,8 +23,8 @@ function add_installation_checkbox_script() {
     if (is_cart()) {
         ?>
         <script type="text/javascript">
-            jQuery(document).ready(function($) {
-                $('.installation-required').on('change', function() {
+            jQuery(document).ready(function ($) {
+                $('.installation-required').on('change', function () {
                     var cartKey = $(this).data('cart-key');
                     var installationRequired = $(this).is(':checked') ? 'yes' : 'no';
 
@@ -48,9 +49,9 @@ function add_installation_checkbox_script() {
                             action: 'update_cart_item_installation',
                             cart_key: cartKey,
                             installation_required: installationRequired,
-                            installation_fee: installationFee
+                            installation_fee: installationFee,
                         },
-                        success: function(response) {
+                        success: function (response) {
                             if (response.success) {
                                 $('body').trigger('update_checkout'); // Update totals dynamically
                                 location.reload(); // Reload page to reflect changes
@@ -58,9 +59,9 @@ function add_installation_checkbox_script() {
                                 console.error(response);
                             }
                         },
-                        error: function(error) {
+                        error: function (error) {
                             console.error(error);
-                        }
+                        },
                     });
                 });
             });
@@ -90,13 +91,14 @@ function update_cart_item_installation() {
     WC()->cart->set_session();
     WC()->cart->calculate_totals();
 
-    wp_send_json_success(['message' => 'Installation fee updated']);
+    wp_send_json_success(['message' => 'Installation fee updated for item']);
 }
+
 
 // Add installation fees to the cart
 add_action('woocommerce_cart_calculate_fees', 'add_installation_fees_to_cart');
 function add_installation_fees_to_cart() {
-    foreach (WC()->cart->get_cart() as $cart_item) {
+    foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
         if (isset($cart_item['installation_required']) && $cart_item['installation_required'] === 'yes') {
             $fee = isset($cart_item['installation_fee']) ? floatval($cart_item['installation_fee']) : 0;
             if ($fee > 0) {

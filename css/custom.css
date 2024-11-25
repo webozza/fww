@@ -408,9 +408,8 @@ table.shop_table.shop_table_responsive.cart.woocommerce-cart-form__contents
 .woocommerce-cart .installation-checkbox {
   margin-bottom: 30px;
   background: lightyellow;
-  padding: 10px 20px;
+  padding: 10px;
   width: fit-content;
-  border: 1px solid grey;
   border-radius: 4px;
 }
 
