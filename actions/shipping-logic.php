@@ -1,5 +1,4 @@
 <?php
-
 add_filter('woocommerce_package_rates', 'remove_all_default_shipping_methods', 10, 2);
 function remove_all_default_shipping_methods($rates, $package) {
     // Check if the cart contains product with ID 1056
@@ -49,6 +48,18 @@ function add_free_shipping_message() {
         echo '<p class="free-shipping-message">';
         echo sprintf(__('Add %d more %s to get FREE shipping!', 'woocommerce'), $items_needed, $blind_label);
         echo '</p>';
+    }
+}
+
+// Ensure no shipping method is saved in the order if product ID 1056 is in the cart
+add_action('woocommerce_checkout_create_order', 'remove_shipping_from_order_if_product_1056', 10, 2);
+function remove_shipping_from_order_if_product_1056($order, $data) {
+    // Check if the cart contains product with ID 1056
+    if (cart_contains_product(1056)) {
+        // Remove shipping from the order
+        $order->set_shipping_total(0);
+        $order->set_shipping_tax(0);
+        $order->set_shipping_methods([]);
     }
 }
 
