@@ -110,9 +110,6 @@ function add_combined_installation_fees_to_cart() {
     }
 }
 
-
-
-
 // Utility function to check if a product is in the cart
 if (!function_exists('cart_contains_product')) {
     function cart_contains_product($product_id) {
