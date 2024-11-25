@@ -7,7 +7,7 @@ function add_installation_checkbox_to_cart_totals() {
     }
 
     $checked = WC()->session->get('installation_required') === 'yes' ? 'checked' : '';
-    echo '<div class="installation-checkbox">';
+    echo '<div class="installation-checkbox" style="background-color: #fff; padding: 10px; border: 1px solid #eee; margin-bottom: 15px;">';
     echo '<label>';
     echo '<input type="checkbox" id="installation-required" value="yes" ' . $checked . '>';
     echo ' Want us to install for you? (additional cost applies)';
@@ -22,6 +22,16 @@ function add_installation_fee_calculation_script() {
         ?>
         <script type="text/javascript">
             jQuery(document).ready(function ($) {
+                // Hide duplicate installation fees in WooCommerce cart
+                function hideDuplicateInstallationFees() {
+                    $('.fee th').each(function () {
+                        let feeType = $(this).text().trim();
+                        if (feeType === "Installation Fee") {
+                            $(this).parent().hide(); // Hide the duplicate row
+                        }
+                    });
+                }
+
                 // Function to calculate the total installation fee
                 function calculateInstallationFee() {
                     let additionalFee = 0;
@@ -63,7 +73,7 @@ function add_installation_fee_calculation_script() {
                     // Update the fee in the DOM
                     displayInstallationFee(totalFee);
 
-                    // Send the updated fee to the server
+                    // Sync the fee with WooCommerce backend
                     $.ajax({
                         type: 'POST',
                         url: '<?php echo admin_url('admin-ajax.php'); ?>',
@@ -73,7 +83,9 @@ function add_installation_fee_calculation_script() {
                             total_fee: totalFee
                         },
                         success: function (response) {
-                            if (!response.success) {
+                            if (response.success) {
+                                hideDuplicateInstallationFees(); // Ensure duplicates are hidden
+                            } else {
                                 console.error(response);
                             }
                         },
@@ -93,23 +105,47 @@ function add_installation_fee_calculation_script() {
                     let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
                     let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
                     displayInstallationFee(totalFee);
+                    hideDuplicateInstallationFees(); // Ensure duplicates are hidden
                 });
 
                 // Initial calculation on page load
                 $(document).ready(function () {
                     let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
-                    let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
-                    displayInstallationFee(totalFee);
-                });
-            });
 
-            // WooCommerce price formatting helper
-            function wc_price(amount) {
-                return new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: '<?php echo get_woocommerce_currency(); ?>'
-                }).format(amount);
-            }
+                    // If the checkbox is checked, calculate and display the fee
+                    if (installationRequired === 'yes') {
+                        let totalFee = calculateInstallationFee();
+                        displayInstallationFee(totalFee);
+
+                        // Sync with WooCommerce backend
+                        $.ajax({
+                            type: 'POST',
+                            url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                            data: {
+                                action: 'update_installation_fee',
+                                installation_required: installationRequired,
+                                total_fee: totalFee
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    hideDuplicateInstallationFees(); // Ensure duplicates are hidden
+                                }
+                            },
+                            error: function (error) {
+                                console.error(error);
+                            }
+                        });
+                    }
+                });
+
+                // WooCommerce price formatting helper
+                function wc_price(amount) {
+                    return new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: '<?php echo get_woocommerce_currency(); ?>'
+                    }).format(amount);
+                }
+            });
         </script>
         <?php
     }
