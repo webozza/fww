@@ -91,19 +91,26 @@ function update_cart_item_installation() {
     wp_send_json_success(['message' => 'Installation fee updated for item']);
 }
 
-// Add installation fees to the cart
-add_action('woocommerce_cart_calculate_fees', 'add_installation_fees_to_cart');
-function add_installation_fees_to_cart() {
+// Add combined installation fees to the cart
+add_action('woocommerce_cart_calculate_fees', 'add_combined_installation_fees_to_cart');
+function add_combined_installation_fees_to_cart() {
+    $total_installation_fee = 0; // Initialize the total installation fee
+
     foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
         // Check if the item requires installation
         if (isset($cart_item['installation_required']) && $cart_item['installation_required'] === 'yes') {
             $fee = isset($cart_item['installation_fee']) ? floatval($cart_item['installation_fee']) : 0;
-            if ($fee > 0) {
-                WC()->cart->add_fee('Installation Fee (' . $cart_item['data']->get_name() . ')', $fee, true, 'standard');
-            }
+            $total_installation_fee += $fee; // Add to the total
         }
     }
+
+    // Add the total installation fee as a single line item
+    if ($total_installation_fee > 0) {
+        WC()->cart->add_fee('Installation Fee', $total_installation_fee, true, 'standard');
+    }
 }
+
+
 
 
 // Utility function to check if a product is in the cart
