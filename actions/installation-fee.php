@@ -1,5 +1,3 @@
-<?php
-
 // Add a single installation checkbox on the cart page
 add_action('woocommerce_cart_totals_before_order_total', 'add_installation_checkbox_to_cart_totals');
 function add_installation_checkbox_to_cart_totals() {
@@ -25,14 +23,13 @@ function add_installation_fee_calculation_script() {
             jQuery(document).ready(function ($) {
                 // Function to calculate the total installation fee
                 function calculateInstallationFee() {
-                    let additionalFee = 0; // Additional fee based on widths
+                    let additionalFee = 0;
 
                     // Iterate over cart items
                     $('.cart_item').each(function () {
-                        let widthText = $(this).find('.variation-Width p').text().trim(); // Example selector
+                        let widthText = $(this).find('.variation-Width p').text().trim();
                         let width = parseInt(widthText) || 0;
 
-                        // Add to the additional fee based on the width
                         if (width > 0 && width <= 36) {
                             additionalFee += 25;
                         } else if (width > 36 && width <= 72) {
@@ -42,8 +39,7 @@ function add_installation_fee_calculation_script() {
                         }
                     });
 
-                    // Ensure the fee is at least $75
-                    return Math.max(additionalFee, 75);
+                    return Math.max(additionalFee, 75); // Minimum fee is $75
                 }
 
                 // Update the installation fee dynamically
@@ -51,7 +47,6 @@ function add_installation_fee_calculation_script() {
                     let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
                     let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
 
-                    // Send the updated fee to the server
                     $.ajax({
                         type: 'POST',
                         url: '<?php echo admin_url('admin-ajax.php'); ?>',
@@ -62,8 +57,7 @@ function add_installation_fee_calculation_script() {
                         },
                         success: function (response) {
                             if (response.success) {
-                                $('body').trigger('update_checkout'); // Update totals dynamically
-                                location.reload();
+                                $('body').trigger('update_checkout');
                             } else {
                                 console.error(response);
                             }
@@ -74,12 +68,12 @@ function add_installation_fee_calculation_script() {
                     });
                 }
 
-                // Trigger fee calculation when the checkbox changes
+                // Trigger fee calculation on checkbox change
                 $('#installation-required').on('change', function () {
                     updateInstallationFee();
                 });
 
-                // Trigger fee calculation when the cart is updated (e.g., items added/removed)
+                // Trigger fee calculation on cart updates
                 $('body').on('updated_cart_totals', function () {
                     if ($('#installation-required').is(':checked')) {
                         updateInstallationFee();
@@ -110,7 +104,6 @@ function add_combined_installation_fee_to_cart(WC_Cart $cart) {
     $installation_required = WC()->session->get('installation_required');
     $installation_fee = WC()->session->get('installation_fee');
 
-    // Remove installation fee if product ID 1056 is in the cart
     if (product_1056_in_cart()) {
         WC()->session->set('installation_required', 'no');
         WC()->session->set('installation_fee', 0);
