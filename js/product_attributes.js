@@ -422,7 +422,10 @@ jQuery(document).ready(function ($) {
   //====================================//
 
   $("#height, #width").on("change", function () {
-    if (currentProductID == selectedProduct) {
+    if (
+      currentProductID == selectedProduct &&
+      $("body").hasClass("postid-46")
+    ) {
       updatePrice();
     }
   });
