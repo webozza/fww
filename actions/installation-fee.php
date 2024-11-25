@@ -11,7 +11,7 @@ function add_installation_checkbox_to_cart_totals() {
     echo '<div class="installation-checkbox">';
     echo '<label>';
     echo '<input type="checkbox" id="installation-required" value="yes" ' . $checked . '>';
-    echo ' Want us to install for you? (minimum $75, additional based on size)';
+    echo ' Want us to install for you? (additional charges apply)';
     echo '</label>';
     echo '</div>';
 }
@@ -63,6 +63,7 @@ function add_installation_fee_calculation_script() {
                         success: function (response) {
                             if (response.success) {
                                 $('body').trigger('update_checkout'); // Update totals dynamically
+                                loaction.reload();
                             } else {
                                 console.error(response);
                             }
