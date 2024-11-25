@@ -11,7 +11,7 @@ function add_installation_checkbox_to_cart_totals() {
     echo '<div class="installation-checkbox">';
     echo '<label>';
     echo '<input type="checkbox" id="installation-required" value="yes" ' . $checked . '>';
-    echo ' Want us to install for you? (additional charges apply)';
+    echo ' Want us to install for you? (additional cost applies)';
     echo '</label>';
     echo '</div>';
 }
@@ -63,7 +63,7 @@ function add_installation_fee_calculation_script() {
                         success: function (response) {
                             if (response.success) {
                                 $('body').trigger('update_checkout'); // Update totals dynamically
-                                loaction.reload();
+                                location.reload();
                             } else {
                                 console.error(response);
                             }
@@ -79,7 +79,7 @@ function add_installation_fee_calculation_script() {
                     updateInstallationFee();
                 });
 
-                // Trigger fee calculation on cart item update
+                // Trigger fee calculation when the cart is updated (e.g., items added/removed)
                 $('body').on('updated_cart_totals', function () {
                     if ($('#installation-required').is(':checked')) {
                         updateInstallationFee();
