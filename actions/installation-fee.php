@@ -11,12 +11,12 @@ function add_installation_checkbox_to_cart_totals() {
     echo '<div class="installation-checkbox">';
     echo '<label>';
     echo '<input type="checkbox" id="installation-required" value="yes" ' . $checked . '>';
-    echo ' I need installation (additional cost applies)';
+    echo ' Want us to install for you? (additional cost applies)';
     echo '</label>';
     echo '</div>';
 }
 
-// Add script to calculate installation fee with JavaScript
+// Add script to handle dynamic cart updates
 add_action('wp_footer', 'add_installation_fee_calculation_script');
 function add_installation_fee_calculation_script() {
     if (is_cart() && !product_1056_in_cart()) {
@@ -47,12 +47,12 @@ function add_installation_fee_calculation_script() {
                     return baseFee + additionalFee;
                 }
 
-                // Handle checkbox change
-                $('#installation-required').on('change', function () {
-                    let installationRequired = $(this).is(':checked') ? 'yes' : 'no';
+                // Update the installation fee dynamically
+                function updateInstallationFee() {
+                    let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
                     let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
 
-                    // Send the data to the server
+                    // Send the updated fee to the server
                     $.ajax({
                         type: 'POST',
                         url: '<?php echo admin_url('admin-ajax.php'); ?>',
@@ -64,7 +64,6 @@ function add_installation_fee_calculation_script() {
                         success: function (response) {
                             if (response.success) {
                                 $('body').trigger('update_checkout'); // Update totals dynamically
-                                location.reload(); // Reload page to reflect changes
                             } else {
                                 console.error(response);
                             }
@@ -73,6 +72,16 @@ function add_installation_fee_calculation_script() {
                             console.error(error);
                         },
                     });
+                }
+
+                // Trigger fee calculation when the checkbox changes
+                $('#installation-required').on('change', function () {
+                    updateInstallationFee();
+                });
+
+                // Trigger fee calculation on cart item update
+                $('body').on('updated_cart_totals', function () {
+                    updateInstallationFee();
                 });
             });
         </script>
