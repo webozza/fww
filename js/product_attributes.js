@@ -424,10 +424,7 @@ jQuery(document).ready(function ($) {
   //====================================//
 
   $("#height, #width").on("change", function () {
-    if (
-      currentProductID == selectedProduct &&
-      $("body").hasClass("postid-46")
-    ) {
+    if (currentProductID == selectedProduct) {
       updatePrice();
     }
   });
