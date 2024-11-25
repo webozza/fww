@@ -405,6 +405,15 @@ table.shop_table.shop_table_responsive.cart.woocommerce-cart-form__contents
 /*====================================================================================
 ** Cart Page
 ====================================================================================*/
+.woocommerce-cart .installation-checkbox {
+  margin-bottom: 30px;
+  background: lightyellow;
+  padding: 10px 20px;
+  width: fit-content;
+  border: 1px solid grey;
+  border-radius: 4px;
+}
+
 .woocommerce-cart .cart-collaterals .cart_totals #shipping_method {
   margin: 0;
 }
