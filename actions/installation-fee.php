@@ -79,9 +79,11 @@ function add_installation_fee_calculation_script() {
                     updateInstallationFee();
                 });
 
-                // Trigger fee calculation on cart item update
+                // Trigger fee calculation when the cart is updated (e.g., items added/removed)
                 $('body').on('updated_cart_totals', function () {
-                    updateInstallationFee();
+                    if ($('#installation-required').is(':checked')) {
+                        updateInstallationFee();
+                    }
                 });
             });
         </script>
