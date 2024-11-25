@@ -22,33 +22,13 @@ function add_installation_checkbox_script() {
                 $('#installation-required').on('change', function () {
                     var installationRequired = $(this).is(':checked') ? 'yes' : 'no';
 
-                    // Calculate installation fee
-                    var totalWidth = 0;
-                    $('.cart_item').each(function () {
-                        var widthText = $(this).find('.variation-Width p').text();
-                        var width = parseInt(widthText) || 0;
-                        totalWidth += width;
-                    });
-
-                    var installationFee = 75; // Base fee
-                    if (installationRequired === 'yes') {
-                        if (totalWidth <= 36) {
-                            installationFee += 25;
-                        } else if (totalWidth > 36 && totalWidth <= 72) {
-                            installationFee += 30;
-                        } else if (totalWidth > 72) {
-                            installationFee += 35;
-                        }
-                    }
-
                     // Send the data to the server
                     $.ajax({
                         type: 'POST',
                         url: '<?php echo admin_url('admin-ajax.php'); ?>',
                         data: {
                             action: 'update_installation_fee',
-                            installation_required: installationRequired,
-                            installation_fee: installationFee,
+                            installation_required: installationRequired
                         },
                         success: function (response) {
                             if (response.success) {
@@ -74,22 +54,32 @@ add_action('wp_ajax_update_installation_fee', 'update_installation_fee');
 add_action('wp_ajax_nopriv_update_installation_fee', 'update_installation_fee');
 function update_installation_fee() {
     $installation_required = sanitize_text_field($_POST['installation_required']);
-    $installation_fee = floatval($_POST['installation_fee']);
-
     WC()->session->set('installation_required', $installation_required);
-    WC()->session->set('installation_fee', $installation_fee);
-
-    wp_send_json_success(['message' => 'Installation fee updated']);
+    wp_send_json_success(['message' => 'Installation status updated']);
 }
 
 // Add installation fee to the cart totals
 add_action('woocommerce_cart_calculate_fees', 'add_combined_installation_fee_to_cart');
-function add_combined_installation_fee_to_cart() {
+function add_combined_installation_fee_to_cart(WC_Cart $cart) {
     $installation_required = WC()->session->get('installation_required');
-    $installation_fee = WC()->session->get('installation_fee');
 
-    if ($installation_required === 'yes' && $installation_fee > 0) {
-        WC()->cart->add_fee('Installation Fee', $installation_fee, true, 'standard');
+    if ($installation_required === 'yes') {
+        $total_fee = 75; // Base fee for installation
+
+        foreach ($cart->get_cart() as $cart_item) {
+            if (isset($cart_item['variation']['Width'])) {
+                $width = intval($cart_item['variation']['Width']); // Get the width of the item
+                if ($width > 0 && $width <= 36) {
+                    $total_fee += 25; // Add $25 for widths <= 36
+                } elseif ($width > 36 && $width <= 72) {
+                    $total_fee += 30; // Add $30 for widths between 37 and 72
+                } elseif ($width > 72) {
+                    $total_fee += 35; // Add $35 for widths > 72
+                }
+            }
+        }
+
+        $cart->add_fee('Installation Fee', $total_fee, true, 'standard');
     }
 }
 
