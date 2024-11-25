@@ -63,7 +63,7 @@ function add_installation_fee_calculation_script() {
                                     // Refresh WooCommerce cart fragments to update the cart totals
                                     $.ajax({
                                         type: 'POST',
-                                        url: wc_cart_fragments_params.ajax_url,
+                                        url: '/wp-admin/admin-ajax.php',
                                         data: {
                                             action: 'woocommerce_get_refreshed_fragments'
                                         },
