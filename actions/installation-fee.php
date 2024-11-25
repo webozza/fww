@@ -7,7 +7,7 @@ function add_installation_checkbox_to_cart_totals() {
     }
 
     $checked = WC()->session->get('installation_required') === 'yes' ? 'checked' : '';
-    echo '<div class="installation-checkbox">';
+    echo '<div class="installation-checkbox" style="background-color: #fff; padding: 10px; border: 1px solid #eee; margin-bottom: 15px;">';
     echo '<label>';
     echo '<input type="checkbox" id="installation-required" value="yes" ' . $checked . '>';
     echo ' Want us to install for you? (additional cost applies)';
@@ -43,9 +43,9 @@ function add_installation_fee_calculation_script() {
                     return Math.max(additionalFee, 75); // Minimum fee is $75
                 }
 
-                // Function to display the installation fee
+                // Function to display the installation fee dynamically
                 function displayInstallationFee(totalFee) {
-                    // Remove existing fee row if present
+                    // Remove existing fee row from the frontend
                     $('.installation-fee-row').remove();
 
                     // Add the installation fee row dynamically
@@ -63,7 +63,7 @@ function add_installation_fee_calculation_script() {
                     // Update the fee in the DOM
                     displayInstallationFee(totalFee);
 
-                    // Send the updated fee to the server
+                    // Sync the fee with WooCommerce backend
                     $.ajax({
                         type: 'POST',
                         url: '<?php echo admin_url('admin-ajax.php'); ?>',
@@ -131,6 +131,13 @@ function update_installation_fee() {
 // Add the installation fee to the cart totals
 add_action('woocommerce_cart_calculate_fees', 'add_combined_installation_fee_to_cart');
 function add_combined_installation_fee_to_cart(WC_Cart $cart) {
+    // Remove duplicate installation fee from the backend
+    foreach ($cart->get_fees() as $key => $fee) {
+        if ($fee->name === 'Installation Fee') {
+            unset($cart->fees_api()->fees[$key]);
+        }
+    }
+
     $installation_required = WC()->session->get('installation_required');
     $installation_fee = WC()->session->get('installation_fee');
 
