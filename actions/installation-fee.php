@@ -11,7 +11,7 @@ function add_installation_checkbox_to_cart_totals() {
     echo '<div class="installation-checkbox">';
     echo '<label>';
     echo '<input type="checkbox" id="installation-required" value="yes" ' . $checked . '>';
-    echo ' Want us to install for you? (additional cost applies)';
+    echo ' Want us to install for you? (minimum $75, additional based on size)';
     echo '</label>';
     echo '</div>';
 }
@@ -25,7 +25,6 @@ function add_installation_fee_calculation_script() {
             jQuery(document).ready(function ($) {
                 // Function to calculate the total installation fee
                 function calculateInstallationFee() {
-                    let baseFee = 75; // Base fee
                     let additionalFee = 0; // Additional fee based on widths
 
                     // Iterate over cart items
@@ -43,12 +42,8 @@ function add_installation_fee_calculation_script() {
                         }
                     });
 
-                    // Return the total fee
-                    if (additionalFee < 75) {
-                        return baseFee
-                    } else {
-                        return additionalFee
-                    }
+                    // Ensure the fee is at least $75
+                    return Math.max(additionalFee, 75);
                 }
 
                 // Update the installation fee dynamically
@@ -68,7 +63,6 @@ function add_installation_fee_calculation_script() {
                         success: function (response) {
                             if (response.success) {
                                 $('body').trigger('update_checkout'); // Update totals dynamically
-                                location.reload();
                             } else {
                                 console.error(response);
                             }
@@ -84,7 +78,7 @@ function add_installation_fee_calculation_script() {
                     updateInstallationFee();
                 });
 
-                // Trigger fee calculation when the cart is updated (e.g., items added/removed)
+                // Trigger fee calculation on cart item update
                 $('body').on('updated_cart_totals', function () {
                     if ($('#installation-required').is(':checked')) {
                         updateInstallationFee();
