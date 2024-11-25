@@ -43,9 +43,12 @@ function add_installation_fee_calculation_script() {
                     return Math.max(additionalFee, 75); // Minimum fee is $75
                 }
 
-                // Function to display the installation fee dynamically
-                function displayInstallationFee(totalFee) {
-                    // Remove existing fee row from the frontend
+                // Update the installation fee dynamically
+                function updateInstallationFee() {
+                    let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
+                    let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
+
+                    // Remove existing fee row
                     $('.installation-fee-row').remove();
 
                     // Add the installation fee row dynamically
@@ -53,15 +56,6 @@ function add_installation_fee_calculation_script() {
                         $('<tr class="installation-fee-row"><th>Installation Fee</th><td>' + wc_price(totalFee) + '</td></tr>')
                             .insertAfter('.cart_totals .cart-subtotal');
                     }
-                }
-
-                // Update the installation fee dynamically
-                function updateInstallationFee() {
-                    let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
-                    let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
-
-                    // Update the fee in the DOM
-                    displayInstallationFee(totalFee);
 
                     // Sync the fee with WooCommerce backend
                     $.ajax({
@@ -92,24 +86,28 @@ function add_installation_fee_calculation_script() {
                 $('body').on('updated_cart_totals', function () {
                     let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
                     let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
-                    displayInstallationFee(totalFee);
+
+                    // Update installation fee
+                    updateInstallationFee();
                 });
 
                 // Initial calculation on page load
                 $(document).ready(function () {
                     let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
                     let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
-                    displayInstallationFee(totalFee);
-                });
-            });
 
-            // WooCommerce price formatting helper
-            function wc_price(amount) {
-                return new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: '<?php echo get_woocommerce_currency(); ?>'
-                }).format(amount);
-            }
+                    // Update installation fee
+                    updateInstallationFee();
+                });
+
+                // WooCommerce price formatting helper
+                function wc_price(amount) {
+                    return new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: '<?php echo get_woocommerce_currency(); ?>'
+                    }).format(amount);
+                }
+            });
         </script>
         <?php
     }
@@ -131,7 +129,7 @@ function update_installation_fee() {
 // Add the installation fee to the cart totals
 add_action('woocommerce_cart_calculate_fees', 'add_combined_installation_fee_to_cart');
 function add_combined_installation_fee_to_cart(WC_Cart $cart) {
-    // Remove duplicate installation fee from the backend
+    // Remove any previous installation fee
     foreach ($cart->get_fees() as $key => $fee) {
         if ($fee->name === 'Installation Fee') {
             unset($cart->fees_api()->fees[$key]);
