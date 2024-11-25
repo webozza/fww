@@ -30,7 +30,7 @@ function add_installation_fee_calculation_script() {
 
                     // Iterate over cart items
                     $('.cart_item').each(function () {
-                        let widthText = $(this).find('.variation-Width').text().trim(); // Example selector
+                        let widthText = $(this).find('.variation-Width p').text().trim(); // Example selector
                         let width = parseInt(widthText) || 0;
 
                         // Add to the additional fee based on the width
