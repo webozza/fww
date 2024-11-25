@@ -24,25 +24,23 @@ function add_installation_checkbox_script() {
         ?>
         <script type="text/javascript">
             jQuery(document).ready(function($) {
-                function calculateItemInstallationFee(width) {
-                    if (width <= 36) {
-                        return 25;
-                    } else if (width > 36 && width <= 72) {
-                        return 30;
-                    } else {
-                        return 35;
-                    }
-                }
-
                 $('.installation-required').on('change', function() {
                     var cartKey = $(this).data('cart-key');
                     var installationRequired = $(this).is(':checked') ? 'yes' : 'no';
 
-                    // Get the product width dynamically
                     var widthText = $(this).closest('tr').find('.variation-Width p').text();
                     var width = parseInt(widthText) || 0;
 
-                    var installationFee = installationRequired === 'yes' ? calculateItemInstallationFee(width) : 0;
+                    var installationFee = 0;
+                    if (installationRequired === 'yes') {
+                        if (width <= 36) {
+                            installationFee = 25;
+                        } else if (width > 36 && width <= 72) {
+                            installationFee = 30;
+                        } else if (width > 72) {
+                            installationFee = 35;
+                        }
+                    }
 
                     $.ajax({
                         type: 'POST',
@@ -53,9 +51,16 @@ function add_installation_checkbox_script() {
                             installation_required: installationRequired,
                             installation_fee: installationFee
                         },
-                        success: function() {
-                            $('body').trigger('update_checkout');
-                            location.reload(); // Refresh cart totals
+                        success: function(response) {
+                            if (response.success) {
+                                $('body').trigger('update_checkout'); // Update totals dynamically
+                                location.reload(); // Reload page to reflect changes
+                            } else {
+                                console.error(response);
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error);
                         }
                     });
                 });
@@ -69,27 +74,33 @@ function add_installation_checkbox_script() {
 add_action('wp_ajax_update_cart_item_installation', 'update_cart_item_installation');
 add_action('wp_ajax_nopriv_update_cart_item_installation', 'update_cart_item_installation');
 function update_cart_item_installation() {
-    $cart = WC()->cart->get_cart();
+    // Get cart data
     $cart_key = sanitize_text_field($_POST['cart_key']);
     $installation_required = sanitize_text_field($_POST['installation_required']);
     $installation_fee = floatval($_POST['installation_fee']);
 
-    if (isset($cart[$cart_key])) {
-        $cart[$cart_key]['installation_required'] = $installation_required;
-        $cart[$cart_key]['installation_fee'] = $installation_fee;
+    // Update cart item data
+    foreach (WC()->cart->get_cart() as $key => $cart_item) {
+        if ($key === $cart_key) {
+            WC()->cart->get_cart()[$key]['installation_required'] = $installation_required;
+            WC()->cart->get_cart()[$key]['installation_fee'] = $installation_fee;
+        }
     }
 
+    // Trigger cart recalculation
     WC()->cart->calculate_totals();
-    wp_die();
+    wp_send_json_success(['message' => 'Installation fee updated']);
 }
 
 // Add installation fees to the cart
 add_action('woocommerce_cart_calculate_fees', 'add_installation_fees_to_cart');
 function add_installation_fees_to_cart() {
-    foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
+    foreach (WC()->cart->get_cart() as $cart_item) {
         if (isset($cart_item['installation_required']) && $cart_item['installation_required'] === 'yes') {
             $fee = isset($cart_item['installation_fee']) ? floatval($cart_item['installation_fee']) : 0;
-            WC()->cart->add_fee('Installation Fee (' . $cart_item['data']->get_name() . ')', $fee, true, 'standard');
+            if ($fee > 0) {
+                WC()->cart->add_fee('Installation Fee (' . $cart_item['data']->get_name() . ')', $fee, true, 'standard');
+            }
         }
     }
 }
