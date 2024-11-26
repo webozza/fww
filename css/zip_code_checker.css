@@ -418,8 +418,10 @@ dl.variation dd {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 5px;
+  gap: 10px;
   cursor: pointer;
+  line-height: normal;
+  margin-bottom: 0;
 }
 
 .installation-checkbox-container label input {
