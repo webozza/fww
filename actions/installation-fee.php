@@ -6,14 +6,29 @@ function add_installation_checkbox_to_cart_totals() {
         return; // Do not display the checkbox if product ID 1056 is in the cart
     }
 
-    $checked = WC()->session->get('installation_required') === 'yes' ? 'checked' : '';
-    echo '<div class="installation-checkbox" style="background-color: #fff; padding: 10px; border: 1px solid #eee; margin-bottom: 15px;">';
-    echo '<label>';
-    echo '<input type="checkbox" id="installation-required" value="yes" ' . $checked . '>';
-    echo ' Want us to install for you? (additional cost applies)';
-    echo '</label>';
-    echo '</div>';
+    ?>
+    <div class="installation-checkbox-container" style="display: none; background-color: #fff; padding: 10px; border: 1px solid #eee; margin-bottom: 15px;">
+        <label>
+            <input type="checkbox" id="installation-required" value="yes">
+            Want us to install for you? (additional cost applies)
+        </label>
+    </div>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            // Retrieve ZIP code status from localStorage
+            let zipCodeStatus = localStorage.getItem('zip_code_status');
+            if (zipCodeStatus) {
+                zipCodeStatus = JSON.parse(zipCodeStatus);
+                if (zipCodeStatus.isValid) {
+                    // Show the installation checkbox if ZIP code is valid
+                    document.querySelector('.installation-checkbox-container').style.display = 'block';
+                }
+            }
+        });
+    </script>
+    <?php
 }
+
 
 // Add script to handle dynamic cart updates
 add_action('wp_footer', 'add_installation_fee_calculation_script');

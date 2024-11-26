@@ -12,7 +12,6 @@ function display_zip_code_checker() {
     <div class="zip-code-check">
         <p>Want us to measure for you?</p>
         <p>Enter your zip code below to see if <strong style="color:#52A37F">FIT</strong>rite<br> is available in your area</p>
-        <!-- <p>Enter your Zip code below to see if installation<br>is available in your area</p> -->
         <label for="zip_code">ZIP CODE</label>
         <input type="text" id="zip_code" name="zip_code" placeholder="90210">
         <button id="check_zip_code">CHECK</button>
@@ -21,22 +20,31 @@ function display_zip_code_checker() {
     <script>
         // Pass the PHP variables to JavaScript
         let available_zip_codes = "<?php echo esc_js($available_zip_codes); ?>".split(',');
-        //  let sucess_text =  `<span class="zip-available"><img src="<?= $tick_icon?>"> YES, get started <a href="/measuring">click here</a>`;
-        let sucess_text =  `<span class="zip-available"><img src="<?= $tick_icon?>"> YES, get started <a href="/fitrite">click here</a>`;
-         let unavailable_text = `<span class="zip-not-available"><img src="<?= $cros_icon?>"> Unfortunately not at this time</span>`
+        let success_text = `<span class="zip-available"><img src="<?= $tick_icon ?>"> YES, get started <a href="/fitrite">click here</a>`;
+        let unavailable_text = `<span class="zip-not-available"><img src="<?= $cros_icon ?>"> Unfortunately not at this time</span>`;
 
+        // Product page script
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('check_zip_code').addEventListener('click', function() {
-                var zipCode = document.getElementById('zip_code').value;
+                var zipCode = document.getElementById('zip_code').value.trim();
                 var resultDiv = document.getElementById('zip_code_result');
+                var isValid = available_zip_codes.includes(zipCode);
                 
-                if (available_zip_codes.includes(zipCode)) {
-                    resultDiv.innerHTML = sucess_text;
-                } else {
-                    resultDiv.innerHTML = unavailable_text;
-                }
+                resultDiv.innerHTML = isValid ? success_text : unavailable_text;
+
+                // Store the validation status in localStorage
+                localStorage.setItem('zip_code_status', JSON.stringify({
+                    zipCode: zipCode,
+                    isValid: isValid
+                }));
+
+                // Emit a custom event for tracking
+                document.dispatchEvent(new CustomEvent('zipCodeChecked', {
+                    detail: { zipCode, isValid }
+                }));
             });
         });
+
     </script>
     <?php
 }
