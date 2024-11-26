@@ -411,6 +411,7 @@ table.shop_table.shop_table_responsive.cart.woocommerce-cart-form__contents
   padding: 10px;
   width: fit-content;
   border-radius: 4px;
+  width: 100%;
 }
 
 .woocommerce-cart .cart-collaterals .cart_totals #shipping_method {
@@ -637,5 +638,14 @@ body.woocommerce-checkout tr.woocommerce-shipping-totals.shipping {
 @media (max-width: 768px) {
   .video_section video {
     max-width: 100% !important;
+  }
+
+  .installation-fee-row th {
+    display: initial !important;
+    text-transform: capitalize !important;
+  }
+
+  .installation-fee-row {
+    display: flex !important;
   }
 }

@@ -22,6 +22,9 @@ function add_installation_checkbox_to_cart_totals() {
                 if (zipCodeStatus.isValid) {
                     // Show the installation checkbox if ZIP code is valid
                     document.querySelector('.installation-checkbox-container').style.display = 'block';
+                } else {
+                    // Show the installation checkbox if ZIP code is valid
+                    document.querySelector('.installation-checkbox-container').style.display = 'none';
                 }
             }
         });
