@@ -405,7 +405,7 @@ table.shop_table.shop_table_responsive.cart.woocommerce-cart-form__contents
 /*====================================================================================
 ** Cart Page
 ====================================================================================*/
-.woocommerce-cart .installation-checkbox {
+.woocommerce-cart .installation-checkbox-container {
   margin-bottom: 30px;
   background: lightyellow;
   padding: 10px;

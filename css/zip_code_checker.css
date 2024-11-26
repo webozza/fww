@@ -414,7 +414,7 @@ dl.variation dd {
   border-top: 1px solid #80808026;
 }
 
-.installation-checkbox label {
+.installation-checkbox-container label {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -422,12 +422,12 @@ dl.variation dd {
   cursor: pointer;
 }
 
-.installation-checkbox label input {
+.installation-checkbox-container label input {
   width: fit-content;
   cursor: pointer;
 }
 
-.installation-checkbox {
+.installation-checkbox-container {
   margin-bottom: 30px;
 }
 

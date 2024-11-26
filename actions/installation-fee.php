@@ -7,7 +7,7 @@ function add_installation_checkbox_to_cart_totals() {
     }
 
     ?>
-    <div class="installation-checkbox-container" style="display: none; background-color: #fff; padding: 10px; border: 1px solid #eee; margin-bottom: 15px;">
+    <div class="installation-checkbox-container">
         <label>
             <input type="checkbox" id="installation-required" value="yes">
             Want us to install for you? (additional cost applies)
