@@ -17,15 +17,22 @@ function add_installation_checkbox_to_cart_totals() {
         document.addEventListener('DOMContentLoaded', function () {
             // Retrieve ZIP code status from localStorage
             let zipCodeStatus = localStorage.getItem('zip_code_status');
+
+            // Check if zipCodeStatus exists and is not null
             if (zipCodeStatus) {
                 zipCodeStatus = JSON.parse(zipCodeStatus);
+
+                // Check if the ZIP code is valid
                 if (zipCodeStatus.isValid) {
                     // Show the installation checkbox if ZIP code is valid
                     document.querySelector('.installation-checkbox-container').style.display = 'block';
                 } else {
-                    // Show the installation checkbox if ZIP code is valid
+                    // Hide the installation checkbox if ZIP code is invalid
                     document.querySelector('.installation-checkbox-container').style.display = 'none';
                 }
+            } else {
+                // No ZIP code checked, ensure the installation checkbox is hidden
+                document.querySelector('.installation-checkbox-container').style.display = 'none';
             }
         });
     </script>
