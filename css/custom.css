@@ -1,3 +1,7 @@
+.fww-flex-row {
+  display: flex;
+}
+
 .woocommerce-order-received ul.wc-item-meta li {
   display: flex;
   gap: 10px;
@@ -405,6 +409,48 @@ table.shop_table.shop_table_responsive.cart.woocommerce-cart-form__contents
 /*====================================================================================
 ** Cart Page
 ====================================================================================*/
+.woocommerce-cart .installation-checkbox-container {
+  width: 100% !important;
+  min-width: 100%;
+  margin-top: 10px !important;
+}
+
+.woocommerce-cart .zip-code-check-wrapper {
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+.woocommerce-cart .zip-code-check {
+  margin-bottom: 15px;
+}
+
+.woocommerce-cart .cart_totals .wc-proceed-to-checkout,
+.woocommerce-cart .cart_totals .zip-code-check-wrapper {
+  display: none !important;
+}
+
+.woocommerce-cart .zip-code-check-wrapper {
+  width: 100% !important;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+.woocommerce-cart .wc-proceed-to-checkout .checkout-button {
+  width: 60% !important;
+  margin-top: 20px;
+}
+
+.woocommerce-cart .wc-proceed-to-checkout {
+  width: 100% !important;
+  min-width: 100%;
+}
+
+.woocommerce-cart .shop_table .actions {
+  padding-top: 0 !important;
+}
+
 .woocommerce-cart .installation-checkbox-container {
   margin-bottom: 30px;
   background: lightyellow;

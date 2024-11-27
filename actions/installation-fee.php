@@ -1,39 +1,109 @@
 <?php
-// Add a single installation checkbox on the cart page
-add_action('woocommerce_cart_totals_before_order_total', 'add_installation_checkbox_to_cart_totals');
-function add_installation_checkbox_to_cart_totals() {
-    if (product_1056_in_cart()) {
-        return; // Do not display the checkbox if product ID 1056 is in the cart
-    }
 
+// Show the zip code checker and installation checkbox above the Proceed to Checkout button
+add_action('woocommerce_proceed_to_checkout', 'display_zip_code_checker_and_installation_checkbox', 10);
+function display_zip_code_checker_and_installation_checkbox() {
+    $product_id = 1056;
+    $available_zip_codes = get_field('zip_code', $product_id);
+    $cros_icon = get_stylesheet_directory_uri() . '/assets/cross.png';
+    $tick_icon = get_stylesheet_directory_uri() . '/assets/tick.png';
     ?>
-    <div class="installation-checkbox-container">
-        <label>
-            <input type="checkbox" id="installation-required" value="yes">
-            Want us to install for you?<br> (additional cost applies)
-        </label>
+    <div class="zip-code-check-wrapper">
+        <div class="zip-code-check">
+            <p>Want us to install for you?</p>
+            <p>Enter your zip code below to see if installation <br> is available in your area</p>
+            <label for="zip_code">ZIP CODE</label>
+            <div class="fww-flex-row">
+                <input type="text" id="zip_code" name="zip_code" placeholder="90210">
+                <button id="check_zip_code">CHECK</button>
+            </div>
+            <div id="zip_code_result"></div>
+        </div>
+        <div class="installation-checkbox-container" style="display: none;">
+            <label>
+                <input type="checkbox" id="installation-required" value="yes">
+                Want us to install for you? <strong><span class="place-installation-fee"></span></strong>
+            </label>
+        </div>
     </div>
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function () {
-            // Retrieve ZIP code status from localStorage
-            let zipCodeStatus = localStorage.getItem('zip_code_status');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const availableZipCodes = "<?php echo esc_js($available_zip_codes); ?>".split(',');
+            const crosIcon = "<?php echo esc_js($cros_icon); ?>";
+            const tickIcon = "<?php echo esc_js($tick_icon); ?>";
+            const successText = ``;
+            const unavailableText = `<span class="zip-not-available"><img src="${crosIcon}"> Unfortunately not at this time</span>`;
 
-            // Check if zipCodeStatus exists and is not null
-            if (zipCodeStatus) {
-                zipCodeStatus = JSON.parse(zipCodeStatus);
+            document.getElementById('check_zip_code').addEventListener('click', function() {
+                const zipCode = document.getElementById('zip_code').value.trim();
+                const resultDiv = document.getElementById('zip_code_result');
+                const isValid = availableZipCodes.includes(zipCode);
 
-                // Check if the ZIP code is valid
-                if (zipCodeStatus.isValid) {
-                    // Show the installation checkbox if ZIP code is valid
-                    document.querySelector('.installation-checkbox-container').style.display = 'block';
+                resultDiv.innerHTML = isValid ? successText : unavailableText;
+
+                // Toggle the installation checkbox visibility
+                const checkboxContainer = document.querySelector('.installation-checkbox-container');
+                if (isValid) {
+                    checkboxContainer.style.display = 'block';
                 } else {
-                    // Hide the installation checkbox if ZIP code is invalid
-                    document.querySelector('.installation-checkbox-container').style.display = 'none';
+                    checkboxContainer.style.display = 'none';
                 }
-            } else {
-                // No ZIP code checked, ensure the installation checkbox is hidden
-                document.querySelector('.installation-checkbox-container').style.display = 'none';
+            });
+        });
+
+        jQuery(document).ready(function ($) {
+            // Function to calculate the installation fee (display only)
+            function calculateDisplayOnlyInstallationFee() {
+                let additionalFee = 0;
+
+                // Iterate over cart items
+                $('.cart_item').each(function () {
+                    let widthText = $(this).find('.variation-Width p').text().trim();
+                    let width = parseInt(widthText) || 0;
+
+                    if (width > 0 && width <= 36) {
+                        additionalFee += 25;
+                    } else if (width > 36 && width <= 72) {
+                        additionalFee += 30;
+                    } else if (width > 72) {
+                        additionalFee += 35;
+                    }
+                });
+
+                return Math.max(additionalFee, 75); // Minimum fee is $75
             }
+
+            // Function to display the installation fee (always)
+            function showInstallationFeePreview() {
+                let totalFee = calculateDisplayOnlyInstallationFee();
+
+                // Update the .place-installation-fee element
+                $('.place-installation-fee').text(wc_price(totalFee));
+            }
+
+            // Format price as WooCommerce does
+            function wc_price(amount) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: '<?php echo get_woocommerce_currency(); ?>'
+                }).format(amount);
+            }
+
+            // Trigger the display of installation fee preview on page load
+            function initializeFeePreview() {
+                // Delay execution until the cart is fully rendered
+                setTimeout(() => {
+                    showInstallationFeePreview();
+                }, 500); // Adjust the delay if necessary
+            }
+
+            // Listen for WooCommerce cart updates and re-trigger the fee preview
+            $('body').on('updated_cart_totals', function () {
+                initializeFeePreview();
+            });
+
+            // Initial fee calculation on page load
+            initializeFeePreview();
         });
     </script>
     <?php
