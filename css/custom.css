@@ -694,4 +694,24 @@ body.woocommerce-checkout tr.woocommerce-shipping-totals.shipping {
   .installation-fee-row {
     display: flex !important;
   }
+
+  .woocommerce-cart .zip-code-check .fww-flex-row {
+    align-items: baseline;
+  }
+
+  .woocommerce-cart .checkout-button {
+    min-width: 100%;
+  }
+
+  .mybag-mini-cart > ul > li .variation {
+    margin: 0;
+  }
+
+  .mybag-mini-cart > ul > li .quantity {
+    margin: 0;
+  }
+
+  .mybag-mini-cart > ul > li .variation dd + dt.variation-WindowName:after {
+    display: none;
+  }
 }
