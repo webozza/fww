@@ -704,11 +704,11 @@ body.woocommerce-checkout tr.woocommerce-shipping-totals.shipping {
   }
 
   .mybag-mini-cart > ul > li .variation {
-    margin: 0;
+    margin: 0 !important;
   }
 
   .mybag-mini-cart > ul > li .quantity {
-    margin: 0;
+    margin: 0 !important;
   }
 
   .mybag-mini-cart > ul > li .variation dd + dt.variation-WindowName:after {
