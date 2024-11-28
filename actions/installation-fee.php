@@ -7,6 +7,7 @@ function display_zip_code_checker_and_installation_checkbox() {
     $available_zip_codes = get_field('zip_code', $product_id);
     $cros_icon = get_stylesheet_directory_uri() . '/assets/cross.png';
     $tick_icon = get_stylesheet_directory_uri() . '/assets/tick.png';
+    $saved_zip_code = get_field('user_zip_code', 'user_'.get_current_user_ID());
     ?>
     <div class="zip-code-check-wrapper">
         <div class="zip-code-check">
@@ -14,7 +15,7 @@ function display_zip_code_checker_and_installation_checkbox() {
             <p>Enter your zip code below to see if installation <br> is available in your area</p>
             <label for="zip_code">ZIP CODE</label>
             <div class="fww-flex-row">
-                <input type="text" id="zip_code" name="zip_code" placeholder="90210">
+                <input type="text" id="zip_code" name="zip_code" placeholder="90210" value="<?= empty($saved_zip_code) ? '' : $saved_zip_code ?>">
                 <button id="check_zip_code">CHECK</button>
             </div>
             <div id="zip_code_result"></div>
@@ -27,39 +28,63 @@ function display_zip_code_checker_and_installation_checkbox() {
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        jQuery(document).ready(function($) {
             const availableZipCodes = "<?php echo esc_js($available_zip_codes); ?>".split(',');
             const crosIcon = "<?php echo esc_js($cros_icon); ?>";
             const tickIcon = "<?php echo esc_js($tick_icon); ?>";
             const successText = ``;
             const unavailableText = `<span class="zip-not-available"><img src="${crosIcon}"> Unfortunately not at this time</span>`;
 
-            document.getElementById('check_zip_code').addEventListener('click', function() {
-                const zipCode = document.getElementById('zip_code').value.trim();
-                const resultDiv = document.getElementById('zip_code_result');
-                const isValid = availableZipCodes.includes(zipCode);
+            // Initialize zip code logic
+            function initializeZipCode() {
+                let zipCode = $('#zip_code').val().trim();
 
-                resultDiv.innerHTML = isValid ? successText : unavailableText;
-
-                // Toggle the installation checkbox visibility
-                const checkboxContainer = document.querySelector('.installation-checkbox-container');
-                if (isValid) {
-                    checkboxContainer.style.display = 'block';
-                } else {
-                    checkboxContainer.style.display = 'none';
+                if (zipCode !== "") {
+                    setTimeout(() => {
+                        $('#check_zip_code').trigger('click');
+                    }, 600);
                 }
-            });
-        });
 
-        jQuery(document).ready(function ($) {
-            // Function to calculate the installation fee (display only)
+                $('#check_zip_code').click(async function() {
+                    zipCode = $('#zip_code').val().trim();
+                    const isValid = availableZipCodes.includes(zipCode);
+                    const resultDiv = $('#zip_code_result');
+                    const checkboxContainer = $('.installation-checkbox-container');
+
+                    resultDiv.html(isValid ? successText : unavailableText);
+                    checkboxContainer.toggle(isValid);
+
+                    localStorage.setItem('zip_code_status', JSON.stringify({ zipCode, isValid }));
+                    $(document).trigger('zipCodeChecked', { zipCode, isValid });
+
+                    const _zipData = { acf: { user_zip_code: zipCode } };
+                    const url = `/wp-json/wp/v2/users/<?= get_current_user_ID() ?>`;
+
+                    try {
+                        const res = await fetch(url, {
+                            method: "POST",
+                            headers: {
+                                "X-WP-Nonce": "<?= wp_create_nonce('wp_rest') ?>",
+                                "Content-type": "application/json; charset=UTF-8",
+                            },
+                            body: JSON.stringify(_zipData),
+                        });
+
+                        const data = await res.json();
+                        console.log("Zip code saved =>", data);
+                    } catch (error) {
+                        console.error("Error saving zip code:", error);
+                    }
+                });
+            }
+
+            // Initialize installation fee logic
             function calculateDisplayOnlyInstallationFee() {
                 let additionalFee = 0;
 
-                // Iterate over cart items
-                $('.cart_item').each(function () {
-                    let widthText = $(this).find('.variation-Width p').text().trim();
-                    let width = parseInt(widthText) || 0;
+                $('.cart_item').each(function() {
+                    const widthText = $(this).find('.variation-Width p').text().trim();
+                    const width = parseInt(widthText) || 0;
 
                     if (width > 0 && width <= 36) {
                         additionalFee += 25;
@@ -73,15 +98,6 @@ function display_zip_code_checker_and_installation_checkbox() {
                 return Math.max(additionalFee, 75); // Minimum fee is $75
             }
 
-            // Function to display the installation fee (always)
-            function showInstallationFeePreview() {
-                let totalFee = calculateDisplayOnlyInstallationFee();
-
-                // Update the .place-installation-fee element
-                $('.place-installation-fee').text(wc_price(totalFee));
-            }
-
-            // Format price as WooCommerce does
             function wc_price(amount) {
                 return new Intl.NumberFormat('en-US', {
                     style: 'currency',
@@ -89,20 +105,21 @@ function display_zip_code_checker_and_installation_checkbox() {
                 }).format(amount);
             }
 
-            // Trigger the display of installation fee preview on page load
-            function initializeFeePreview() {
-                // Delay execution until the cart is fully rendered
-                setTimeout(() => {
-                    showInstallationFeePreview();
-                }, 500); // Adjust the delay if necessary
+            function showInstallationFeePreview() {
+                const totalFee = calculateDisplayOnlyInstallationFee();
+                $('.place-installation-fee').text(wc_price(totalFee));
             }
 
-            // Listen for WooCommerce cart updates and re-trigger the fee preview
-            $('body').on('updated_cart_totals', function () {
-                initializeFeePreview();
-            });
+            function initializeFeePreview() {
+                setTimeout(() => {
+                    showInstallationFeePreview();
+                }, 500);
+            }
 
-            // Initial fee calculation on page load
+            $('body').on('updated_cart_totals', initializeFeePreview);
+
+            // Initialize both features
+            initializeZipCode();
             initializeFeePreview();
         });
     </script>
@@ -155,15 +172,49 @@ function add_installation_fee_calculation_script() {
 
                     // Add the installation fee row dynamically
                     if (totalFee > 0) {
+                        // Add the installation fee row below the cart subtotal
                         $('<tr class="installation-fee-row"><th>Installation Fee</th><td>' + wc_price(totalFee) + '</td></tr>')
                             .insertAfter('.cart_totals .cart-subtotal');
                     }
                 }
 
+                // Function to update the cart total
+                function updateCartTotal(totalFee, installationRequired) {
+                    // Get the current cart total
+                    let cartTotal = $('.woocommerce-cart .order-total .woocommerce-Price-amount bdi')
+                        .text()
+                        .trim()
+                        .replaceAll(',', '') // Remove commas
+                        .replaceAll('$', ''); // Remove dollar signs
+                    cartTotal = parseFloat(cartTotal) || 0; // Ensure it's a valid number
+
+                    let sarahKukuCartTotal;
+
+                    // Calculate the new cart total
+                    if (installationRequired === 'yes') {
+                        // Add the installation fee to the cart total
+                        sarahKukuCartTotal = cartTotal + totalFee;
+                    } else {
+                        // Subtract the installation fee from the cart total
+                        sarahKukuCartTotal = cartTotal - totalFee;
+                    }
+
+                    // Format the new total with commas and 2 decimal points
+                    let formattedTotal = wc_price(sarahKukuCartTotal);
+
+                    // Update the total price in the DOM without removing any structure
+                    // $('.woocommerce-cart .order-total .woocommerce-Price-amount bdi').html(formattedTotal);
+                }
+
                 // Update the installation fee dynamically
                 function updateInstallationFee() {
                     let installationRequired = $('#installation-required').is(':checked') ? 'yes' : 'no';
+
+                    updateCartTotal(calculateInstallationFee(), installationRequired);
+
                     let totalFee = installationRequired === 'yes' ? calculateInstallationFee() : 0;
+                    
+                    
 
                     // Update the fee in the DOM
                     displayInstallationFee(totalFee);

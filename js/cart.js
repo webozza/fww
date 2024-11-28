@@ -84,7 +84,11 @@ jQuery(document).ready(function ($) {
     var zipCode = $("#zip_code").val();
     var resultDiv = $("#zip_code_result");
 
-    if (!$("body").hasClass("woocommerce-cart")) {
+    if (
+      !$("body").hasClass("woocommerce-cart") &&
+      !$("body").hasClass("postid-465") &&
+      !$("body").hasClass("page-id-759")
+    ) {
       if (available_zip_codes.includes(zipCode)) {
         resultDiv.html(sucess_text);
         setTimeout(() => {

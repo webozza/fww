@@ -7,13 +7,14 @@ function display_zip_code_checker() {
     $available_zip_codes = get_field('zip_code', $product_id);
     $cros_icon = get_stylesheet_directory_uri() . '/assets/cross.png';
     $tick_icon = get_stylesheet_directory_uri() . '/assets/tick.png';
+    $saved_zip_code = get_field('user_zip_code', 'user_'.get_current_user_ID());
 
     ?>
     <div class="zip-code-check">
         <p>Want us to measure for you?</p>
         <p>Enter your zip code below to see if <strong style="color:#52A37F">FIT</strong>rite<br> is available in your area</p>
         <label for="zip_code">ZIP CODE</label>
-        <input type="text" id="zip_code" name="zip_code" placeholder="90210">
+        <input type="text" id="zip_code" name="zip_code" placeholder="90210" value="<?= empty($saved_zip_code) ? '' : $saved_zip_code ?>">
         <button id="check_zip_code">CHECK</button>
         <div id="zip_code_result"></div>
     </div>
@@ -24,13 +25,27 @@ function display_zip_code_checker() {
         let unavailable_text = `<span class="zip-not-available"><img src="<?= $cros_icon ?>"> Unfortunately not at this time</span>`;
 
         // Product page script
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('check_zip_code').addEventListener('click', function() {
-                var zipCode = document.getElementById('zip_code').value.trim();
-                var resultDiv = document.getElementById('zip_code_result');
-                var isValid = available_zip_codes.includes(zipCode);
+        jQuery(document).ready(function($) {
+
+            var zipCode = $('#zip_code').val().trim();
+
+            console.log(zipCode);
+
+            if (zipCode !== "") {
+                setTimeout(() => {
+                    $('#check_zip_code').trigger('click');
+                }, 600);
+            }
+
+            $('#check_zip_code').click(async function() {
+                zipCode = $('#zip_code').val().trim();
+
                 
-                resultDiv.innerHTML = isValid ? success_text : unavailable_text;
+
+                var isValid = available_zip_codes.includes(zipCode);
+                var resultDiv = $('#zip_code_result');
+
+                resultDiv.html(isValid ? success_text : unavailable_text);
 
                 // Store the validation status in localStorage
                 localStorage.setItem('zip_code_status', JSON.stringify({
@@ -39,11 +54,40 @@ function display_zip_code_checker() {
                 }));
 
                 // Emit a custom event for tracking
-                document.dispatchEvent(new CustomEvent('zipCodeChecked', {
-                    detail: { zipCode, isValid }
-                }));
+                $(document).trigger('zipCodeChecked', { zipCode, isValid });
+
+                
+
+                var _zipData = {
+                    acf: {
+                        user_zip_code: zipCode,
+                    },
+                };
+
+                var fetchZipCode = async function() {
+                    var url = `/wp-json/wp/v2/users/<?= get_current_user_ID() ?>`;
+
+                    let res = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "X-WP-Nonce": "<?= wp_create_nonce('wp_rest') ?>",
+                            "Content-type": "application/json; charset=UTF-8",
+                        },
+                        body: JSON.stringify(_zipData),
+                    });
+
+                    return await res.json();
+                };
+
+                var saveZipCode = async function() {
+                    let data = await fetchZipCode();
+                    console.log("Zip code saved =>", data);
+                };
+
+                saveZipCode();
             });
         });
+        
 
     </script>
     <?php
