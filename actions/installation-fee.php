@@ -36,13 +36,15 @@ function display_zip_code_checker_and_installation_checkbox() {
             const unavailableText = `<span class="zip-not-available"><img src="${crosIcon}"> Unfortunately not at this time</span>`;
 
             const zipCodeStatus = localStorage.getItem('zip_code_status');
-            const parsedData = JSON.parse(zipCodeStatus);
-            const storedZipCode = parsedData.zipCode;
-            
-            if(storedZipCode !== "") {
-                $('#zip_code').val(storedZipCode);
-            }
 
+            if(zipCodeStatus !== null) {
+                const parsedData = JSON.parse(zipCodeStatus);
+                const storedZipCode = parsedData.zipCode;
+                
+                if(storedZipCode !== "") {
+                    $('#zip_code').val(storedZipCode);
+                }
+            }
             
             // Initialize zip code logic
             function initializeZipCode() {

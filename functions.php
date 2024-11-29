@@ -11,7 +11,7 @@
 
  if ( ! defined( '_S_VERSION' ) ) {
     // Replace this with your actual theme version
-    define( '_S_VERSION', '1.1.57' );
+    define( '_S_VERSION', '1.1.58' );
 }
 
 //====================================//

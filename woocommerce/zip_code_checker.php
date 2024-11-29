@@ -28,11 +28,13 @@ function display_zip_code_checker() {
         jQuery(document).ready(function($) {
 
             const zipCodeStatus = localStorage.getItem('zip_code_status');
-            const parsedData = JSON.parse(zipCodeStatus);
-            const storedZipCode = parsedData.zipCode;
-            
-            if(storedZipCode !== "") {
-                $('#zip_code').val(storedZipCode);
+            if(zipCodeStatus !== null) {
+                const parsedData = JSON.parse(zipCodeStatus);
+                const storedZipCode = parsedData.zipCode;
+                
+                if(storedZipCode !== "") {
+                    $('#zip_code').val(storedZipCode);
+                }
             }
 
             var zipCode = $('#zip_code').val().trim();
