@@ -7,7 +7,7 @@ function display_zip_code_checker_and_installation_checkbox() {
     $available_zip_codes = get_field('zip_code', $product_id);
     $cros_icon = get_stylesheet_directory_uri() . '/assets/cross.png';
     $tick_icon = get_stylesheet_directory_uri() . '/assets/tick.png';
-    $saved_zip_code = get_field('user_zip_code', 'user_'.get_current_user_ID());
+    // $saved_zip_code = get_field('user_zip_code', 'user_'.get_current_user_ID());
     ?>
     <div class="zip-code-check-wrapper">
         <div class="zip-code-check">
@@ -15,7 +15,7 @@ function display_zip_code_checker_and_installation_checkbox() {
             <p>Enter your zip code below to see if installation <br> is available in your area</p>
             <label for="zip_code">ZIP CODE</label>
             <div class="fww-flex-row">
-                <input type="text" id="zip_code" name="zip_code" placeholder="90210" value="<?= empty($saved_zip_code) ? '' : $saved_zip_code ?>">
+                <input type="text" id="zip_code" name="zip_code" placeholder="90210" value="">
                 <button id="check_zip_code">CHECK</button>
             </div>
             <div id="zip_code_result"></div>
@@ -35,8 +35,18 @@ function display_zip_code_checker_and_installation_checkbox() {
             const successText = ``;
             const unavailableText = `<span class="zip-not-available"><img src="${crosIcon}"> Unfortunately not at this time</span>`;
 
+            const zipCodeStatus = localStorage.getItem('zip_code_status');
+            const parsedData = JSON.parse(zipCodeStatus);
+            const storedZipCode = parsedData.zipCode;
+            
+            if(storedZipCode !== "") {
+                $('#zip_code').val(storedZipCode);
+            }
+
+            
             // Initialize zip code logic
             function initializeZipCode() {
+
                 let zipCode = $('#zip_code').val().trim();
 
                 if (zipCode !== "") {
@@ -45,7 +55,7 @@ function display_zip_code_checker_and_installation_checkbox() {
                     }, 600);
                 }
 
-                $('#check_zip_code').click(async function() {
+                $('#check_zip_code').click(function() {
                     zipCode = $('#zip_code').val().trim();
                     const isValid = availableZipCodes.includes(zipCode);
                     const resultDiv = $('#zip_code_result');
@@ -56,26 +66,8 @@ function display_zip_code_checker_and_installation_checkbox() {
 
                     localStorage.setItem('zip_code_status', JSON.stringify({ zipCode, isValid }));
                     $(document).trigger('zipCodeChecked', { zipCode, isValid });
-
-                    const _zipData = { acf: { user_zip_code: zipCode } };
-                    const url = `/wp-json/wp/v2/users/<?= get_current_user_ID() ?>`;
-
-                    try {
-                        const res = await fetch(url, {
-                            method: "POST",
-                            headers: {
-                                "X-WP-Nonce": "<?= wp_create_nonce('wp_rest') ?>",
-                                "Content-type": "application/json; charset=UTF-8",
-                            },
-                            body: JSON.stringify(_zipData),
-                        });
-
-                        const data = await res.json();
-                        console.log("Zip code saved =>", data);
-                    } catch (error) {
-                        console.error("Error saving zip code:", error);
-                    }
                 });
+
             }
 
             // Initialize installation fee logic
