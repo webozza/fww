@@ -719,6 +719,16 @@ body.woocommerce-checkout tr.woocommerce-shipping-totals.shipping {
 /*====================================================================================
 ** VIDEO SECTION
 ====================================================================================*/
+
+.page-id-882 .aiovg-player {
+  cursor: pointer;
+}
+
+.page-id-882 .aiovg-player iframe {
+  pointer-events: none;
+  cursor: pointer;
+}
+
 .video_popup {
   position: fixed;
   top: 50%;

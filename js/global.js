@@ -18,6 +18,7 @@ jQuery(document).ready(function ($) {
   let isCart = $("body.woocommerce-cart").length;
   let isCheckout = $("body.woocommerce-checkout").length;
   let isProduct = $("body.single-product").length;
+  let isSupport = $("body").hasClass("page-id-882");
 
   let noShippingForMeasurement = () => {
     let measurementAddedToCart = $(
@@ -94,6 +95,25 @@ jQuery(document).ready(function ($) {
     }
   };
 
+  let videoPluginModifier = () => {
+    $(".aiovg-player").click(function () {
+      let videoSrc = $(this).find("iframe").attr("src");
+      $(".video_popup .popup_content iframe").remove();
+      $(".video_popup .popup_content").prepend(`
+          <iframe src="${videoSrc}&autoplay=1">
+      `);
+      $(".video_popup iframe").click();
+      $(".video_popup").fadeIn();
+      // $(".video_popup video").attr("controls", "");
+      // $(".video_popup video")[0].play();
+    });
+
+    $(".video_popup .close_button").click(function () {
+      $(this).closest(".video_popup").hide();
+      $(".video_popup iframe").remove();
+    });
+  };
+
   let videoPlayer = () => {
     $(".video_section .play_button").click(function () {
       const video = $(this).siblings("video");
@@ -156,5 +176,9 @@ jQuery(document).ready(function ($) {
     enableSelect2();
     removeFractions78();
     videoPlayer();
+  }
+
+  if (isSupport) {
+    videoPluginModifier();
   }
 });
