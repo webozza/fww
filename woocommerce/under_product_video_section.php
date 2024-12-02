@@ -30,35 +30,3 @@
         <div class="play_button"></div>
     </div>
 </div>
-
-
-<!-- Hidden video popups -->
-<?php
-function add_video_popup_to_footer() {
-    ?>
-    <div class="video_popup" style="display: none;">
-        <!-- Embed your video here -->
-        <div class="popup_content">
-            <iframe width="560" height="515" src="https://www.youtube.com/embed/LA1XUZTtcNc?si=E-R88UUtcKdYNsSW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            <button class="close_button"></button>
-        </div>
-    </div>
-    <?php
-}
-add_action('wp_footer', 'add_video_popup_to_footer');
-?>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function(){
-        $('.video_box').click(function(){
-            var popup = $('.video_popup');
-            console.log('dfdfdf')
-            popup.show();
-        });
-
-        $('.close_button').click(function(){
-            $(this).closest('.video_popup').hide();
-        });
-    });
-</script>

@@ -97,9 +97,24 @@ jQuery(document).ready(function ($) {
   let videoPlayer = () => {
     $(".video_section .play_button").click(function () {
       const video = $(this).siblings("video");
-      video.attr("controls", ""); // Add controls to the video
-      video[0].play(); // Start playing the video
-      $(this).remove(); // Hide the play button
+      let videoSrc = $(this).parent().find("source").attr("src");
+
+      $(".video_popup .popup_content video").remove();
+      $(".video_popup .popup_content").prepend(`
+          <video controls poster="/wp-content/uploads/2024/10/video_placeholder.png" playsinline preload="auto" style="width: 100%; height: 100%;" class="vjs-tech" id="player_outside_mount">
+            <source type="video/mp4" src="${videoSrc}">
+            Your browser does not support the video tag.
+          </video>
+      `);
+      $(".video_popup").fadeIn();
+      $(".video_popup video").attr("controls", "");
+      $(".video_popup video")[0].play();
+      // $(this).remove();
+    });
+
+    $(".video_popup .close_button").click(function () {
+      $(this).closest(".video_popup").hide();
+      $(".video_popup video")[0].pause();
     });
 
     $(".video_section video").click(function () {
