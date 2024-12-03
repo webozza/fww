@@ -3,11 +3,28 @@
 // Show the zip code checker and installation checkbox above the Proceed to Checkout button
 add_action('woocommerce_proceed_to_checkout', 'display_zip_code_checker_and_installation_checkbox', 10);
 function display_zip_code_checker_and_installation_checkbox() {
-    $product_id = 1056;
+    // Product ID to check
+    $restricted_product_id = 1056;
+
+    // Check if the product is in the cart
+    $is_in_cart = false;
+    foreach (WC()->cart->get_cart() as $cart_item) {
+        if ($cart_item['product_id'] == $restricted_product_id) {
+            $is_in_cart = true;
+            break;
+        }
+    }
+
+    // If the product is in the cart, return early and do not show the checker
+    if ($is_in_cart) {
+        return;
+    }
+
+    // Proceed with rendering the ZIP code checker and installation checkbox
+    $product_id = 465;
     $available_zip_codes = get_field('zip_code', $product_id);
     $cros_icon = get_stylesheet_directory_uri() . '/assets/cross.png';
     $tick_icon = get_stylesheet_directory_uri() . '/assets/tick.png';
-    // $saved_zip_code = get_field('user_zip_code', 'user_'.get_current_user_ID());
     ?>
     <div class="zip-code-check-wrapper">
         <div class="zip-code-check">
@@ -35,44 +52,16 @@ function display_zip_code_checker_and_installation_checkbox() {
             const successText = ``;
             const unavailableText = `<span class="zip-not-available"><img src="${crosIcon}"> Unfortunately not at this time</span>`;
 
-            const zipCodeStatus = localStorage.getItem('zip_code_status');
+            $('#check_zip_code').click(function() {
+                const zipCode = $('#zip_code').val().trim();
+                const isValid = availableZipCodes.includes(zipCode);
+                const resultDiv = $('#zip_code_result');
+                const checkboxContainer = $('.installation-checkbox-container');
 
-            if(zipCodeStatus !== null) {
-                const parsedData = JSON.parse(zipCodeStatus);
-                const storedZipCode = parsedData.zipCode;
-                
-                if(storedZipCode !== "") {
-                    $('#zip_code').val(storedZipCode);
-                }
-            }
-            
-            // Initialize zip code logic
-            function initializeZipCode() {
+                resultDiv.html(isValid ? successText : unavailableText);
+                checkboxContainer.toggle(isValid);
+            });
 
-                let zipCode = $('#zip_code').val().trim();
-
-                if (zipCode !== "") {
-                    setTimeout(() => {
-                        $('#check_zip_code').trigger('click');
-                    }, 600);
-                }
-
-                $('#check_zip_code').click(function() {
-                    zipCode = $('#zip_code').val().trim();
-                    const isValid = availableZipCodes.includes(zipCode);
-                    const resultDiv = $('#zip_code_result');
-                    const checkboxContainer = $('.installation-checkbox-container');
-
-                    resultDiv.html(isValid ? successText : unavailableText);
-                    checkboxContainer.toggle(isValid);
-
-                    localStorage.setItem('zip_code_status', JSON.stringify({ zipCode, isValid }));
-                    $(document).trigger('zipCodeChecked', { zipCode, isValid });
-                });
-
-            }
-
-            // Initialize installation fee logic
             function calculateDisplayOnlyInstallationFee() {
                 let additionalFee = 0;
 
@@ -104,17 +93,8 @@ function display_zip_code_checker_and_installation_checkbox() {
                 $('.place-installation-fee').text(wc_price(totalFee));
             }
 
-            function initializeFeePreview() {
-                setTimeout(() => {
-                    showInstallationFeePreview();
-                }, 500);
-            }
-
-            $('body').on('updated_cart_totals', initializeFeePreview);
-
-            // Initialize both features
-            initializeZipCode();
-            initializeFeePreview();
+            $('body').on('updated_cart_totals', showInstallationFeePreview);
+            showInstallationFeePreview();
         });
     </script>
     <?php
