@@ -174,6 +174,7 @@ jQuery(document).ready(function ($) {
         $(".order-total .woocommerce-Price-amount bdi")
           .text()
           .replaceAll("$", "")
+          .replaceAll(",", "")
           .trim()
       );
 
@@ -186,9 +187,11 @@ jQuery(document).ready(function ($) {
       }
 
       // Update the price in the order-total row
-      $(".order-total .woocommerce-Price-amount bdi").text(
-        `$${newCartTotalWithInstallationFee.toFixed(2)}`
-      );
+      let formattedTotal = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(newCartTotalWithInstallationFee);
+      $(".order-total .woocommerce-Price-amount bdi").text(formattedTotal);
     });
   };
 
