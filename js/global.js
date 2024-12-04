@@ -195,7 +195,7 @@ jQuery(document).ready(function ($) {
     });
 
     if ($(".installation-fee-row").length) {
-      $(".installation-required").prop("checked", true);
+      $("#installation-required").prop("checked", true);
     }
   };
 
