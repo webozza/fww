@@ -206,7 +206,9 @@ jQuery(document).ready(function ($) {
 
   if (isCart) {
     // moveShippingFreeMsg();
-    updateCartTotalWithInstallationFee();
+    setTimeout(() => {
+      updateCartTotalWithInstallationFee();
+    }, 2400);
   }
 
   if (isProduct) {
