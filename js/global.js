@@ -193,6 +193,10 @@ jQuery(document).ready(function ($) {
       }).format(newCartTotalWithInstallationFee);
       $(".order-total .woocommerce-Price-amount bdi").text(formattedTotal);
     });
+
+    if ($(".installation-fee-row").length) {
+      $(".installation-required").prop("checked", true);
+    }
   };
 
   if (isCart || isCheckout) {
