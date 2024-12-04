@@ -163,6 +163,35 @@ jQuery(document).ready(function ($) {
     }
   };
 
+  let updateCartTotalWithInstallationFee = () => {
+    let newCartTotalWithInstallationFee;
+
+    $("#installation-required").change(function () {
+      let installationFee = Number(
+        $(".place-installation-fee").eq(0).text().replaceAll("$", "").trim()
+      );
+      let cartTotal = Number(
+        $(".order-total .woocommerce-Price-amount bdi")
+          .text()
+          .replaceAll("$", "")
+          .trim()
+      );
+
+      let isChecked = $(this).prop("checked");
+
+      if (isChecked) {
+        newCartTotalWithInstallationFee = installationFee + cartTotal;
+      } else {
+        newCartTotalWithInstallationFee = cartTotal - installationFee;
+      }
+
+      // Update the price in the order-total row
+      $(".order-total .woocommerce-Price-amount bdi").text(
+        `$${newCartTotalWithInstallationFee.toFixed(2)}`
+      );
+    });
+  };
+
   if (isCart || isCheckout) {
     noShippingForMeasurement();
     alterCartTextFITrite();
@@ -170,6 +199,7 @@ jQuery(document).ready(function ($) {
 
   if (isCart) {
     // moveShippingFreeMsg();
+    updateCartTotalWithInstallationFee();
   }
 
   if (isProduct) {
