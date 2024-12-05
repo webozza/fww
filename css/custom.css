@@ -824,3 +824,15 @@ body.woocommerce-checkout tr.woocommerce-shipping-totals.shipping {
     transition: 0.3s;
   }
 }
+
+.list-social-icons li:nth-child(2) svg {
+  height: 20px;
+  fill: #6e6e6e;
+  transition: all 0.3s ease;
+  position: relative;
+  top: 2px;
+}
+
+.list-social-icons li:nth-child(2) svg:hover {
+  fill: #000;
+}
