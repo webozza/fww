@@ -208,6 +208,10 @@ jQuery(document).ready(function ($) {
     $(".list-social-icons .fa-twitter").removeClass("fa-twitter");
   };
 
+  let openInNewTab = () => {
+    $(".list-social-icons a").attr("target", "_blank");
+  };
+
   if (isCart || isCheckout) {
     noShippingForMeasurement();
     alterCartTextFITrite();
@@ -229,4 +233,5 @@ jQuery(document).ready(function ($) {
   }
 
   replaceTwitterIcon();
+  openInNewTab();
 });
