@@ -21,7 +21,7 @@ jQuery(document).ready(function ($) {
   if ($("body").hasClass("single-product")) {
     if (currentProductID == selectedProduct) {
       $(".woocommerce-variation").after(
-        `<div class="new_price"><h3>$111</h3></div>`
+        `<div class="new_price"><h3>$${pricingTable["30"]["24"]}</h3></div>`
       );
     }
 
