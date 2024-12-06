@@ -11,7 +11,7 @@ jQuery(document).ready(function ($) {
   }
 
   let measuringFee = 75;
-  let InstallationCharge = 12;
+  let InstallationCharge = 15;
   let discount = 10;
 
   //====================================//
@@ -167,7 +167,8 @@ jQuery(document).ready(function ($) {
 
   let product759 = $("body").hasClass("postid-465");
   if (product759) {
-    $(".new_price h3").text(`$123`);
+    let currentPrice = $(".new_price h3").text().replaceAll("$", "").trim();
+    $(".new_price h3").text(`$${Number(currentPrice) + 15}`);
   }
 
   function updatePrice() {

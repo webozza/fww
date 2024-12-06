@@ -23,7 +23,7 @@ function custom_shipping_fee_and_message() {
         $item_count = $woocommerce->cart->get_cart_contents_count();
 
         // Define shipping cost
-        $shipping_cost = ($item_count < 3) ? 25 : 0;
+        $shipping_cost = ($item_count < 3) ? 30 : 0;
 
         // Add custom shipping fee
         $woocommerce->cart->add_fee(__('Shipping', 'woocommerce'), $shipping_cost, true);
