@@ -171,33 +171,151 @@ jQuery(document).ready(function ($) {
     $(".new_price h3").text(`$${Number(currentPrice) + 15}`);
   }
 
+  // function updatePrice() {
+  //   let height = $("#height").val();
+  //   let width = $("#width").val();
+
+  //   // Convert fractions to decimals for calculations
+  //   height = convertFractionToDecimal(height.split(" ")[0]);
+  //   width = convertFractionToDecimal(width.split(" ")[0]);
+
+  //   // Predefined height and width points
+  //   const predefinedHeights = [30, 36, 42, 48, 54, 60, 66, 72, 78];
+  //   const predefinedWidths = [24, 30, 36, 42, 48, 54, 60, 66, 72, 78];
+
+  //   // Helper function to find the closest valid range key
+  //   function getValidRange(value, predefinedKeys) {
+  //     let currentRange = predefinedKeys[0];
+  //     for (let i = 1; i < predefinedKeys.length; i++) {
+  //       if (value < predefinedKeys[i]) {
+  //         return currentRange;
+  //       }
+  //       currentRange = predefinedKeys[i];
+  //     }
+  //     return currentRange;
+  //   }
+
+  //   // Get the valid height and width keys based on predefined points
+  //   let validHeightKey = getValidRange(height, predefinedHeights);
+  //   let validWidthKey = getValidRange(width, predefinedWidths);
+
+  //   // Ensure the keys exist in the pricing table
+  //   if (
+  //     !pricingTable[validHeightKey] ||
+  //     !pricingTable[validHeightKey][validWidthKey]
+  //   ) {
+  //     $(".new_price h3").text("Not Available");
+  //     console.error("Price not available for given dimensions");
+  //     return;
+  //   }
+
+  //   // Calculate the price from the table
+  //   let basePrice = pricingTable[validHeightKey][validWidthKey];
+
+  //   // Update the price display
+  //   $(".new_price h3").text(`$${Number(basePrice) + InstallationCharge}`);
+
+  //   console.log("Calculated price:", basePrice);
+
+  //   // Return the calculated price for later use
+  //   return Number(basePrice) + InstallationCharge;
+  // }
+
   function updatePrice() {
     let height = $("#height").val();
     let width = $("#width").val();
 
-    // Convert fractions to decimals for calculations
-    height = convertFractionToDecimal(height.split(" ")[0]);
-    width = convertFractionToDecimal(width.split(" ")[0]);
+    // Helper function to convert fractions to decimals
+    function convertFractionToDecimal(value) {
+      if (!value || typeof value !== "string") {
+        console.error("Invalid input for conversion:", value);
+        return 0;
+      }
+
+      try {
+        // Remove parentheses if they exist around the fraction
+        value = value.replace(/[()]/g, "").trim();
+
+        // Check if the input includes a fraction
+        if (value.includes("/")) {
+          const parts = value.split(" ");
+          let wholePart = 0;
+          let fractionPart = "0/1";
+
+          if (parts.length === 2) {
+            wholePart = parseFloat(parts[0]);
+            fractionPart = parts[1];
+          } else if (parts.length === 1) {
+            fractionPart = parts[0];
+          }
+
+          // Check if the fraction is valid
+          if (fractionPart.includes("/")) {
+            const [numerator, denominator] = fractionPart
+              .split("/")
+              .map(Number);
+
+            if (isNaN(numerator) || isNaN(denominator) || denominator === 0) {
+              throw new Error(`Invalid fraction: ${fractionPart}`);
+            }
+
+            return wholePart + numerator / denominator;
+          } else {
+            throw new Error(`Invalid fraction format: ${fractionPart}`);
+          }
+        }
+
+        // If no fraction, try parsing as a float
+        const parsedValue = parseFloat(value);
+        if (isNaN(parsedValue)) {
+          throw new Error(`Invalid numeric value: ${value}`);
+        }
+
+        return parsedValue;
+      } catch (error) {
+        console.error(
+          `Error converting value to decimal: ${value} - ${error.message}`
+        );
+        return 0;
+      }
+    }
+
+    // Convert height and width to decimals
+    width = convertFractionToDecimal(width);
+    height = convertFractionToDecimal(height);
+
+    console.log("Converted Width:", width);
+    console.log("Converted Height:", height);
 
     // Predefined height and width points
     const predefinedHeights = [30, 36, 42, 48, 54, 60, 66, 72, 78];
     const predefinedWidths = [24, 30, 36, 42, 48, 54, 60, 66, 72, 78];
 
-    // Helper function to find the closest valid range key
-    function getValidRange(value, predefinedKeys) {
-      let currentRange = predefinedKeys[0];
-      for (let i = 1; i < predefinedKeys.length; i++) {
-        if (value < predefinedKeys[i]) {
-          return currentRange;
+    // Helper function to find the next valid predefined range
+    function getNextRange(value, predefinedKeys) {
+      for (let i = 0; i < predefinedKeys.length; i++) {
+        if (value <= predefinedKeys[i]) {
+          console.log(
+            `Value ${value} is being rounded up to ${predefinedKeys[i]}`
+          );
+          return predefinedKeys[i];
         }
-        currentRange = predefinedKeys[i];
       }
-      return currentRange;
+      // If value exceeds all predefined ranges, return the last range
+      console.log(
+        `Value ${value} exceeds all ranges, using ${
+          predefinedKeys[predefinedKeys.length - 1]
+        }`
+      );
+      return predefinedKeys[predefinedKeys.length - 1];
     }
 
-    // Get the valid height and width keys based on predefined points
-    let validHeightKey = getValidRange(height, predefinedHeights);
-    let validWidthKey = getValidRange(width, predefinedWidths);
+    // Get the next valid height and width keys
+    const validWidthKey = getNextRange(width, predefinedWidths);
+    const validHeightKey = getNextRange(height, predefinedHeights);
+
+    console.log("Rounded Up Width Key:", validWidthKey);
+    console.log("Rounded Up Height Key:", validHeightKey);
 
     // Ensure the keys exist in the pricing table
     if (
@@ -210,7 +328,7 @@ jQuery(document).ready(function ($) {
     }
 
     // Calculate the price from the table
-    let basePrice = pricingTable[validHeightKey][validWidthKey];
+    const basePrice = pricingTable[validHeightKey][validWidthKey];
 
     // Update the price display
     $(".new_price h3").text(`$${Number(basePrice) + InstallationCharge}`);
